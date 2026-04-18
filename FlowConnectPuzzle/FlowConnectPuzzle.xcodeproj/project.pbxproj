@@ -1,0 +1,696 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		DA85AC982F9356580088A534 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DA85AC912F9356580088A534 /* Assets.xcassets */; };
+		DA85AC9A2F9356580088A534 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA85AC922F9356580088A534 /* ContentView.swift */; };
+		DA85AC9B2F9356580088A534 /* FlowConnectPuzzleApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA85AC942F9356580088A534 /* FlowConnectPuzzleApp.swift */; };
+		DA85AC9C2F9356580088A534 /* Item.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA85AC962F9356580088A534 /* Item.swift */; };
+		DA85ACA02F93565F0088A534 /* FlowConnectPuzzleUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA85AC9D2F93565F0088A534 /* FlowConnectPuzzleUITests.swift */; };
+		DA85ACA12F93565F0088A534 /* FlowConnectPuzzleUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA85AC9E2F93565F0088A534 /* FlowConnectPuzzleUITestsLaunchTests.swift */; };
+		DA85ACA42F93565F0088A534 /* FlowConnectPuzzleTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA85ACA22F93565F0088A534 /* FlowConnectPuzzleTests.swift */; };
+		DA85ACAE2F9356A60088A534 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = DA85ACAD2F9356A60088A534 /* README.md */; };
+		DA85ACB02F9356A60088A534 /* PuzzleGameView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA85ACAB2F9356A60088A534 /* PuzzleGameView.swift */; };
+		DA85ACB12F9356A60088A534 /* HapticManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA85ACA82F9356A60088A534 /* HapticManager.swift */; };
+		DA85ACB22F9356A60088A534 /* GridCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA85ACA72F9356A60088A534 /* GridCell.swift */; };
+		DA85ACB32F9356A60088A534 /* PuzzleSolver.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA85ACAC2F9356A60088A534 /* PuzzleSolver.swift */; };
+		DA85ACB52F9356A60088A534 /* GameState.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA85ACA62F9356A60088A534 /* GameState.swift */; };
+		DA85ACBE2F93845D0088A534 /* Difficulty.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA85ACBD2F93845D0088A534 /* Difficulty.swift */; };
+		DA85ACC02F9384730088A534 /* PuzzleGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA85ACBF2F9384730088A534 /* PuzzleGenerator.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		DA85AC742F93563C0088A534 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = DA85AC5A2F93563B0088A534 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = DA85AC612F93563B0088A534;
+			remoteInfo = FlowConnectPuzzle;
+		};
+		DA85AC7E2F93563C0088A534 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = DA85AC5A2F93563B0088A534 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = DA85AC612F93563B0088A534;
+			remoteInfo = FlowConnectPuzzle;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		DA85AC622F93563B0088A534 /* FlowConnectPuzzle.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FlowConnectPuzzle.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		DA85AC732F93563C0088A534 /* FlowConnectPuzzleTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = FlowConnectPuzzleTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		DA85AC7D2F93563C0088A534 /* FlowConnectPuzzleUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = FlowConnectPuzzleUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		DA85AC912F9356580088A534 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		DA85AC922F9356580088A534 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		DA85AC932F9356580088A534 /* FlowConnectPuzzle.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = FlowConnectPuzzle.entitlements; sourceTree = "<group>"; };
+		DA85AC942F9356580088A534 /* FlowConnectPuzzleApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlowConnectPuzzleApp.swift; sourceTree = "<group>"; };
+		DA85AC952F9356580088A534 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		DA85AC962F9356580088A534 /* Item.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Item.swift; sourceTree = "<group>"; };
+		DA85AC9D2F93565F0088A534 /* FlowConnectPuzzleUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlowConnectPuzzleUITests.swift; sourceTree = "<group>"; };
+		DA85AC9E2F93565F0088A534 /* FlowConnectPuzzleUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlowConnectPuzzleUITestsLaunchTests.swift; sourceTree = "<group>"; };
+		DA85ACA22F93565F0088A534 /* FlowConnectPuzzleTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlowConnectPuzzleTests.swift; sourceTree = "<group>"; };
+		DA85ACA62F9356A60088A534 /* GameState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameState.swift; sourceTree = "<group>"; };
+		DA85ACA72F9356A60088A534 /* GridCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GridCell.swift; sourceTree = "<group>"; };
+		DA85ACA82F9356A60088A534 /* HapticManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HapticManager.swift; sourceTree = "<group>"; };
+		DA85ACAB2F9356A60088A534 /* PuzzleGameView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PuzzleGameView.swift; sourceTree = "<group>"; };
+		DA85ACAC2F9356A60088A534 /* PuzzleSolver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PuzzleSolver.swift; sourceTree = "<group>"; };
+		DA85ACAD2F9356A60088A534 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+		DA85ACBD2F93845D0088A534 /* Difficulty.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Difficulty.swift; sourceTree = "<group>"; };
+		DA85ACBF2F9384730088A534 /* PuzzleGenerator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PuzzleGenerator.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		DA85AC5F2F93563B0088A534 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		DA85AC702F93563C0088A534 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		DA85AC7A2F93563C0088A534 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		DA85AC592F93563B0088A534 = {
+			isa = PBXGroup;
+			children = (
+				DA85AC972F9356580088A534 /* FlowConnectPuzzle */,
+				DA85ACA32F93565F0088A534 /* FlowConnectPuzzleTests */,
+				DA85AC9F2F93565F0088A534 /* FlowConnectPuzzleUITests */,
+				DA85AC632F93563B0088A534 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		DA85AC632F93563B0088A534 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				DA85AC622F93563B0088A534 /* FlowConnectPuzzle.app */,
+				DA85AC732F93563C0088A534 /* FlowConnectPuzzleTests.xctest */,
+				DA85AC7D2F93563C0088A534 /* FlowConnectPuzzleUITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		DA85AC972F9356580088A534 /* FlowConnectPuzzle */ = {
+			isa = PBXGroup;
+			children = (
+				DA85ACB72F9380E80088A534 /* App */,
+				DA85ACB82F9380FB0088A534 /* Models */,
+				DA85ACBA2F9381450088A534 /* ViewModels */,
+				DA85ACBB2F93816F0088A534 /* Views */,
+				DA85ACBC2F9381940088A534 /* Services */,
+				DA85ACB92F9381330088A534 /* SwiftData */,
+				DA85AC912F9356580088A534 /* Assets.xcassets */,
+				DA85AC932F9356580088A534 /* FlowConnectPuzzle.entitlements */,
+				DA85AC952F9356580088A534 /* Info.plist */,
+				DA85ACAD2F9356A60088A534 /* README.md */,
+			);
+			path = FlowConnectPuzzle;
+			sourceTree = "<group>";
+		};
+		DA85AC9F2F93565F0088A534 /* FlowConnectPuzzleUITests */ = {
+			isa = PBXGroup;
+			children = (
+				DA85AC9D2F93565F0088A534 /* FlowConnectPuzzleUITests.swift */,
+				DA85AC9E2F93565F0088A534 /* FlowConnectPuzzleUITestsLaunchTests.swift */,
+			);
+			path = FlowConnectPuzzleUITests;
+			sourceTree = "<group>";
+		};
+		DA85ACA32F93565F0088A534 /* FlowConnectPuzzleTests */ = {
+			isa = PBXGroup;
+			children = (
+				DA85ACA22F93565F0088A534 /* FlowConnectPuzzleTests.swift */,
+			);
+			path = FlowConnectPuzzleTests;
+			sourceTree = "<group>";
+		};
+		DA85ACB72F9380E80088A534 /* App */ = {
+			isa = PBXGroup;
+			children = (
+				DA85AC942F9356580088A534 /* FlowConnectPuzzleApp.swift */,
+				DA85AC922F9356580088A534 /* ContentView.swift */,
+			);
+			path = App;
+			sourceTree = "<group>";
+		};
+		DA85ACB82F9380FB0088A534 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				DA85ACA72F9356A60088A534 /* GridCell.swift */,
+				DA85ACBD2F93845D0088A534 /* Difficulty.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		DA85ACB92F9381330088A534 /* SwiftData */ = {
+			isa = PBXGroup;
+			children = (
+				DA85AC962F9356580088A534 /* Item.swift */,
+			);
+			path = SwiftData;
+			sourceTree = "<group>";
+		};
+		DA85ACBA2F9381450088A534 /* ViewModels */ = {
+			isa = PBXGroup;
+			children = (
+				DA85ACA62F9356A60088A534 /* GameState.swift */,
+			);
+			path = ViewModels;
+			sourceTree = "<group>";
+		};
+		DA85ACBB2F93816F0088A534 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				DA85ACAB2F9356A60088A534 /* PuzzleGameView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		DA85ACBC2F9381940088A534 /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				DA85ACA82F9356A60088A534 /* HapticManager.swift */,
+				DA85ACAC2F9356A60088A534 /* PuzzleSolver.swift */,
+				DA85ACBF2F9384730088A534 /* PuzzleGenerator.swift */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		DA85AC612F93563B0088A534 /* FlowConnectPuzzle */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = DA85AC862F93563C0088A534 /* Build configuration list for PBXNativeTarget "FlowConnectPuzzle" */;
+			buildPhases = (
+				DA85AC5E2F93563B0088A534 /* Sources */,
+				DA85AC5F2F93563B0088A534 /* Frameworks */,
+				DA85AC602F93563B0088A534 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = FlowConnectPuzzle;
+			packageProductDependencies = (
+			);
+			productName = FlowConnectPuzzle;
+			productReference = DA85AC622F93563B0088A534 /* FlowConnectPuzzle.app */;
+			productType = "com.apple.product-type.application";
+		};
+		DA85AC722F93563C0088A534 /* FlowConnectPuzzleTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = DA85AC8B2F93563C0088A534 /* Build configuration list for PBXNativeTarget "FlowConnectPuzzleTests" */;
+			buildPhases = (
+				DA85AC6F2F93563C0088A534 /* Sources */,
+				DA85AC702F93563C0088A534 /* Frameworks */,
+				DA85AC712F93563C0088A534 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				DA85AC752F93563C0088A534 /* PBXTargetDependency */,
+			);
+			name = FlowConnectPuzzleTests;
+			packageProductDependencies = (
+			);
+			productName = FlowConnectPuzzleTests;
+			productReference = DA85AC732F93563C0088A534 /* FlowConnectPuzzleTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		DA85AC7C2F93563C0088A534 /* FlowConnectPuzzleUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = DA85AC8E2F93563C0088A534 /* Build configuration list for PBXNativeTarget "FlowConnectPuzzleUITests" */;
+			buildPhases = (
+				DA85AC792F93563C0088A534 /* Sources */,
+				DA85AC7A2F93563C0088A534 /* Frameworks */,
+				DA85AC7B2F93563C0088A534 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				DA85AC7F2F93563C0088A534 /* PBXTargetDependency */,
+			);
+			name = FlowConnectPuzzleUITests;
+			packageProductDependencies = (
+			);
+			productName = FlowConnectPuzzleUITests;
+			productReference = DA85AC7D2F93563C0088A534 /* FlowConnectPuzzleUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		DA85AC5A2F93563B0088A534 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 2640;
+				LastUpgradeCheck = 2640;
+				TargetAttributes = {
+					DA85AC612F93563B0088A534 = {
+						CreatedOnToolsVersion = 26.4.1;
+					};
+					DA85AC722F93563C0088A534 = {
+						CreatedOnToolsVersion = 26.4.1;
+						TestTargetID = DA85AC612F93563B0088A534;
+					};
+					DA85AC7C2F93563C0088A534 = {
+						CreatedOnToolsVersion = 26.4.1;
+						TestTargetID = DA85AC612F93563B0088A534;
+					};
+				};
+			};
+			buildConfigurationList = DA85AC5D2F93563B0088A534 /* Build configuration list for PBXProject "FlowConnectPuzzle" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = DA85AC592F93563B0088A534;
+			minimizedProjectReferenceProxies = 1;
+			preferredProjectObjectVersion = 77;
+			productRefGroup = DA85AC632F93563B0088A534 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				DA85AC612F93563B0088A534 /* FlowConnectPuzzle */,
+				DA85AC722F93563C0088A534 /* FlowConnectPuzzleTests */,
+				DA85AC7C2F93563C0088A534 /* FlowConnectPuzzleUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		DA85AC602F93563B0088A534 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				DA85ACAE2F9356A60088A534 /* README.md in Resources */,
+				DA85AC982F9356580088A534 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		DA85AC712F93563C0088A534 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		DA85AC7B2F93563C0088A534 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		DA85AC5E2F93563B0088A534 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				DA85AC9A2F9356580088A534 /* ContentView.swift in Sources */,
+				DA85AC9B2F9356580088A534 /* FlowConnectPuzzleApp.swift in Sources */,
+				DA85AC9C2F9356580088A534 /* Item.swift in Sources */,
+				DA85ACC02F9384730088A534 /* PuzzleGenerator.swift in Sources */,
+				DA85ACB02F9356A60088A534 /* PuzzleGameView.swift in Sources */,
+				DA85ACB12F9356A60088A534 /* HapticManager.swift in Sources */,
+				DA85ACBE2F93845D0088A534 /* Difficulty.swift in Sources */,
+				DA85ACB22F9356A60088A534 /* GridCell.swift in Sources */,
+				DA85ACB32F9356A60088A534 /* PuzzleSolver.swift in Sources */,
+				DA85ACB52F9356A60088A534 /* GameState.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		DA85AC6F2F93563C0088A534 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				DA85ACA42F93565F0088A534 /* FlowConnectPuzzleTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		DA85AC792F93563C0088A534 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				DA85ACA02F93565F0088A534 /* FlowConnectPuzzleUITests.swift in Sources */,
+				DA85ACA12F93565F0088A534 /* FlowConnectPuzzleUITestsLaunchTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		DA85AC752F93563C0088A534 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = DA85AC612F93563B0088A534 /* FlowConnectPuzzle */;
+			targetProxy = DA85AC742F93563C0088A534 /* PBXContainerItemProxy */;
+		};
+		DA85AC7F2F93563C0088A534 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = DA85AC612F93563B0088A534 /* FlowConnectPuzzle */;
+			targetProxy = DA85AC7E2F93563C0088A534 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		DA85AC872F93563C0088A534 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = FlowConnectPuzzle/FlowConnectPuzzle.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = V7W4R2D2VR;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = FlowConnectPuzzle/Info.plist;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.haonguyen.game.FlowConnectPuzzle.FlowConnectPuzzle;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		DA85AC882F93563C0088A534 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = FlowConnectPuzzle/FlowConnectPuzzle.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = V7W4R2D2VR;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = FlowConnectPuzzle/Info.plist;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.haonguyen.game.FlowConnectPuzzle.FlowConnectPuzzle;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		DA85AC892F93563C0088A534 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = V7W4R2D2VR;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.4;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		DA85AC8A2F93563C0088A534 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = V7W4R2D2VR;
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.4;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		DA85AC8C2F93563C0088A534 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = V7W4R2D2VR;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.4;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.haonguyen.game.FlowConnectPuzzle.FlowConnectPuzzleTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/FlowConnectPuzzle.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/FlowConnectPuzzle";
+			};
+			name = Debug;
+		};
+		DA85AC8D2F93563C0088A534 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = V7W4R2D2VR;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.4;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.haonguyen.game.FlowConnectPuzzle.FlowConnectPuzzleTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/FlowConnectPuzzle.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/FlowConnectPuzzle";
+			};
+			name = Release;
+		};
+		DA85AC8F2F93563C0088A534 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = V7W4R2D2VR;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.haonguyen.game.FlowConnectPuzzle.FlowConnectPuzzleUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = FlowConnectPuzzle;
+			};
+			name = Debug;
+		};
+		DA85AC902F93563C0088A534 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = V7W4R2D2VR;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.haonguyen.game.FlowConnectPuzzle.FlowConnectPuzzleUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = FlowConnectPuzzle;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		DA85AC5D2F93563B0088A534 /* Build configuration list for PBXProject "FlowConnectPuzzle" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				DA85AC892F93563C0088A534 /* Debug */,
+				DA85AC8A2F93563C0088A534 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		DA85AC862F93563C0088A534 /* Build configuration list for PBXNativeTarget "FlowConnectPuzzle" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				DA85AC872F93563C0088A534 /* Debug */,
+				DA85AC882F93563C0088A534 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		DA85AC8B2F93563C0088A534 /* Build configuration list for PBXNativeTarget "FlowConnectPuzzleTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				DA85AC8C2F93563C0088A534 /* Debug */,
+				DA85AC8D2F93563C0088A534 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		DA85AC8E2F93563C0088A534 /* Build configuration list for PBXNativeTarget "FlowConnectPuzzleUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				DA85AC8F2F93563C0088A534 /* Debug */,
+				DA85AC902F93563C0088A534 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = DA85AC5A2F93563B0088A534 /* Project object */;
+}
