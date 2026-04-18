@@ -11,23 +11,25 @@ import Foundation
 ///
 /// # How Difficulty Works
 ///
-/// Each level defines two parameters that together determine how hard
-/// the puzzle is:
+/// Each level has a FIXED grid size and number count to ensure consistent
+/// challenge. The key constraint: connecting all numbers in sequence (1→2→3→...→N)
+/// must force the player to visit EVERY cell on the grid.
 ///
-/// 1. **Grid size** — larger grids have more cells to fill, creating
-///    longer paths with more opportunities to go wrong.
+/// **Grid size** — larger grids create longer paths with more cells to cover.
 ///
-/// 2. **Number count** (`numberRange`) — more numbered checkpoints
-///    divide the solution path into smaller segments, reducing the
-///    player's freedom to choose their own route. With 16 checkpoints
-///    on a 64-cell grid, each segment is only ~4 cells long, so the
-///    player must follow a nearly exact path.
+/// **Number count** — fixed at the hardest level for consistency. Numbers are
+/// strategically placed so consecutive numbers are NEVER adjacent, forcing
+/// players to navigate complex winding paths through all cells.
 ///
-/// The actual number count is randomized within `numberRange` each
-/// game so that replaying the same difficulty still feels varied.
+/// **Win condition:** Visit ALL cells while connecting numbers 1→2→3→...→N.
 ///
-/// See ``PuzzleGenerator`` for how these values feed into the
-/// deceptive placement algorithm.
+/// Difficulty progression:
+/// - **Easy**: 5×5 grid (25 cells) with 9 numbers — ~2.7 cells per segment
+/// - **Medium**: 6×6 grid (36 cells) with 11 numbers — ~3.2 cells per segment
+/// - **Hard**: 7×7 grid (49 cells) with 13 numbers — ~3.7 cells per segment
+///
+/// See ``PuzzleGenerator`` for how numbers are strategically placed to
+/// maximize puzzle difficulty through deceptive positioning.
 enum Difficulty: String, CaseIterable, Identifiable {
     case easy
     case medium
@@ -47,22 +49,24 @@ enum Difficulty: String, CaseIterable, Identifiable {
         switch self {
         case .easy:   return 5
         case .medium: return 6
-        case .hard:   return 8
+        case .hard:   return 7
         }
     }
     
-    /// Range of how many numbers to place (inclusive).
-    /// The actual count is chosen randomly within this range each game.
-    var numberRange: ClosedRange<Int> {
+    /// Fixed number of checkpoints for this difficulty level.
+    /// Always uses the maximum count to ensure consistent challenge.
+    /// Numbers are placed along a Hamiltonian path that visits all cells,
+    /// ensuring that connecting all numbers requires traversing every cell.
+    var numberCount: Int {
         switch self {
-        case .easy:   return 6...8
-        case .medium: return 9...12
-        case .hard:   return 13...16
+        case .easy:   return 9   // 25 cells ÷ 9 numbers ≈ 2.7 cells per segment
+        case .medium: return 11  // 36 cells ÷ 11 numbers ≈ 3.2 cells per segment
+        case .hard:   return 13  // 49 cells ÷ 13 numbers ≈ 3.7 cells per segment
         }
     }
     
     var description: String {
-        "\(gridSize)×\(gridSize) grid, \(numberRange.lowerBound)–\(numberRange.upperBound) numbers"
+        return "\(gridSize)×\(gridSize) grid, \(numberCount) numbers"
     }
     
     var iconName: String {

@@ -22,6 +22,7 @@
 		DA85ACB52F9356A60088A534 /* GameState.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA85ACA62F9356A60088A534 /* GameState.swift */; };
 		DA85ACBE2F93845D0088A534 /* Difficulty.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA85ACBD2F93845D0088A534 /* Difficulty.swift */; };
 		DA85ACC02F9384730088A534 /* PuzzleGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA85ACBF2F9384730088A534 /* PuzzleGenerator.swift */; };
+		DADDDEA22F93F0D400D51A57 /* AGEINT.md in Resources */ = {isa = PBXBuildFile; fileRef = DADDDEA12F93F0D300D51A57 /* AGEINT.md */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -62,6 +63,7 @@
 		DA85ACAD2F9356A60088A534 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		DA85ACBD2F93845D0088A534 /* Difficulty.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Difficulty.swift; sourceTree = "<group>"; };
 		DA85ACBF2F9384730088A534 /* PuzzleGenerator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PuzzleGenerator.swift; sourceTree = "<group>"; };
+		DADDDEA12F93F0D300D51A57 /* AGEINT.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = AGEINT.md; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -148,6 +150,7 @@
 			children = (
 				DA85AC942F9356580088A534 /* FlowConnectPuzzleApp.swift */,
 				DA85AC922F9356580088A534 /* ContentView.swift */,
+				DADDDEA12F93F0D300D51A57 /* AGEINT.md */,
 			);
 			path = App;
 			sourceTree = "<group>";
@@ -307,6 +310,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				DA85ACAE2F9356A60088A534 /* README.md in Resources */,
+				DADDDEA22F93F0D400D51A57 /* AGEINT.md in Resources */,
 				DA85AC982F9356580088A534 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
