@@ -50,12 +50,26 @@ struct PuzzleGameView: View {
                         .shadow(color: .black.opacity(0.08), radius: 4, x: 0, y: 2)
                 }
                 
-                // Reset (same puzzle)
-                Button(action: { gameState.reset() }) {
-                    Text("Reset")
+                // Undo button
+                Button(action: { gameState.undo() }) {
+                    Image(systemName: "arrow.uturn.backward")
                         .font(.system(size: 16, weight: .semibold))
                         .foregroundColor(.primary)
-                        .padding(.horizontal, 24)
+                        .padding(.horizontal, 16)
+                        .padding(.vertical, 10)
+                        .background(Color(uiColor: .systemBackground))
+                        .cornerRadius(20)
+                        .shadow(color: .black.opacity(0.08), radius: 4, x: 0, y: 2)
+                }
+                .disabled(gameState.path.isEmpty)
+                .opacity(gameState.path.isEmpty ? 0.4 : 1)
+                
+                // Reset (same puzzle)
+                Button(action: { gameState.reset() }) {
+                    Image(systemName: "arrow.counterclockwise")
+                        .font(.system(size: 16, weight: .semibold))
+                        .foregroundColor(.primary)
+                        .padding(.horizontal, 16)
                         .padding(.vertical, 10)
                         .background(Color(uiColor: .systemBackground))
                         .cornerRadius(20)
@@ -81,10 +95,10 @@ struct PuzzleGameView: View {
                 
                 // New puzzle (regenerate)
                 Button(action: { gameState.newGame() }) {
-                    Text("New")
+                    Image(systemName: "plus.square")
                         .font(.system(size: 16, weight: .semibold))
                         .foregroundColor(.primary)
-                        .padding(.horizontal, 24)
+                        .padding(.horizontal, 16)
                         .padding(.vertical, 10)
                         .background(Color(uiColor: .systemBackground))
                         .cornerRadius(20)
@@ -207,7 +221,7 @@ struct PuzzleGameView: View {
             linePath,
             with: .color(pathColor),
             style: StrokeStyle(
-                lineWidth: cellSize * 0.15,
+                lineWidth: cellSize * 0.25,
                 lineCap: .round,
                 lineJoin: .round
             )

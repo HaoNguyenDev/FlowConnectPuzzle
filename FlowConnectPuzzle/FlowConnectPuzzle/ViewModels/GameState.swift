@@ -73,15 +73,85 @@ class GameState {
     func undo() {
         guard !path.isEmpty else { return }
         
-        let lastPosition = path.removeLast()
-        grid[lastPosition.row][lastPosition.col].isInPath = false
+        // Find the last number in the path (working backwards)
+        var lastNumberIndex = -1
+        for i in stride(from: path.count - 1, through: 0, by: -1) {
+            let pos = path[i]
+            if grid[pos.row][pos.col].number != nil {
+                lastNumberIndex = i
+                break
+            }
+        }
         
-        if let newLast = path.last {
-            let cell = grid[newLast.row][newLast.col]
-            if let number = cell.number {
-                currentNumber = number
+        // If we found a number in the path
+        if lastNumberIndex >= 0 {
+            // Check if there are empty cells after the last number
+            let hasEmptyCellsAfter = path.count > lastNumberIndex + 1
+            
+            if hasEmptyCellsAfter {
+                // First undo: Remove all cells AFTER the last number (keep the number)
+                while path.count > lastNumberIndex + 1 {
+                    let removed = path.removeLast()
+                    grid[removed.row][removed.col].isInPath = false
+                }
+                
+                // Update current number to the last number in path
+                if let lastPos = path.last {
+                    let cell = grid[lastPos.row][lastPos.col]
+                    if let number = cell.number {
+                        currentNumber = number
+                    }
+                }
+            } else {
+                // Second undo: Remove current number and cells after previous number
+                // Remove the current number
+                let removed = path.removeLast()
+                grid[removed.row][removed.col].isInPath = false
+                
+                // Find the previous number (now the new last number)
+                var previousNumberIndex = -1
+                for i in stride(from: path.count - 1, through: 0, by: -1) {
+                    let pos = path[i]
+                    if grid[pos.row][pos.col].number != nil {
+                        previousNumberIndex = i
+                        break
+                    }
+                }
+                
+                if previousNumberIndex >= 0 {
+                    // Remove cells after the previous number (keep the previous number)
+                    while path.count > previousNumberIndex + 1 {
+                        let removed = path.removeLast()
+                        grid[removed.row][removed.col].isInPath = false
+                    }
+                    
+                    // Update current number to the previous number
+                    if let lastPos = path.last {
+                        let cell = grid[lastPos.row][lastPos.col]
+                        if let number = cell.number {
+                            currentNumber = number
+                        }
+                    }
+                } else {
+                    // No previous number found, clear everything
+                    path.removeAll()
+                    for row in 0..<gridSize {
+                        for col in 0..<gridSize {
+                            grid[row][col].isInPath = false
+                        }
+                    }
+                    currentNumber = 1
+                }
             }
         } else {
+            // If no numbers found in path (only empty cells after number 1)
+            // Clear the entire path
+            path.removeAll()
+            for row in 0..<gridSize {
+                for col in 0..<gridSize {
+                    grid[row][col].isInPath = false
+                }
+            }
             currentNumber = 1
         }
         
@@ -107,9 +177,17 @@ class GameState {
             return true
         }
         
-        // Backtrack only when dragging back to the second-to-last cell.
-        // Touching any other cell already in the path is blocked (no reset).
+        // Backtrack behavior depends on difficulty:
+        // - Easy: Allow backtracking by dragging to the second-to-last cell
+        // - Medium/Hard: No backtracking allowed (must use Undo button)
         if path.contains(position) {
+            // For medium and hard, block all backtracking attempts
+            if difficulty == .medium || difficulty == .hard {
+                HapticManager.shared.invalidMove()
+                return true
+            }
+            
+            // For easy, allow backtracking to the second-to-last cell
             if path.count >= 2 && position == path[path.count - 2] {
                 let removed = path.removeLast()
                 grid[removed.row][removed.col].isInPath = false
@@ -151,6 +229,9 @@ class GameState {
     
     func checkCompletion() {
         let wasConnected = allNumbersConnected
+        
+        // Check if all numbers have been connected in sequence
+        // Player wins by connecting all numbers, regardless of cells visited
         allNumbersConnected = currentNumber == maxNumber
         
         if allNumbersConnected && !wasConnected {
