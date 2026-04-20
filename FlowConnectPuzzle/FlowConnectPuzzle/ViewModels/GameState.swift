@@ -179,10 +179,10 @@ class GameState {
         
         // Backtrack behavior depends on difficulty:
         // - Easy: Allow backtracking by dragging to the second-to-last cell
-        // - Medium/Hard: No backtracking allowed (must use Undo button)
+        // - Medium/Hard/Very Hard/Expert: No backtracking allowed (must use Undo button)
         if path.contains(position) {
-            // For medium and hard, block all backtracking attempts
-            if difficulty == .medium || difficulty == .hard {
+            // For medium, hard, very hard, and expert - block all backtracking attempts
+            if difficulty == .medium || difficulty == .hard || difficulty == .veryHard || difficulty == .expert {
                 HapticManager.shared.invalidMove()
                 return true
             }
