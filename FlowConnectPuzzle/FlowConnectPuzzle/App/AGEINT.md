@@ -310,12 +310,9 @@ func addToPath(_ position: GridPosition) -> Bool {
 
 ---
 
-### Undo Button Behavior (Two-Step Checkpoint System)
+### Undo Button Behavior (Checkpoint System)
 
-The Undo button has **two-step behavior** depending on the current state:
-
-**Step 1:** If there are empty cells after the last number → remove them (keep the number)  
-**Step 2:** If already at a number with no empty cells after → remove the number (go to previous number)
+The Undo button removes the path back to (and INCLUDING) the last number checkpoint:
 
 ```swift
 func undo() {
@@ -331,49 +328,53 @@ func undo() {
     }
     
     if lastNumberIndex >= 0 {
-        let hasEmptyCellsAfter = path.count > lastNumberIndex + 1
-        
-        if hasEmptyCellsAfter {
-            // First undo: Remove empty cells AFTER the number
-            while path.count > lastNumberIndex + 1 {
-                remove cells
-            }
-            currentNumber = lastNumber
-        } else {
-            // Second undo: Remove the number itself, go to previous
-            remove last number
-            currentNumber = previousNumber
+        // Remove all cells from the last number onwards (including the number)
+        while path.count > lastNumberIndex {
+            let removed = path.removeLast()
+            grid[removed].isInPath = false
         }
+        
+        // Update currentNumber to the previous number in path
+        if let lastPos = path.last {
+            currentNumber = grid[lastPos].number ?? previousNumber
+        } else {
+            currentNumber = 1  // Path empty, restart from 1
+        }
+    } else {
+        // No numbers in path → clear everything
+        path.removeAll()
+        clearAllPaths()
+        currentNumber = 1
     }
 }
 ```
 
-**Example - Two-step undo:**
+**Example - User scenario:**
 
 ```
 Initial state:
   Path: [1] → [empty] → [2] → [empty] → [empty]
                            ↑                ↑
                      Last number      Current position
+                                      Realized mistake!
 
-Press Undo (1st time):
-  Path: [1] → [empty] → [2]
-                        ↑
-                  Stops at number 2
-  Result: Empty cells removed, stays at number 2 ✓
-
-Press Undo (2nd time):
+After pressing Undo:
   Path: [1] → [empty]
                   ↑
-            Goes back to number 1
-  Result: Number 2 removed, back to number 1 ✓
+            Cursor at number 1
+  
+  Result:
+  - Number 2 is REMOVED from path (isInPath = false)
+  - Number 2 cell becomes available to draw to again
+  - Current number = 1
+  - Can draw from number 1 towards number 2 with a different path! ✓
 ```
 
 **Key Points:**
-- **First undo**: Removes empty cells after last number (if any)
-- **Second undo**: Removes the number itself, goes to previous checkpoint
-- Allows fine-grained control over path correction
-- Can undo step-by-step through your drawing
+- Undo removes everything from (and including) the last number
+- The removed number becomes available to draw to again
+- Current number updates to the previous checkpoint
+- You can always continue drawing after undo
 
 ---
 
@@ -404,7 +405,10 @@ func checkCompletion() {
 
 ```
 VStack {
-    Difficulty Label
+    Header Row
+    ├─ Back button (left)
+    ├─ Difficulty name (left-center)
+    └─ Timer (right) - Clock icon + elapsed time (MM:SS.CS format with milliseconds)
     
     Puzzle Grid (DragGesture)
     │
@@ -419,14 +423,201 @@ VStack {
     └─ Path lines (Canvas overlay)
     
     Action Buttons Row
-    ├─ Back
-    ├─ Reset (replay same puzzle)
+    ├─ Undo (adds +3 second time penalty)
+    ├─ Reset (replay same puzzle, timer continues as penalty)
     ├─ Hint (breathing glow)
-    └─ New (regenerate puzzle)
+    └─ New (regenerate puzzle + reset timer)
     
     Completion Overlay (if win)
+    ├─ "Puzzle Complete!" title
+    ├─ Completion time display (clock icon + time with milliseconds)
+    └─ "Next Puzzle" button
 }
 ```
+
+---
+
+### Completion Overlay
+
+**Purpose**: Show victory message and completion time when puzzle is solved.
+
+**Visual Layout:**
+```
+┌─────────────────────────────────┐
+│                                 │
+│      Puzzle Complete! 🎉        │
+│                                 │
+│   ┌─────────────────────┐       │
+│   │  🕐  2:34          │       │  ← Completion time badge
+│   └─────────────────────┘       │
+│                                 │
+│   ┌─────────────────┐           │
+│   │  Next Puzzle    │           │  ← Button to continue
+│   └─────────────────┘           │
+│                                 │
+└─────────────────────────────────┘
+```
+
+**Implementation:**
+
+```swift
+VStack(spacing: 20) {
+    Text("Puzzle Complete!")
+        .font(.system(size: 28, weight: .bold))
+        .foregroundColor(.white)
+    
+    // Show completion time
+    HStack(spacing: 8) {
+        Image(systemName: "clock.fill")
+            .font(.system(size: 20))
+            .foregroundColor(.white.opacity(0.9))
+        
+        Text(formattedTime)
+            .font(.system(size: 24, weight: .semibold))
+            .foregroundColor(.white.opacity(0.9))
+            .monospacedDigit()
+    }
+    .padding(.horizontal, 24)
+    .padding(.vertical, 12)
+    .background(Color.white.opacity(0.2))
+    .cornerRadius(16)
+    
+    Button("Next Puzzle") {
+        gameState.newGame()
+        resetTimer()
+    }
+}
+```
+
+**Key Features:**
+- Displays final completion time from the timer
+- Semi-transparent white badge background
+- Clock icon for visual clarity
+- Monospaced digits for professional appearance
+- Automatically resets timer when "Next Puzzle" is pressed
+
+---
+
+### Timer System
+
+**Purpose**: Track elapsed time for each puzzle attempt with millisecond precision for competitive speedrunning.
+
+**Key Features:**
+- Starts automatically when puzzle loads
+- Stops when puzzle is completed
+- **Timer Penalties & Resets:**
+  - **Undo button**: Adds +3 seconds penalty (encourages careful play)
+  - **Reset button**: Timer CONTINUES (penalty for resetting puzzle state)
+  - **New button**: Resets timer (fresh puzzle, fresh time)
+  - **Next Puzzle button**: Resets timer (fresh puzzle after winning)
+- **Display format**: `M:SS.CS` or `MM:SS.CS` (e.g., "0:05.23", "12:34.56")
+  - **M/MM**: Minutes
+  - **SS**: Seconds (2 digits)
+  - **CS**: Centiseconds (2 digits, 1/100th of a second)
+- Uses monospaced digits for stable display
+- **Millisecond precision** for competitive leaderboards
+
+**Implementation:**
+
+```swift
+@State private var elapsedTime: TimeInterval = 0  // Total time in seconds (with milliseconds)
+@State private var timerActive: Bool = true
+@State private var lastUpdateTime: Date?  // Track last update time
+
+private let gameTimer = Timer.publish(every: 0.01, on: .main, in: .common).autoconnect()  // Update every 10ms
+
+var formattedTime: String {
+    let totalMilliseconds = Int(elapsedTime * 1000)
+    let minutes = totalMilliseconds / 60000
+    let seconds = (totalMilliseconds % 60000) / 1000
+    let milliseconds = (totalMilliseconds % 1000) / 10  // Show centiseconds (2 digits)
+    return String(format: "%d:%02d.%02d", minutes, seconds, milliseconds)
+}
+
+// Timer updates with millisecond precision
+.onReceive(gameTimer) { currentTime in
+    if timerActive && !gameState.allNumbersConnected {
+        if let lastTime = lastUpdateTime {
+            let delta = currentTime.timeIntervalSince(lastTime)
+            elapsedTime += delta
+        }
+        lastUpdateTime = currentTime
+    }
+}
+
+// Reset timer (only for New Puzzle and Next Puzzle)
+private func resetTimer() {
+    elapsedTime = 0
+    timerActive = true
+    lastUpdateTime = Date()
+}
+
+// Add time penalty (for Undo button)
+private func addTimePenalty() {
+    elapsedTime += 3.0  // Add 3 seconds penalty
+}
+
+// Stop timer on completion
+.onChange(of: gameState.allNumbersConnected) { _, newValue in
+    if newValue {
+        timerActive = false
+        lastUpdateTime = nil
+    }
+}
+```
+
+**Button Behaviors:**
+
+| Button | Action | Timer Behavior | Rationale |
+|--------|--------|----------------|-----------|
+| **Undo** | Remove last checkpoint | +3 seconds penalty | Discourages excessive undo usage |
+| **Reset** | Clear path, keep puzzle | Timer continues | Penalty for giving up current attempt |
+| **New** | Generate new puzzle | Reset to 0:00.00 | Fresh puzzle = fresh time |
+| **Next Puzzle** | New puzzle after win | Reset to 0:00.00 | Fresh puzzle = fresh time |
+
+**Visual Display:**
+
+```swift
+// Header Layout: Back button - Difficulty - Timer
+HStack(spacing: 16) {
+    // Back button (left)
+    Button(action: onBack) {
+        Image(systemName: "chevron.left")
+            .font(.system(size: 16, weight: .semibold))
+            .foregroundColor(.primary)
+            .padding(.horizontal, 16)
+            .padding(.vertical, 10)
+            .background(Color(uiColor: .systemBackground))
+            .cornerRadius(20)
+            .shadow(color: .black.opacity(0.08), radius: 4, x: 0, y: 2)
+    }
+    
+    // Difficulty label (center-left)
+    Text(difficulty.displayName)
+        .font(.system(size: 14, weight: .medium))
+        .foregroundColor(.secondary)
+    
+    Spacer()
+    
+    // Timer display (right)
+    HStack(spacing: 6) {
+        Image(systemName: "clock")
+            .font(.system(size: 14, weight: .medium))
+            .foregroundColor(.secondary)
+        
+        Text(formattedTime)  // e.g., "1:23.45"
+            .font(.system(size: 14, weight: .medium))
+            .foregroundColor(.secondary)
+            .monospacedDigit()  // Prevents layout shift
+    }
+}
+.padding(.horizontal, 16)
+```
+
+**Timer Display Examples:**
+- `0:05.23` - 5 seconds and 23 centiseconds
+- `1:30.45` - 1 minute, 30 seconds, and 45 centiseconds
+- `12:34.99` - 12 minutes, 34 seconds, and 99 centiseconds
 
 ---
 
@@ -716,5 +907,24 @@ When working with this codebase, remember:
 ---
 
 **Last Updated**: 2026-04-19  
-**Version**: 1.0  
+**Version**: 2.1  
+**Changelog**:
+- v2.1 (2026-04-19): Updated timer penalty system
+  - **Undo button**: Now adds +3 seconds time penalty
+  - **Reset button**: Timer no longer resets (continues as penalty)
+  - Only "New" and "Next Puzzle" buttons reset timer
+  - Encourages strategic play and reduces undo spam
+- v2.0 (2026-04-19): Major update with new difficulty levels
+  - Added **Very Hard** (8×8 grid, 15 numbers)
+  - Added **Expert** (9×9 grid, 17 numbers)
+  - Renamed file from AGEINT.md to AGENT.md (standard AI documentation naming)
+  - Updated backtracking logic to include new difficulties
+- v1.1 (2026-04-19): Added millisecond precision timer for competitive speedrunning
+  - Timer now displays format `M:SS.CS` (e.g., "1:23.45")
+  - Update frequency: 10ms for accurate timing
+  - Moved Back button to header (left of difficulty label)
+  - Timer moved to header (right side)
+- v1.0 (2026-04-19): Initial documentation
+
 **Maintained by**: AI Assistant + Development Team
+
