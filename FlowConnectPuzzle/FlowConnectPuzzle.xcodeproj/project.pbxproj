@@ -22,7 +22,14 @@
 		DA85ACB52F9356A60088A534 /* GameState.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA85ACA62F9356A60088A534 /* GameState.swift */; };
 		DA85ACBE2F93845D0088A534 /* Difficulty.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA85ACBD2F93845D0088A534 /* Difficulty.swift */; };
 		DA85ACC02F9384730088A534 /* PuzzleGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA85ACBF2F9384730088A534 /* PuzzleGenerator.swift */; };
-		DADDDEA22F93F0D400D51A57 /* AGEINT.md in Resources */ = {isa = PBXBuildFile; fileRef = DADDDEA12F93F0D300D51A57 /* AGEINT.md */; };
+		DAA6DC242F9D44DD00062038 /* StatisticsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAA6DC232F9D44DD00062038 /* StatisticsManager.swift */; };
+		DAA6DC262F9D44F600062038 /* AchievementManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAA6DC252F9D44F600062038 /* AchievementManager.swift */; };
+		DAA6DC282F9D450900062038 /* GameTheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAA6DC272F9D450900062038 /* GameTheme.swift */; };
+		DAA6DC2A2F9D451A00062038 /* DailyChallenge.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAA6DC292F9D451A00062038 /* DailyChallenge.swift */; };
+		DAA6DC2C2F9D452E00062038 /* AchievementBannerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAA6DC2B2F9D452E00062038 /* AchievementBannerView.swift */; };
+		DAA6DC2E2F9D454600062038 /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAA6DC2D2F9D454600062038 /* OnboardingView.swift */; };
+		DAA6DC302F9D455C00062038 /* StatisticsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAA6DC2F2F9D455C00062038 /* StatisticsView.swift */; };
+		DADDDEA22F93F0D400D51A57 /* AGENT.md in Resources */ = {isa = PBXBuildFile; fileRef = DADDDEA12F93F0D300D51A57 /* AGENT.md */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -63,7 +70,14 @@
 		DA85ACAD2F9356A60088A534 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		DA85ACBD2F93845D0088A534 /* Difficulty.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Difficulty.swift; sourceTree = "<group>"; };
 		DA85ACBF2F9384730088A534 /* PuzzleGenerator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PuzzleGenerator.swift; sourceTree = "<group>"; };
-		DADDDEA12F93F0D300D51A57 /* AGEINT.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = AGEINT.md; sourceTree = "<group>"; };
+		DAA6DC232F9D44DD00062038 /* StatisticsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatisticsManager.swift; sourceTree = "<group>"; };
+		DAA6DC252F9D44F600062038 /* AchievementManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AchievementManager.swift; sourceTree = "<group>"; };
+		DAA6DC272F9D450900062038 /* GameTheme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameTheme.swift; sourceTree = "<group>"; };
+		DAA6DC292F9D451A00062038 /* DailyChallenge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DailyChallenge.swift; sourceTree = "<group>"; };
+		DAA6DC2B2F9D452E00062038 /* AchievementBannerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AchievementBannerView.swift; sourceTree = "<group>"; };
+		DAA6DC2D2F9D454600062038 /* OnboardingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingView.swift; sourceTree = "<group>"; };
+		DAA6DC2F2F9D455C00062038 /* StatisticsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatisticsView.swift; sourceTree = "<group>"; };
+		DADDDEA12F93F0D300D51A57 /* AGENT.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = AGENT.md; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -150,7 +164,7 @@
 			children = (
 				DA85AC942F9356580088A534 /* FlowConnectPuzzleApp.swift */,
 				DA85AC922F9356580088A534 /* ContentView.swift */,
-				DADDDEA12F93F0D300D51A57 /* AGEINT.md */,
+				DADDDEA12F93F0D300D51A57 /* AGENT.md */,
 			);
 			path = App;
 			sourceTree = "<group>";
@@ -160,6 +174,8 @@
 			children = (
 				DA85ACA72F9356A60088A534 /* GridCell.swift */,
 				DA85ACBD2F93845D0088A534 /* Difficulty.swift */,
+				DAA6DC272F9D450900062038 /* GameTheme.swift */,
+				DAA6DC292F9D451A00062038 /* DailyChallenge.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -184,6 +200,9 @@
 			isa = PBXGroup;
 			children = (
 				DA85ACAB2F9356A60088A534 /* PuzzleGameView.swift */,
+				DAA6DC2B2F9D452E00062038 /* AchievementBannerView.swift */,
+				DAA6DC2D2F9D454600062038 /* OnboardingView.swift */,
+				DAA6DC2F2F9D455C00062038 /* StatisticsView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -194,6 +213,8 @@
 				DA85ACA82F9356A60088A534 /* HapticManager.swift */,
 				DA85ACAC2F9356A60088A534 /* PuzzleSolver.swift */,
 				DA85ACBF2F9384730088A534 /* PuzzleGenerator.swift */,
+				DAA6DC232F9D44DD00062038 /* StatisticsManager.swift */,
+				DAA6DC252F9D44F600062038 /* AchievementManager.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -310,7 +331,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				DA85ACAE2F9356A60088A534 /* README.md in Resources */,
-				DADDDEA22F93F0D400D51A57 /* AGEINT.md in Resources */,
+				DADDDEA22F93F0D400D51A57 /* AGENT.md in Resources */,
 				DA85AC982F9356580088A534 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -339,13 +360,20 @@
 				DA85AC9A2F9356580088A534 /* ContentView.swift in Sources */,
 				DA85AC9B2F9356580088A534 /* FlowConnectPuzzleApp.swift in Sources */,
 				DA85AC9C2F9356580088A534 /* Item.swift in Sources */,
+				DAA6DC242F9D44DD00062038 /* StatisticsManager.swift in Sources */,
 				DA85ACC02F9384730088A534 /* PuzzleGenerator.swift in Sources */,
 				DA85ACB02F9356A60088A534 /* PuzzleGameView.swift in Sources */,
+				DAA6DC282F9D450900062038 /* GameTheme.swift in Sources */,
 				DA85ACB12F9356A60088A534 /* HapticManager.swift in Sources */,
 				DA85ACBE2F93845D0088A534 /* Difficulty.swift in Sources */,
 				DA85ACB22F9356A60088A534 /* GridCell.swift in Sources */,
 				DA85ACB32F9356A60088A534 /* PuzzleSolver.swift in Sources */,
+				DAA6DC2C2F9D452E00062038 /* AchievementBannerView.swift in Sources */,
 				DA85ACB52F9356A60088A534 /* GameState.swift in Sources */,
+				DAA6DC302F9D455C00062038 /* StatisticsView.swift in Sources */,
+				DAA6DC2E2F9D454600062038 /* OnboardingView.swift in Sources */,
+				DAA6DC262F9D44F600062038 /* AchievementManager.swift in Sources */,
+				DAA6DC2A2F9D451A00062038 /* DailyChallenge.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

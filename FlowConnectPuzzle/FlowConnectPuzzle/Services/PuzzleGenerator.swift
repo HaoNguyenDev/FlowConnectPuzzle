@@ -13,6 +13,24 @@ struct PuzzleConfiguration {
     let numberPositions: [Int: GridPosition]
 }
 
+/// Xorshift64 seeded random number generator (deterministic, fast).
+private struct SeededRNG: RandomNumberGenerator {
+    private var state: UInt64
+
+    init(seed: UInt64) {
+        // Non-zero initial state required for xorshift.
+        state = seed == 0 ? 0xcafef00dd15ea5e5 : seed
+        _ = next()  // warm up
+    }
+
+    mutating func next() -> UInt64 {
+        state ^= state << 13
+        state ^= state >> 7
+        state ^= state << 17
+        return state
+    }
+}
+
 /// Generates solvable puzzles with deceptive number placement.
 ///
 /// # Strategy Overview
@@ -113,88 +131,90 @@ struct PuzzleConfiguration {
 ///
 /// Players must navigate long winding paths across the grid. The next number
 /// always appears FAR away, making mistakes easy and planning essential!
-/// └──────────┴───────┴──────────┴────────────┴──────────────────────────┘
-/// ```
-///
-/// **Extreme Distance Strategy:** Consecutive numbers are placed at MAXIMUM
-/// distance from each other. Minimum distances by level:
-///   - **Easy (5×5)**: min 2 cells, typically 4-6 cells apart
-///   - **Medium (6×6)**: min 3 cells, typically 5-8 cells apart
-///   - **Hard (7×7)**: min 3 cells, typically 6-12 cells apart
-///
-/// Players must navigate long winding paths across the grid. The next number
-/// always appears FAR away, making mistakes easy and planning essential!
 enum PuzzleGenerator {
-    
-    /// Generate a puzzle for the given difficulty with random number placements.
+
+    /// Generate a random puzzle for the given difficulty.
     static func generate(for difficulty: Difficulty) -> PuzzleConfiguration {
-        let gridSize = difficulty.gridSize
-        let maxNumber = difficulty.numberCount
-        
-        let path = generateHamiltonianPath(gridSize: gridSize)
-        let numberPositions = placeNumbers(along: path, maxNumber: maxNumber)
-        
-        return PuzzleConfiguration(
-            gridSize: gridSize,
-            maxNumber: maxNumber,
-            numberPositions: numberPositions
-        )
+        var rng = SystemRandomNumberGenerator()
+        return generate(for: difficulty, rng: &rng)
     }
-    
+
+    /// Generate a deterministic puzzle using the provided seed (used for Daily Challenge).
+    static func generate(for difficulty: Difficulty, seed: UInt64) -> PuzzleConfiguration {
+        var rng = SeededRNG(seed: seed)
+        return generate(for: difficulty, rng: &rng)
+    }
+
+    // MARK: - Core Generation (generic over RNG)
+
+    private static func generate<R: RandomNumberGenerator>(
+        for difficulty: Difficulty,
+        rng: inout R
+    ) -> PuzzleConfiguration {
+        let gridSize  = difficulty.gridSize
+        let maxNumber = difficulty.numberCount
+        let path = generateHamiltonianPath(gridSize: gridSize, rng: &rng)
+        let numberPositions = placeNumbers(along: path, maxNumber: maxNumber, rng: &rng)
+        return PuzzleConfiguration(gridSize: gridSize, maxNumber: maxNumber, numberPositions: numberPositions)
+    }
+
     // MARK: - Hamiltonian Path Generation (Warnsdorff's Algorithm)
-    
+
     /// Generate a Hamiltonian path visiting every cell exactly once.
     ///
     /// Uses randomized Warnsdorff's heuristic: from the current cell, move to
     /// the unvisited neighbor with the fewest unvisited neighbors of its own.
     /// Ties are broken randomly for puzzle variety.
-    private static func generateHamiltonianPath(gridSize: Int) -> [GridPosition] {
+    private static func generateHamiltonianPath<R: RandomNumberGenerator>(
+        gridSize: Int,
+        rng: inout R
+    ) -> [GridPosition] {
         let totalCells = gridSize * gridSize
-        
+
         for _ in 0..<100 {
             let start = GridPosition(
-                row: Int.random(in: 0..<gridSize),
-                col: Int.random(in: 0..<gridSize)
+                row: Int.random(in: 0..<gridSize, using: &rng),
+                col: Int.random(in: 0..<gridSize, using: &rng)
             )
-            
+
             var visited = Set<GridPosition>()
             var path: [GridPosition] = []
-            
+
             visited.insert(start)
             path.append(start)
-            
+
             while path.count < totalCells {
                 guard let current = path.last else { break }
-                
+
                 let neighbors = unvisitedNeighbors(
                     of: current, gridSize: gridSize, visited: visited
                 )
-                
+
                 if neighbors.isEmpty { break }
-                
+
                 // Warnsdorff: pick neighbor with fewest onward moves, break ties randomly
                 let minDegree = neighbors.map {
                     unvisitedNeighbors(of: $0, gridSize: gridSize, visited: visited).count
                 }.min()!
-                
+
                 let best = neighbors.filter {
                     unvisitedNeighbors(of: $0, gridSize: gridSize, visited: visited).count == minDegree
                 }
-                
-                let next = best.randomElement()!
+
+                let next = best.randomElement(using: &rng)!
                 visited.insert(next)
                 path.append(next)
             }
-            
+
             if path.count == totalCells {
                 return path
             }
         }
-        
+
         // Fallback: deterministic snake/zigzag pattern (always valid)
         return snakePath(gridSize: gridSize)
     }
-    
+
     private static func snakePath(gridSize: Int) -> [GridPosition] {
         var path: [GridPosition] = []
         for row in 0..<gridSize {
@@ -207,7 +227,7 @@ enum PuzzleGenerator {
         }
         return path
     }
-    
+
     private static func unvisitedNeighbors(
         of position: GridPosition,
         gridSize: Int,
@@ -222,9 +242,9 @@ enum PuzzleGenerator {
             return visited.contains(neighbor) ? nil : neighbor
         }
     }
-    
+
     // MARK: - Number Placement
-    
+
     /// Place numbers strategically along the Hamiltonian path:
     ///
     /// 1. **Divide path into segments** — spread numbers evenly along the path
@@ -234,124 +254,115 @@ enum PuzzleGenerator {
     /// **Strategy:** Place consecutive numbers as far apart as possible on the grid
     /// to maximize difficulty. Players will struggle to find the correct path because
     /// the next number appears on the opposite side of the grid.
-    private static func placeNumbers(
+    private static func placeNumbers<R: RandomNumberGenerator>(
         along path: [GridPosition],
-        maxNumber: Int
+        maxNumber: Int,
+        rng: inout R
     ) -> [Int: GridPosition] {
         let totalCells = path.count
-        
+
         // Determine segment boundaries - divide path into roughly equal parts
         let segmentSize = Double(totalCells) / Double(maxNumber)
         var segments: [ClosedRange<Int>] = []
-        
+
         for number in 1...maxNumber {
             let floatStart = Double(number - 1) * segmentSize
-            let floatEnd = Double(number) * segmentSize
-            
+            let floatEnd   = Double(number) * segmentSize
+
             let start = Int(floatStart)
-            let end = number == maxNumber ? totalCells - 1 : min(Int(floatEnd) - 1, totalCells - 1)
-            
+            let end   = number == maxNumber ? totalCells - 1 : min(Int(floatEnd) - 1, totalCells - 1)
+
             // Add some padding to allow flexibility in placement
             let paddedStart = max(0, start - Int(segmentSize * 0.2))
-            let paddedEnd = min(totalCells - 1, end + Int(segmentSize * 0.2))
-            
+            let paddedEnd   = min(totalCells - 1, end + Int(segmentSize * 0.2))
+
             segments.append(paddedStart...paddedEnd)
         }
-        
+
         // --- Pass 1: Place first number randomly in its segment ---
         var chosenIndices: [Int] = []
-        chosenIndices.append(segments[0].randomElement()!)
-        
+        chosenIndices.append(segments[0].randomElement(using: &rng)!)
+
         // --- Pass 2: MAXIMIZE spatial distance between consecutive numbers ---
-        // Calculate minimum required distance based on grid size
         let gridSize = Int(sqrt(Double(totalCells)))
         let minConsecutiveDistance = max(2, gridSize / 2)
-        
+
         for i in 1..<maxNumber {
             let prevPos = path[chosenIndices[i - 1]]
             var bestIdx = segments[i].lowerBound
             var bestDist = -1
-            
+
             // First try: Find position that meets MINIMUM distance requirement
             for idx in segments[i] {
-                let pos = path[idx]
+                let pos  = path[idx]
                 let dist = manhattan(prevPos, pos)
-                
-                // STRICT RULE: Must be at least minConsecutiveDistance apart
+
                 if dist < minConsecutiveDistance { continue }
-                
-                if dist > bestDist || (dist == bestDist && Bool.random()) {
+
+                if dist > bestDist || (dist == bestDist && Bool.random(using: &rng)) {
                     bestDist = dist
-                    bestIdx = idx
+                    bestIdx  = idx
                 }
             }
-            
+
             // Second try: If no position meets minimum, ensure at least non-adjacent (dist > 1)
             if bestDist == -1 {
                 for idx in segments[i] {
-                    let pos = path[idx]
+                    let pos  = path[idx]
                     let dist = manhattan(prevPos, pos)
-                    
-                    // Still enforce non-adjacency
+
                     if dist <= 1 { continue }
-                    
-                    if dist > bestDist || (dist == bestDist && Bool.random()) {
+
+                    if dist > bestDist || (dist == bestDist && Bool.random(using: &rng)) {
                         bestDist = dist
-                        bestIdx = idx
+                        bestIdx  = idx
                     }
                 }
             }
-            
+
             // Last resort: just pick the farthest in segment
             if bestDist == -1 {
                 for idx in segments[i] {
-                    let pos = path[idx]
+                    let pos  = path[idx]
                     let dist = manhattan(prevPos, pos)
-                    if dist > bestDist || (dist == bestDist && Bool.random()) {
+                    if dist > bestDist || (dist == bestDist && Bool.random(using: &rng)) {
                         bestDist = dist
-                        bestIdx = idx
+                        bestIdx  = idx
                     }
                 }
             }
-            
+
             chosenIndices.append(bestIdx)
         }
-        
+
         // --- Pass 3: Aggressive optimization for MAXIMUM consecutive spread ---
-        // Focus ONLY on maximizing distance between consecutive numbers
-        // Run multiple iterations for better optimization
         for _ in 0..<3 {
             for i in 0..<maxNumber {
                 let currentSpread = consecutiveSpread(chosenIndices, path: path)
-                
-                var bestIdx = chosenIndices[i]
+
+                var bestIdx    = chosenIndices[i]
                 var bestSpread = currentSpread
-                
-                // Try up to 15 alternative positions (more attempts = better spread)
-                let candidates = Array(segments[i]).shuffled().prefix(15)
+
+                let candidates = Array(segments[i]).shuffled(using: &rng).prefix(15)
                 for candidateIdx in candidates {
-                    var trial = chosenIndices
-                    trial[i] = candidateIdx
-                    
-                    // Validate minimum distance constraint still holds
+                    var trial    = chosenIndices
+                    trial[i]     = candidateIdx
+
                     if !meetsMinimumDistanceConstraint(trial, path: path, minDist: minConsecutiveDistance) {
                         continue
                     }
-                    
+
                     let spread = consecutiveSpread(trial, path: path)
-                    
-                    // ONLY maximize spread - ignore confusion optimization
-                    // This makes consecutive numbers as far apart as possible
                     if spread > bestSpread {
                         bestSpread = spread
-                        bestIdx = candidateIdx
+                        bestIdx    = candidateIdx
                     }
                 }
-                
+
                 chosenIndices[i] = bestIdx
             }
         }
-        
+
         // Build final number → position mapping
         var positions: [Int: GridPosition] = [:]
         for i in 0..<maxNumber {
@@ -359,63 +370,34 @@ enum PuzzleGenerator {
         }
         return positions
     }
-    
+
     // MARK: - Optimization Helpers
-    
+
     /// Validates that all consecutive numbers meet minimum distance requirement.
-    /// Returns true if all consecutive pairs are separated by at least minDist.
     private static func meetsMinimumDistanceConstraint(
         _ indices: [Int],
         path: [GridPosition],
         minDist: Int
     ) -> Bool {
         for i in 1..<indices.count {
-            let dist = manhattan(path[indices[i - 1]], path[indices[i]])
-            if dist < minDist {
-                return false  // Consecutive numbers too close!
+            if manhattan(path[indices[i - 1]], path[indices[i]]) < minDist {
+                return false
             }
         }
         return true
     }
-    
+
     /// Sum of Manhattan distances between consecutive number pairs.
-    /// Higher = more spatial spread = harder to navigate visually.
-    private static func consecutiveSpread(
-        _ indices: [Int],
-        path: [GridPosition]
-    ) -> Int {
+    private static func consecutiveSpread(_ indices: [Int], path: [GridPosition]) -> Int {
         var total = 0
         for i in 1..<indices.count {
             total += manhattan(path[indices[i - 1]], path[indices[i]])
         }
         return total
     }
-    
-    /// Rewards placing non-consecutive numbers close together on the grid.
-    /// Creates "wrong number" visual traps.
-    private static func nonConsecutiveCloseness(
-        _ indices: [Int],
-        path: [GridPosition]
-    ) -> Int {
-        guard indices.count >= 3 else { return 0 }
-        var total = 0
-        
-        // Check pairs that are NOT consecutive (e.g., 3 and 7)
-        for i in 0..<(indices.count - 2) {
-            for j in (i + 2)..<indices.count {
-                let dist = manhattan(path[indices[i]], path[indices[j]])
-                // Reward if they're within 3 cells of each other
-                if dist <= 3 {
-                    total += (4 - dist) * 3  // Higher weight for closer pairs
-                }
-            }
-        }
-        return total
-    }
-    
+
     /// Manhattan distance between two grid positions.
     private static func manhattan(_ a: GridPosition, _ b: GridPosition) -> Int {
         abs(a.row - b.row) + abs(a.col - b.col)
     }
-    
 }
