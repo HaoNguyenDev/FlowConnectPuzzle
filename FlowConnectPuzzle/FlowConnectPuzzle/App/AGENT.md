@@ -316,9 +316,22 @@ struct GameTheme: Identifiable, Equatable {
 @Observable
 class ThemeManager {
     static let shared = ThemeManager()
-    var current: GameTheme  // Persisted in UserDefaults under key "selected_theme_id"
+
+    // IMPORTANT: stored property + didSet — NOT a computed property.
+    // @Observable only tracks stored properties; computed properties do NOT
+    // trigger SwiftUI re-renders when changed.
+    var current: GameTheme {
+        didSet { UserDefaults.standard.set(current.id, forKey: "selected_theme_id") }
+    }
+
+    private init() {
+        let savedId = UserDefaults.standard.string(forKey: "selected_theme_id") ?? "ocean"
+        current = GameTheme.all.first { $0.id == savedId } ?? .ocean
+    }
 }
 ```
+
+**Critical rule**: `current` MUST remain a **stored property** with `didSet`. Using a computed property (custom getter/setter) breaks `@Observable` tracking — the UI will not update when the theme changes.
 
 **Usage in views**: Always read `ThemeManager.shared.current` — never hardcode `.blue` for game colors.
 
@@ -362,22 +375,28 @@ VStack {
     ├─ Difficulty name or "Daily Challenge" label (with calendar icon) (center-left)
     └─ Timer (right) — Clock icon + elapsed time (MM:SS.CS format)
 
-    Puzzle Grid (DragGesture)
+    Puzzle Grid (DragGesture — blocked until gameStarted = true)
     │
     ├─ ForEach row/col
     │   └─ Rectangle cell (theme-colored background)
     │
     ├─ Canvas overlay (path lines, theme-colored)
     │
-    └─ Number badges overlay
-        ├─ Black circle with white number
-        └─ Hint: LED comet ring + breathing glow (accent color)
+    ├─ Number badges overlay
+    │   ├─ Black circle with white number
+    │   └─ Hint: LED comet ring + breathing glow (accent color)
+    │
+    └─ Start Overlay (shown when gameStarted = false)
+        ├─ .ultraThinMaterial blur (covers grid — hides numbers/path)
+        ├─ Difficulty icon + name + grid description
+        ├─ "Time so far: X:XX.XX" (only shown after Reset, as penalty reminder)
+        └─ "Start" / "Resume" button (play.fill icon)
 
     Action Buttons Row
-    ├─ Undo (adds +3 second time penalty) — disabled when path is empty
-    ├─ Reset (replay same puzzle, timer continues)
-    ├─ Hint (breathing glow on next number)
-    └─ New (regenerate + reset timer) — HIDDEN during daily mode
+    ├─ Undo (adds +3 second time penalty) — disabled until game started
+    ├─ Reset (shows start overlay again, timer pauses — elapsed time kept as penalty)
+    ├─ Hint (breathing glow on next number) — disabled until game started
+    └─ New (regenerate + reset timer + show start overlay) — HIDDEN during daily mode
 
     Achievement Banner (top overlay, auto-dismisses after 4 seconds)
 
@@ -393,16 +412,23 @@ VStack {
 
 ## ⏱️ Timer System
 
-- Starts automatically when puzzle loads
+- **Does NOT start automatically** — timer only begins after user taps the **Start** button on the blur overlay
 - Stops when `allNumbersConnected` becomes `true`
+- **State variable**: `gameStarted: Bool` — controls both the blur overlay visibility and timer ticking
 - **Penalties & Resets:**
 
-| Button | Timer Behavior | Rationale |
-|--------|---------------|-----------|
-| **Undo** | +3 seconds penalty | Discourages excessive undo |
-| **Reset** | Timer continues | Penalty for resetting |
-| **New** | Reset to 0:00.00 | Fresh puzzle = fresh time |
-| **Next Puzzle** | Reset to 0:00.00 | Fresh puzzle after win |
+| Button | Overlay | Timer Behavior | Rationale |
+|--------|---------|---------------|-----------|
+| **Start** | Dismissed | Begins counting | User-controlled start |
+| **Undo** | — | +3 seconds penalty | Discourages excessive undo |
+| **Reset** | Shown again | Pauses (elapsed time kept) | Penalty stays; user must re-tap Start |
+| **New** | Shown again | Reset to 0:00.00 | Fresh puzzle = fresh time |
+| **Next Puzzle** | Shown again | Reset to 0:00.00 | Fresh puzzle after win |
+
+**Timer functions:**
+- `startGame()` — sets `gameStarted = true`, starts timer from `lastUpdateTime = Date()`
+- `resetTimer()` — resets `elapsedTime = 0`, sets `gameStarted = false` (for New/Next Puzzle)
+- `pauseTimer()` — keeps `elapsedTime`, sets `gameStarted = false` (for Reset)
 
 - **Display format**: `M:SS.CS` (e.g., `1:23.45` = 1 min 23.45 sec)
 - Update frequency: every 10ms for centisecond precision
@@ -599,12 +625,22 @@ When working with this codebase, remember:
 - [ ] Adjacency: only 4-directional (no diagonal)
 - [ ] Seeded generation: pass `seed: UInt64` to `PuzzleGenerator.generate(for:seed:)`
 - [ ] Daily mode hides "New Puzzle" button and shows "Back to Menu" on completion
+- [ ] `gameStarted = false` on initial load, Reset, New, Next Puzzle — timer only ticks when `gameStarted = true`
+- [ ] `ThemeManager.current` MUST be a stored property — computed property breaks `@Observable` reactivity
 
 ---
 
 **Last Updated**: 2026-04-26
-**Version**: 3.0
+**Version**: 3.1
 **Changelog**:
+- v3.1 (2026-04-26): Start overlay + ThemeManager fix
+  - Added **Start Overlay** in `PuzzleGameView` — `.ultraThinMaterial` blur covers grid until user taps Start
+  - Timer now starts ONLY when user taps Start (not on view appear)
+  - Reset shows overlay again, pausing timer while keeping elapsed time (penalty preserved)
+  - New/Next Puzzle shows overlay and resets timer to 0
+  - Added `startGame()`, `pauseTimer()` functions; `resetTimer()` no longer auto-starts
+  - Fixed **ThemeManager** — `current` converted from computed property to stored property + `didSet` to fix `@Observable` reactivity (theme changes now update UI immediately)
+  - Added 4 named `#Preview` variants for `PuzzleGameView`
 - v3.0 (2026-04-26): Major feature expansion
   - Added **Statistics System** (`StatisticsManager`) — best times, solve counts per difficulty
   - Added **Achievement System** (`AchievementManager`) — 10 unlockable achievements
@@ -623,3 +659,4 @@ When working with this codebase, remember:
 - v1.0 (2026-04-19): Initial documentation
 
 **Maintained by**: AI Assistant + Development Team
+
