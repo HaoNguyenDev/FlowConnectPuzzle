@@ -9,12 +9,13 @@ import SwiftUI
 struct StreakCalendarView: View {
     @State private var streak = StreakManager.shared
     @State private var themeManager = ThemeManager.shared
+    @State private var lm = LocalizationManager.shared
 
     private let weeksToShow = 13
 
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
-            Text("Daily Activity — Last 3 Months")
+            Text(lm.t("calendar.header"))
                 .font(.system(size: 12, weight: .semibold))
                 .foregroundColor(.secondary)
 
@@ -48,7 +49,7 @@ struct StreakCalendarView: View {
             // Legend
             HStack(spacing: 6) {
                 Spacer()
-                Text("Less")
+                Text(lm.t("calendar.less"))
                     .font(.system(size: 10))
                     .foregroundColor(.secondary)
                 ForEach([0.0, 0.3, 0.6, 1.0], id: \.self) { opacity in
@@ -58,7 +59,7 @@ struct StreakCalendarView: View {
                             : themeManager.current.pathColor.opacity(opacity))
                         .frame(width: 10, height: 10)
                 }
-                Text("More")
+                Text(lm.t("calendar.more"))
                     .font(.system(size: 10))
                     .foregroundColor(.secondary)
             }

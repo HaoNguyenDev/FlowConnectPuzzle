@@ -20,6 +20,7 @@ struct ContentView: View {
     @State private var notificationManager = NotificationManager.shared
     @State private var soundManager = SoundManager.shared
     @State private var showChallengeFriend = false
+    @State private var lm = LocalizationManager.shared
 
     var body: some View {
         Group {
@@ -89,7 +90,7 @@ struct ContentView: View {
 
                     // Difficulty list
                     VStack(spacing: 0) {
-                        Text("Select Difficulty")
+                        Text(lm.t("game.select_difficulty"))
                             .font(.system(size: 13, weight: .semibold))
                             .foregroundColor(.secondary)
                             .frame(maxWidth: .infinity, alignment: .leading)
@@ -106,7 +107,7 @@ struct ContentView: View {
 
                     // Other Modes
                     VStack(spacing: 0) {
-                        Text("Other Modes")
+                        Text(lm.t("menu.other_modes"))
                             .font(.system(size: 13, weight: .semibold))
                             .foregroundColor(.secondary)
                             .frame(maxWidth: .infinity, alignment: .leading)
@@ -118,8 +119,8 @@ struct ContentView: View {
                             Button { showTimeTrial = true } label: {
                                 modeCard(
                                     icon: "timer",
-                                    title: "Time Trial",
-                                    subtitle: "Solve as many puzzles as you can in 3 minutes",
+                                    title: lm.t("timetrial.title"),
+                                    subtitle: lm.t("menu.time_trial_subtitle"),
                                     color: .orange
                                 )
                             }
@@ -128,13 +129,13 @@ struct ContentView: View {
                             // Zen Mode
                             Menu {
                                 ForEach(Difficulty.allCases) { d in
-                                    Button(d.displayName) { selectedMode = .zen(d) }
+                                    Button(lm.difficultyName(d)) { selectedMode = .zen(d) }
                                 }
                             } label: {
                                 modeCard(
                                     icon: "leaf.fill",
-                                    title: "Zen Mode",
-                                    subtitle: "No timer, no penalty — just pure solving",
+                                    title: lm.t("menu.zen_mode"),
+                                    subtitle: lm.t("menu.zen_subtitle"),
                                     color: .green
                                 )
                             }
@@ -178,11 +179,11 @@ struct ContentView: View {
 
                 VStack(alignment: .leading, spacing: 3) {
                     HStack(spacing: 6) {
-                        Text("Daily Challenge")
+                        Text(lm.t("game.daily_challenge"))
                             .font(.system(size: 17, weight: .bold))
                             .foregroundColor(.primary)
                         if completed {
-                            Text("Done")
+                            Text(lm.t("menu.done_badge"))
                                 .font(.system(size: 11, weight: .semibold))
                                 .foregroundColor(.white)
                                 .padding(.horizontal, 7)
@@ -201,7 +202,7 @@ struct ContentView: View {
                         HStack(spacing: 3) {
                             Text("🔥")
                                 .font(.system(size: 11))
-                            Text("\(streakManager.currentStreak) day streak")
+                            Text(String(format: lm.t("menu.day_streak"), streakManager.currentStreak))
                                 .font(.system(size: 11, weight: .semibold))
                                 .foregroundColor(.orange)
                         }
@@ -243,11 +244,11 @@ struct ContentView: View {
 
                 VStack(alignment: .leading, spacing: 3) {
                     HStack(spacing: 6) {
-                        Text("Weekly Challenge")
+                        Text(lm.t("game.weekly_challenge"))
                             .font(.system(size: 17, weight: .bold))
                             .foregroundColor(.primary)
                         if completed {
-                            Text("Done")
+                            Text(lm.t("menu.done_badge"))
                                 .font(.system(size: 11, weight: .semibold))
                                 .foregroundColor(.white)
                                 .padding(.horizontal, 7)
@@ -259,7 +260,7 @@ struct ContentView: View {
                     Text(WeeklyChallenge.formattedDateRange)
                         .font(.system(size: 13))
                         .foregroundColor(.secondary)
-                    Text("Expert · +200 XP bonus")
+                    Text(lm.t("menu.weekly_bonus"))
                         .font(.system(size: 12))
                         .foregroundColor(.purple)
                 }
@@ -293,7 +294,7 @@ struct ContentView: View {
                     .frame(width: 36)
 
                 VStack(alignment: .leading, spacing: 3) {
-                    Text(difficulty.displayName)
+                    Text(lm.difficultyName(difficulty))
                         .font(.system(size: 17, weight: .semibold))
                     Text(difficulty.description)
                         .font(.system(size: 13))
@@ -305,7 +306,7 @@ struct ContentView: View {
                 // Personal best time
                 if let best = stats.bestTime(for: difficulty) {
                     VStack(alignment: .trailing, spacing: 1) {
-                        Text("Best")
+                        Text(lm.t("menu.best"))
                             .font(.system(size: 10, weight: .medium))
                             .foregroundColor(.secondary)
                         Text(formatTime(best))
@@ -366,7 +367,7 @@ struct ContentView: View {
     private var settingsSheet: some View {
         NavigationView {
             List {
-                Section("Theme") {
+                Section(lm.t("settings.theme")) {
                     ForEach(GameTheme.all) { theme in
                         Button {
                             themeManager.current = theme
@@ -388,27 +389,48 @@ struct ContentView: View {
                     }
                 }
 
-                Section("Sound") {
-                    Toggle("Sound Effects", isOn: Binding(
+                Section(lm.t("settings.language")) {
+                    ForEach(AppLanguage.allCases) { lang in
+                        Button {
+                            lm.language = lang
+                        } label: {
+                            HStack(spacing: 12) {
+                                Text(lang.flagEmoji)
+                                    .font(.system(size: 20))
+                                Text(lang.displayName)
+                                    .foregroundColor(.primary)
+                                Spacer()
+                                if lm.language == lang {
+                                    Image(systemName: "checkmark")
+                                        .foregroundColor(.blue)
+                                        .fontWeight(.semibold)
+                                }
+                            }
+                        }
+                    }
+                }
+
+                Section(lm.t("settings.sound")) {
+                    Toggle(lm.t("settings.sound_effects"), isOn: Binding(
                         get: { soundManager.isEnabled },
                         set: { soundManager.isEnabled = $0 }
                     ))
                 }
 
-                Section("Social") {
+                Section(lm.t("settings.social")) {
                     Button {
                         showSettings = false
                         DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
                             showChallengeFriend = true
                         }
                     } label: {
-                        Label("Challenge a Friend", systemImage: "person.2.fill")
+                        Label(lm.t("settings.challenge_friend"), systemImage: "person.2.fill")
                     }
                     .foregroundColor(.blue)
                 }
 
-                Section("Notifications") {
-                    Toggle("Daily Reminders", isOn: Binding(
+                Section(lm.t("settings.notifications")) {
+                    Toggle(lm.t("settings.daily_reminders"), isOn: Binding(
                         get: { notificationManager.isEnabled },
                         set: { newValue in
                             if newValue {
@@ -419,14 +441,14 @@ struct ContentView: View {
                         }
                     ))
                     if notificationManager.isEnabled {
-                        Text("You'll receive reminders at 8:00 AM and 8:00 PM if today's challenge isn't done.")
+                        Text(lm.t("settings.reminder_notice"))
                             .font(.caption)
                             .foregroundColor(.secondary)
                     }
                 }
 
-                Section("Tutorial") {
-                    Button("Show Onboarding Again") {
+                Section(lm.t("settings.tutorial")) {
+                    Button(lm.t("settings.show_onboarding")) {
                         showSettings = false
                         DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
                             showOnboarding = true
@@ -435,11 +457,11 @@ struct ContentView: View {
                     .foregroundColor(.blue)
                 }
             }
-            .navigationTitle("Settings")
+            .navigationTitle(lm.t("settings.title"))
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
-                    Button("Done") { showSettings = false }
+                    Button(lm.t("settings.done")) { showSettings = false }
                 }
             }
         }

@@ -79,7 +79,19 @@ FlowConnectPuzzle/
 │   ├── NotificationManager.swift           # Local push notifications (8am + 8pm reminders)
 │   ├── ProgressionManager.swift            # XP + level system (10 levels, Novice → Champion)
 │   ├── SoundManager.swift                  # Sound effects via AudioToolbox
-│   └── GameCenterManager.swift             # Game Center auth + leaderboard submission
+│   ├── GameCenterManager.swift             # Game Center auth + leaderboard submission
+│   └── LocalizationManager.swift          # @Observable singleton, loads .strings files at runtime
+│
+├── Localizations
+│   ├── en.strings                          # English (required — fallback for all languages)
+│   ├── vi.strings                          # Tiếng Việt
+│   ├── es.strings                          # Español
+│   ├── fr.strings                          # Français
+│   ├── de.strings                          # Deutsch
+│   ├── ja.strings                          # 日本語
+│   ├── zh_Hans.strings                     # 简体中文
+│   ├── pt.strings                          # Português
+│   └── ko.strings                          # 한국어
 │
 ├── Views
 │   ├── PuzzleGameView.swift                # Main game UI — accepts GameMode, handles all modes
@@ -466,6 +478,83 @@ class AchievementManager {
 
 ---
 
+## 🌐 Localization System
+
+All user-visible strings are externalized into `.strings` files loaded at runtime by `LocalizationManager`. Language switches take effect **immediately** without restart.
+
+### Supported Languages
+
+| Code | Language | File |
+|------|----------|------|
+| `en` | English | `Localizations/en.strings` |
+| `vi` | Tiếng Việt | `Localizations/vi.strings` |
+| `es` | Español | `Localizations/es.strings` |
+| `fr` | Français | `Localizations/fr.strings` |
+| `de` | Deutsch | `Localizations/de.strings` |
+| `ja` | 日本語 | `Localizations/ja.strings` |
+| `zh-Hans` | 简体中文 | `Localizations/zh_Hans.strings` (hyphen → underscore) |
+| `pt` | Português | `Localizations/pt.strings` |
+| `ko` | 한국어 | `Localizations/ko.strings` |
+
+### LocalizationManager
+
+```swift
+@Observable
+class LocalizationManager {
+    static let shared = LocalizationManager()
+
+    var language: AppLanguage {
+        didSet {
+            UserDefaults.standard.set(language.rawValue, forKey: "selected_language")
+            loadStrings(for: language)   // triggers @Observable re-render in all views
+        }
+    }
+
+    func t(_ key: String) -> String          // primary lookup with English fallback
+    func difficultyName(_ difficulty: Difficulty) -> String  // "difficulty.{rawValue}"
+    func achievementTitle(_ id: String) -> String           // "achievement.{id}.title"
+    func achievementDesc(_ id: String) -> String            // "achievement.{id}.desc"
+    func streakText(_ count: Int) -> String  // handles singular/plural
+    func daysText(_ count: Int) -> String    // handles singular/plural
+}
+```
+
+**Fallback chain**: `currentLanguageStrings[key] ?? englishStrings[key] ?? key`
+
+English is always loaded first; other languages are merged on top, so any missing translation gracefully falls back to English rather than showing a raw key.
+
+**How to use in views:**
+```swift
+@State private var lm = LocalizationManager.shared
+
+// Simple string
+Text(lm.t("settings.title"))
+
+// Format string
+Text(String(format: lm.t("stats.level"), level, levelName))
+
+// Difficulty name
+Text(lm.difficultyName(difficulty))
+```
+
+**CJK word-order format specifiers**: Japanese, Korean, and Chinese use positional specifiers (`%1$d`, `%2$@`) to handle different word order:
+```
+// English: "200 XP to Master"
+"stats.xp_to_next" = "%d XP to %@";
+// Japanese: "Masterまで200 XP"
+"stats.xp_to_next" = "%2$@まで%1$d XP";
+```
+
+**Adding a new string**: Add the key to `en.strings` first (required for fallback), then add translations to the other 8 files. The key itself is displayed if it's missing from English.
+
+**Adding a new language**: Add a case to `AppLanguage` enum in `LocalizationManager.swift`, create `Localizations/{code}.strings`, and it will appear in the Settings language picker automatically.
+
+### File Location
+
+All `.strings` files are in the `Localizations/` group in the Xcode project navigator (under `FlowConnectPuzzle/Localizations/`). They are loaded at runtime via `Bundle.main.path(forResource:ofType:)` — no `.lproj` folder structure required.
+
+---
+
 ## 🎨 Theme System
 
 ```swift
@@ -676,6 +765,17 @@ When countdown reaches 0:
 
 Uses `Timer.publish` + `Combine` for the countdown. Requires `import Combine`.
 
+### Undo / Reset Buttons in Time Trial
+
+From **Medium difficulty onwards** (`currentDifficulty != .easy`, i.e. puzzle #5+), two action buttons appear below the grid:
+
+| Button | Action | Enabled condition |
+|--------|--------|-------------------|
+| **Undo** (`arrow.uturn.backward`) | `gameState.undo()` — steps back one cell in the path | `isRunning && !path.isEmpty` |
+| **Reset** (`arrow.counterclockwise`) | `gameState.reset()` — clears the entire path for the current puzzle | `isRunning && !path.isEmpty` |
+
+**No extra time penalty**: the countdown timer continues while the player undoes/resets — that is the natural penalty. Buttons are hidden (`.opacity(0.4)`) when disabled and fade in with `.animation(.easeInOut(duration: 0.25))` when difficulty first crosses into Medium.
+
 ---
 
 ## 👥 Challenge a Friend
@@ -858,6 +958,7 @@ All haptics go through `HapticManager.shared`. Never call UIKit haptic generator
 3. **No game persistence** — Closing the app mid-game loses current progress
 4. **Daily challenge: one attempt only** — No way to retry a failed daily puzzle
 5. **Game Center: requires network** — Leaderboard submission silently fails when offline (scores are not queued)
+6. **Localization `.strings` files require manual Target Membership** — When adding new `.strings` files to the Xcode project, they must be checked under **Target Membership → FlowConnectPuzzle** in the File Inspector. Without this, `Bundle.main.path(forResource:ofType:)` returns `nil` and `LocalizationManager.t()` falls back to returning the raw key string instead of the translated value.
 
 ---
 
@@ -1048,9 +1149,12 @@ When working with this codebase, remember:
 
 ---
 
-**Last Updated**: 2026-04-30
-**Version**: 4.0
+**Last Updated**: 2026-05-01
+**Version**: 4.1
 **Changelog**:
+- v4.1 (2026-05-01): Time Trial UX fix + Localization bug documentation
+  - **TimeTrialView**: Added Undo and Reset buttons that appear from Medium difficulty onwards (`currentDifficulty != .easy`). No extra time penalty — countdown is the natural cost. Buttons are disabled/dimmed when path is empty or game not running.
+  - **Known Issue documented**: `.strings` files added to Xcode must be manually checked under Target Membership → FlowConnectPuzzle, otherwise `Bundle.main.path(forResource:ofType:)` returns `nil` and localization falls back to raw keys.
 - v4.0 (2026-04-30): Daily engagement features — 4 tiers implemented
   - **New Models**: `GameMode` enum (replaces separate boolean flags), `WeeklyChallenge`
   - **New Services**: `StreakManager`, `NotificationManager`, `ProgressionManager`, `SoundManager`, `GameCenterManager`

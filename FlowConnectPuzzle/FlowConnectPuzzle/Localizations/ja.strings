@@ -1,0 +1,176 @@
+/* Difficulty */
+"difficulty.easy" = "かんたん";
+"difficulty.medium" = "ふつう";
+"difficulty.hard" = "むずかしい";
+"difficulty.veryHard" = "とてもむずかしい";
+"difficulty.expert" = "エキスパート";
+
+/* Game */
+"game.daily_challenge" = "デイリーチャレンジ";
+"game.weekly_challenge" = "ウィークリーチャレンジ";
+"game.zen" = "禅";
+"game.select_difficulty" = "難易度を選択";
+"game.time_so_far" = "経過時間：%@";
+"game.resume" = "再開";
+"game.start" = "スタート";
+"game.puzzle_complete" = "パズル完成！";
+"game.daily_complete" = "デイリー達成！";
+"game.weekly_complete" = "ウィークリー達成！";
+"game.new_personal_best" = "自己ベスト更新！";
+"game.share_result" = "結果をシェア";
+"game.back_to_menu" = "メニューに戻る";
+"game.next_puzzle" = "次のパズル";
+
+/* Menu */
+"menu.other_modes" = "その他のモード";
+"menu.time_trial_subtitle" = "3分間でできるだけ多くのパズルを解こう";
+"menu.zen_mode" = "禅モード";
+"menu.zen_subtitle" = "リラックス — タイマーなし、プレッシャーなし";
+"menu.best" = "ベスト";
+"menu.day_streak" = "%d日連続";
+"menu.done_badge" = "完了";
+"menu.weekly_bonus" = "全難易度クリアでボーナスXP";
+
+/* Settings */
+"settings.title" = "設定";
+"settings.done" = "完了";
+"settings.theme" = "テーマ";
+"settings.language" = "言語";
+"settings.sound" = "サウンド";
+"settings.sound_effects" = "効果音";
+"settings.notifications" = "通知";
+"settings.daily_reminders" = "毎日のリマインダー";
+"settings.reminder_notice" = "ストリークを維持するため、毎日通知が届きます。";
+"settings.social" = "ソーシャル";
+"settings.challenge_friend" = "友達に挑戦";
+"settings.tutorial" = "チュートリアル";
+"settings.show_onboarding" = "チュートリアルを再表示";
+
+/* Stats */
+"stats.title" = "統計";
+"stats.progression" = "進捗";
+"stats.level" = "レベル%d — %@";
+"stats.xp_to_next" = "%2$@まであと%1$d XP";
+"stats.max_level" = "最大レベル到達！";
+"stats.calendar_header" = "デイリーアクティビティ";
+"stats.streak" = "ストリーク";
+"stats.current_streak" = "現在のストリーク";
+"stats.best_streak" = "最高ストリーク";
+"stats.best_times" = "ベストタイム";
+"stats.puzzles_solved" = "解いたパズル";
+"stats.total" = "合計";
+"stats.achievements" = "実績";
+"stats.streak_singular" = "1日連続";
+"stats.streak_plural" = "%d日連続";
+"stats.day_singular" = "1日";
+"stats.days_plural" = "%d日";
+
+/* Time Trial */
+"timetrial.title" = "タイムトライアル";
+"timetrial.score" = "スコア";
+"timetrial.solved" = "解答済み";
+"timetrial.subtitle" = "3分間でできるだけ多くのパズルを解こう。\n5問ごとに難易度が上がります。";
+"timetrial.times_up" = "タイムアップ！";
+"timetrial.puzzles_solved" = "解いたパズル";
+"timetrial.total_score" = "合計スコア";
+"timetrial.best_difficulty" = "最高難易度";
+"timetrial.pts" = "%dpt";
+"timetrial.share" = "🕐 タイムトライアル：%d問解いて%dpt獲得！Flow Connect Puzzleで挑戦しよう！";
+"timetrial.share_result" = "結果をシェア";
+"timetrial.back_to_menu" = "メニューに戻る";
+"timetrial.start" = "スタート";
+
+/* Challenge */
+"challenge.title" = "友達に挑戦";
+"challenge.accept_title" = "チャレンジを受ける";
+"challenge.your_code" = "あなたのチャレンジコード";
+"challenge.share_code" = "コードをシェア";
+"challenge.enter_code" = "チャレンジコードを入力…";
+"challenge.start_btn" = "チャレンジ開始";
+"challenge.copied" = "コードをコピーしました！";
+"challenge.invalid_title" = "無効なコード";
+"challenge.invalid_message" = "チャレンジをデコードできませんでした。コードを確認して再試行してください。";
+"challenge.ok" = "OK";
+"challenge.difficulty_label" = "難易度";
+"challenge.done" = "完了";
+
+/* Onboarding */
+"onboarding.skip" = "スキップ";
+"onboarding.next" = "次へ";
+"onboarding.get_started" = "はじめる";
+"onboarding.step1_title" = "Flow Connectへようこそ";
+"onboarding.step1_body" = "1 → 2 → 3 … の順に数字をつないでパズルを完成させよう。全てのマスを埋めたら勝ち！";
+"onboarding.step2_title" = "パスを描こう";
+"onboarding.step2_body" = "指をグリッドの上でドラッグして、順番に数字を通るパスを描こう。";
+"onboarding.step3_title" = "自由に戻れる";
+"onboarding.step3_body" = "間違えた？ドラッグして戻れば最後のステップを取り消せる。指を離してやり直してもOK。";
+"onboarding.step4_title" = "プレイ準備完了？";
+"onboarding.step4_body" = "かんたんから始めてエキスパートを目指そう。頑張って！";
+
+/* Share */
+"share.solved_puzzle" = "%@のパズルを%@で解いた！あなたは勝てる？Flow Connect Puzzleで挑戦！";
+"share.daily" = "デイリーチャレンジ（%@）を%@でクリア！Flow Connect Puzzleで挑戦！";
+"share.weekly" = "ウィークリーチャレンジを%@でクリア！Flow Connect Puzzleで挑戦！";
+"share.zen" = "Flow Connect PuzzleのZenモードでリラックス中。タイマーなし、純粋な癒し。";
+
+/* Streak Calendar */
+"calendar.header" = "デイリーアクティビティ — 過去3ヶ月";
+"calendar.less" = "少";
+"calendar.more" = "多";
+
+/* Achievement banner */
+"achievement.unlocked" = "実績解除！";
+
+/* Achievement titles */
+"achievement.first_solve.title" = "初めの一歩";
+"achievement.solve_10.title" = "始まり";
+"achievement.solve_50.title" = "パズル好き";
+"achievement.solve_100.title" = "100問達成";
+"achievement.solve_500.title" = "パズルマスター";
+"achievement.easy_master.title" = "かんたんマスター";
+"achievement.medium_master.title" = "ふつうマスター";
+"achievement.hard_master.title" = "難関突破";
+"achievement.very_hard_master.title" = "超難関";
+"achievement.expert_master.title" = "エキスパート精鋭";
+"achievement.speed_demon.title" = "スピードデーモン";
+"achievement.lightning.title" = "電光石火";
+"achievement.streak_3.title" = "ハットトリック";
+"achievement.streak_7.title" = "週間戦士";
+"achievement.streak_30.title" = "月間精励";
+"achievement.streak_100.title" = "百日達成";
+"achievement.daily_7.title" = "デイリー信者";
+"achievement.daily_30.title" = "月間常連";
+"achievement.timetrial_bronze.title" = "タイムトライアル銅";
+"achievement.timetrial_silver.title" = "タイムトライアル銀";
+"achievement.timetrial_gold.title" = "タイムトライアル金";
+"achievement.level_5.title" = "新星";
+"achievement.level_10.title" = "ベテラン";
+"achievement.level_20.title" = "レジェンド";
+"achievement.perfectionist.title" = "完璧主義者";
+
+/* Achievement descriptions */
+"achievement.first_solve.desc" = "初めてパズルを解いた";
+"achievement.solve_10.desc" = "10問解いた";
+"achievement.solve_50.desc" = "50問解いた";
+"achievement.solve_100.desc" = "100問解いた";
+"achievement.solve_500.desc" = "500問解いた";
+"achievement.easy_master.desc" = "かんたんを20問解いた";
+"achievement.medium_master.desc" = "ふつうを15問解いた";
+"achievement.hard_master.desc" = "むずかしいを10問解いた";
+"achievement.very_hard_master.desc" = "とてもむずかしいを5問解いた";
+"achievement.expert_master.desc" = "エキスパートを3問解いた";
+"achievement.speed_demon.desc" = "かんたんを10秒以内で解いた";
+"achievement.lightning.desc" = "ふつうを20秒以内で解いた";
+"achievement.streak_3.desc" = "3日連続でプレイした";
+"achievement.streak_7.desc" = "7日連続でプレイした";
+"achievement.streak_30.desc" = "30日連続でプレイした";
+"achievement.streak_100.desc" = "100日連続でプレイした";
+"achievement.daily_7.desc" = "デイリーチャレンジを7回達成";
+"achievement.daily_30.desc" = "デイリーチャレンジを30回達成";
+"achievement.timetrial_bronze.desc" = "タイムトライアルで100pt以上";
+"achievement.timetrial_silver.desc" = "タイムトライアルで300pt以上";
+"achievement.timetrial_gold.desc" = "タイムトライアルで500pt以上";
+"achievement.level_5.desc" = "レベル5に到達";
+"achievement.level_10.desc" = "レベル10に到達";
+"achievement.level_20.desc" = "レベル20に到達";
+"achievement.perfectionist.desc" = "むずかしい以上を戻らずに解いた";

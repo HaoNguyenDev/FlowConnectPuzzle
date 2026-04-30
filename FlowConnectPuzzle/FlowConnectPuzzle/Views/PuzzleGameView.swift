@@ -24,6 +24,7 @@ struct PuzzleGameView: View {
     @State private var showAchievementBanner: Bool = false
     /// Controls blur overlay — game only starts (and timer only ticks) after user taps Start.
     @State private var gameStarted: Bool = false
+    @State private var lm = LocalizationManager.shared
 
     private let ledTimer  = Timer.publish(every: 1.0 / 60.0, on: .main, in: .common).autoconnect()
     private let gameTimer = Timer.publish(every: 0.01, on: .main, in: .common).autoconnect()
@@ -77,7 +78,7 @@ struct PuzzleGameView: View {
                             .font(.system(size: 12, weight: .medium))
                             .foregroundColor(.purple)
                     }
-                    Text(isWeekly ? "Weekly Challenge" : (isDaily ? "Daily Challenge" : difficulty.displayName))
+                    Text(isWeekly ? lm.t("game.weekly_challenge") : (isDaily ? lm.t("game.daily_challenge") : lm.difficultyName(difficulty)))
                         .font(.system(size: 14, weight: .medium))
                         .foregroundColor(.secondary)
                 }
@@ -90,7 +91,7 @@ struct PuzzleGameView: View {
                         Image(systemName: "leaf.fill")
                             .font(.system(size: 12))
                             .foregroundColor(.green.opacity(0.7))
-                        Text("Zen")
+                        Text(lm.t("game.zen"))
                             .font(.system(size: 13, weight: .medium))
                             .foregroundColor(.secondary)
                     }
@@ -310,7 +311,7 @@ struct PuzzleGameView: View {
                 }
 
                 VStack(spacing: 6) {
-                    Text(isWeekly ? "Weekly Challenge" : (isDaily ? "Daily Challenge" : difficulty.displayName))
+                    Text(isWeekly ? lm.t("game.weekly_challenge") : (isDaily ? lm.t("game.daily_challenge") : lm.difficultyName(difficulty)))
                         .font(.system(size: 22, weight: .bold))
                         .foregroundColor(.primary)
                     Text(difficulty.description)
@@ -318,7 +319,7 @@ struct PuzzleGameView: View {
                         .foregroundColor(.secondary)
                     if elapsedTime > 0 {
                         // Shown on re-start after Reset — displays accumulated penalty time
-                        Text("Time so far: \(formattedTime)")
+                        Text(String(format: lm.t("game.time_so_far"), formattedTime))
                             .font(.system(size: 12, weight: .medium).monospacedDigit())
                             .foregroundColor(theme.pathColor)
                             .padding(.top, 2)
@@ -330,7 +331,7 @@ struct PuzzleGameView: View {
                     HStack(spacing: 10) {
                         Image(systemName: "play.fill")
                             .font(.system(size: 16))
-                        Text(elapsedTime > 0 ? "Resume" : "Start")
+                        Text(elapsedTime > 0 ? lm.t("game.resume") : lm.t("game.start"))
                             .font(.system(size: 18, weight: .semibold))
                     }
                     .foregroundColor(.white)
@@ -589,13 +590,13 @@ struct PuzzleGameView: View {
 
     private var shareResultText: String {
         if isWeekly {
-            return "🏆 Weekly Challenge conquered in \(formattedTime)! Play Flow Connect Puzzle!"
+            return lm.t("share.weekly")
         } else if isDaily {
             let streak = streakManager.currentStreak
             let streakPart = streak > 1 ? " 🔥 \(streak)-day streak!" : ""
-            return "🧩 Daily Challenge solved in \(formattedTime)!\(streakPart) Play Flow Connect Puzzle!"
+            return "🧩 \(String(format: lm.t("game.solved_in"), formattedTime))\(streakPart) Play Flow Connect Puzzle!"
         } else {
-            return "🧩 Solved \(difficulty.displayName) in \(formattedTime) on Flow Connect Puzzle!"
+            return String(format: lm.t("share.solved_puzzle"), lm.difficultyName(difficulty), formattedTime)
         }
     }
 
@@ -615,7 +616,7 @@ struct PuzzleGameView: View {
                         Image(systemName: "calendar.badge.checkmark")
                             .foregroundColor(.yellow)
                     }
-                    Text(isWeekly ? "Weekly Complete!" : (isDaily ? "Daily Complete!" : "Puzzle Complete!"))
+                    Text(isWeekly ? lm.t("game.weekly_complete") : (isDaily ? lm.t("game.daily_complete") : lm.t("game.puzzle_complete")))
                         .font(.system(size: 28, weight: .bold))
                         .foregroundColor(.white)
                 }
@@ -638,7 +639,7 @@ struct PuzzleGameView: View {
                     HStack(spacing: 6) {
                         Image(systemName: "star.fill")
                             .foregroundColor(.yellow)
-                        Text("New Personal Best!")
+                        Text(lm.t("game.new_personal_best"))
                             .font(.system(size: 14, weight: .semibold))
                             .foregroundColor(.yellow)
                     }
@@ -653,7 +654,7 @@ struct PuzzleGameView: View {
                     HStack(spacing: 8) {
                         Image(systemName: "square.and.arrow.up")
                             .font(.system(size: 14))
-                        Text("Share Result")
+                        Text(lm.t("game.share_result"))
                             .font(.system(size: 14, weight: .medium))
                     }
                     .foregroundColor(.white.opacity(0.85))
@@ -665,7 +666,7 @@ struct PuzzleGameView: View {
 
                 if isDaily || isWeekly {
                     Button(action: onBack) {
-                        Text("Back to Menu")
+                        Text(lm.t("game.back_to_menu"))
                             .font(.system(size: 18, weight: .semibold))
                             .foregroundColor(theme.pathColor)
                             .padding(.horizontal, 32)
@@ -679,7 +680,7 @@ struct PuzzleGameView: View {
                         resetTimer()
                         isPersonalBest = false
                     }) {
-                        Text("Next Puzzle")
+                        Text(lm.t("game.next_puzzle"))
                             .font(.system(size: 18, weight: .semibold))
                             .foregroundColor(theme.pathColor)
                             .padding(.horizontal, 32)

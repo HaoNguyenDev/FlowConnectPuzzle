@@ -1,0 +1,176 @@
+/* Difficulty */
+"difficulty.easy" = "Leicht";
+"difficulty.medium" = "Mittel";
+"difficulty.hard" = "Schwer";
+"difficulty.veryHard" = "Sehr schwer";
+"difficulty.expert" = "Experte";
+
+/* Game */
+"game.daily_challenge" = "Tägliche Herausforderung";
+"game.weekly_challenge" = "Wöchentliche Herausforderung";
+"game.zen" = "Zen";
+"game.select_difficulty" = "SCHWIERIGKEIT WÄHLEN";
+"game.time_so_far" = "Zeit: %@";
+"game.resume" = "Fortsetzen";
+"game.start" = "Starten";
+"game.puzzle_complete" = "Puzzle gelöst!";
+"game.daily_complete" = "Tägliche Herausforderung abgeschlossen!";
+"game.weekly_complete" = "Wöchentliche Herausforderung abgeschlossen!";
+"game.new_personal_best" = "Neuer persönlicher Rekord!";
+"game.share_result" = "Ergebnis teilen";
+"game.back_to_menu" = "Zurück zum Menü";
+"game.next_puzzle" = "Nächstes Puzzle";
+
+/* Menu */
+"menu.other_modes" = "ANDERE MODI";
+"menu.time_trial_subtitle" = "Löse so viele Puzzles wie möglich in 3 Minuten";
+"menu.zen_mode" = "Zen-Modus";
+"menu.zen_subtitle" = "Entspann dich — kein Timer, kein Druck";
+"menu.best" = "Beste";
+"menu.day_streak" = "%d Tage in Folge";
+"menu.done_badge" = "Erledigt";
+"menu.weekly_bonus" = "Bonus-XP für das Abschließen aller Schwierigkeiten";
+
+/* Settings */
+"settings.title" = "Einstellungen";
+"settings.done" = "Fertig";
+"settings.theme" = "Design";
+"settings.language" = "Sprache";
+"settings.sound" = "Ton";
+"settings.sound_effects" = "Soundeffekte";
+"settings.notifications" = "Benachrichtigungen";
+"settings.daily_reminders" = "Tägliche Erinnerungen";
+"settings.reminder_notice" = "Du erhältst jeden Tag eine Erinnerung, um deine Serie am Leben zu halten.";
+"settings.social" = "Soziales";
+"settings.challenge_friend" = "Freund herausfordern";
+"settings.tutorial" = "Tutorial";
+"settings.show_onboarding" = "Tutorial erneut anzeigen";
+
+/* Stats */
+"stats.title" = "Statistiken";
+"stats.progression" = "Fortschritt";
+"stats.level" = "Level %d — %@";
+"stats.xp_to_next" = "%d XP bis %@";
+"stats.max_level" = "Maximales Level erreicht!";
+"stats.calendar_header" = "Tägliche Aktivität";
+"stats.streak" = "Serie";
+"stats.current_streak" = "Aktuelle Serie";
+"stats.best_streak" = "Beste Serie";
+"stats.best_times" = "Bestzeiten";
+"stats.puzzles_solved" = "Gelöste Puzzles";
+"stats.total" = "Gesamt";
+"stats.achievements" = "Errungenschaften";
+"stats.streak_singular" = "1 Tag in Folge";
+"stats.streak_plural" = "%d Tage in Folge";
+"stats.day_singular" = "1 Tag";
+"stats.days_plural" = "%d Tage";
+
+/* Time Trial */
+"timetrial.title" = "Zeitrennen";
+"timetrial.score" = "Punkte";
+"timetrial.solved" = "Gelöst";
+"timetrial.subtitle" = "Löse so viele Puzzles wie möglich in 3 Minuten.\nDie Schwierigkeit steigt alle 5 Puzzles.";
+"timetrial.times_up" = "Zeit abgelaufen!";
+"timetrial.puzzles_solved" = "Gelöste Puzzles";
+"timetrial.total_score" = "Gesamtpunkte";
+"timetrial.best_difficulty" = "Beste Schwierigkeit";
+"timetrial.pts" = "%d Pkt.";
+"timetrial.share" = "🕐 Zeitrennen: %d Puzzles für %d Pkt. gelöst! Spiel Flow Connect Puzzle!";
+"timetrial.share_result" = "Ergebnis teilen";
+"timetrial.back_to_menu" = "Zurück zum Menü";
+"timetrial.start" = "Starten";
+
+/* Challenge */
+"challenge.title" = "Freund herausfordern";
+"challenge.accept_title" = "Herausforderung annehmen";
+"challenge.your_code" = "Dein Herausforderungscode";
+"challenge.share_code" = "Code teilen";
+"challenge.enter_code" = "Code eingeben…";
+"challenge.start_btn" = "Herausforderung starten";
+"challenge.copied" = "Code kopiert!";
+"challenge.invalid_title" = "Ungültiger Code";
+"challenge.invalid_message" = "Die Herausforderung konnte nicht dekodiert werden. Überprüfe den Code und versuche es erneut.";
+"challenge.ok" = "OK";
+"challenge.difficulty_label" = "Schwierigkeit";
+"challenge.done" = "Fertig";
+
+/* Onboarding */
+"onboarding.skip" = "Überspringen";
+"onboarding.next" = "Weiter";
+"onboarding.get_started" = "Loslegen";
+"onboarding.step1_title" = "Willkommen bei Flow Connect";
+"onboarding.step1_body" = "Verbinde die Zahlen der Reihe nach von 1 → 2 → 3 …, um jedes Puzzle zu lösen. Fülle alle Felder aus, um zu gewinnen!";
+"onboarding.step2_title" = "Zeichne deinen Weg";
+"onboarding.step2_body" = "Ziehe deinen Finger über das Raster, um einen Weg durch die Zahlen in der Reihenfolge zu zeichnen.";
+"onboarding.step3_title" = "Frei zurückgehen";
+"onboarding.step3_body" = "Falscher Weg? Ziehe zurück, um den letzten Schritt rückgängig zu machen — oder hebe den Finger und fang neu an.";
+"onboarding.step4_title" = "Bereit zu spielen?";
+"onboarding.step4_body" = "Beginne mit Leicht und arbeite dich bis Experte vor. Viel Erfolg!";
+
+/* Share */
+"share.solved_puzzle" = "Ich habe ein %@ Puzzle in %@ gelöst! Kannst du das schlagen? Spiel Flow Connect Puzzle!";
+"share.daily" = "Ich habe die Tägliche Herausforderung (%@) in %@ abgeschlossen! Spiel Flow Connect Puzzle!";
+"share.weekly" = "Ich habe die Wöchentliche Herausforderung in %@ abgeschlossen! Spiel Flow Connect Puzzle!";
+"share.zen" = "Ich genieße den Zen-Modus in Flow Connect Puzzle. Kein Timer, pure Entspannung.";
+
+/* Streak Calendar */
+"calendar.header" = "Tägliche Aktivität — Letzte 3 Monate";
+"calendar.less" = "Weniger";
+"calendar.more" = "Mehr";
+
+/* Achievement banner */
+"achievement.unlocked" = "Errungenschaft freigeschaltet!";
+
+/* Achievement titles */
+"achievement.first_solve.title" = "Erste Schritte";
+"achievement.solve_10.title" = "Anfänger";
+"achievement.solve_50.title" = "Puzzle-Enthusiast";
+"achievement.solve_100.title" = "Jahrhundert-Löser";
+"achievement.solve_500.title" = "Puzzle-Meister";
+"achievement.easy_master.title" = "Leicht-Meister";
+"achievement.medium_master.title" = "Mittel-Meister";
+"achievement.hard_master.title" = "Schwer-Bezwinger";
+"achievement.very_hard_master.title" = "Extremlöser";
+"achievement.expert_master.title" = "Experten-Elite";
+"achievement.speed_demon.title" = "Geschwindigkeitsteufel";
+"achievement.lightning.title" = "Blitzschnell";
+"achievement.streak_3.title" = "Hat-Trick";
+"achievement.streak_7.title" = "Wochenkämpfer";
+"achievement.streak_30.title" = "Monatliche Hingabe";
+"achievement.streak_100.title" = "Centurion";
+"achievement.daily_7.title" = "Täglicher Anhänger";
+"achievement.daily_30.title" = "Monatlicher Stammgast";
+"achievement.timetrial_bronze.title" = "Zeitrennen Bronze";
+"achievement.timetrial_silver.title" = "Zeitrennen Silber";
+"achievement.timetrial_gold.title" = "Zeitrennen Gold";
+"achievement.level_5.title" = "Aufsteigender Stern";
+"achievement.level_10.title" = "Veteran";
+"achievement.level_20.title" = "Legende";
+"achievement.perfectionist.title" = "Perfektionist";
+
+/* Achievement descriptions */
+"achievement.first_solve.desc" = "Erstes Puzzle gelöst";
+"achievement.solve_10.desc" = "10 Puzzles gelöst";
+"achievement.solve_50.desc" = "50 Puzzles gelöst";
+"achievement.solve_100.desc" = "100 Puzzles gelöst";
+"achievement.solve_500.desc" = "500 Puzzles gelöst";
+"achievement.easy_master.desc" = "20 Leichte Puzzles gelöst";
+"achievement.medium_master.desc" = "15 Mittlere Puzzles gelöst";
+"achievement.hard_master.desc" = "10 Schwere Puzzles gelöst";
+"achievement.very_hard_master.desc" = "5 Sehr schwere Puzzles gelöst";
+"achievement.expert_master.desc" = "3 Experten-Puzzles gelöst";
+"achievement.speed_demon.desc" = "Ein leichtes Puzzle in unter 10 Sekunden gelöst";
+"achievement.lightning.desc" = "Ein mittleres Puzzle in unter 20 Sekunden gelöst";
+"achievement.streak_3.desc" = "3 Tage in Folge gespielt";
+"achievement.streak_7.desc" = "7 Tage in Folge gespielt";
+"achievement.streak_30.desc" = "30 Tage in Folge gespielt";
+"achievement.streak_100.desc" = "100 Tage in Folge gespielt";
+"achievement.daily_7.desc" = "7 Tägliche Herausforderungen abgeschlossen";
+"achievement.daily_30.desc" = "30 Tägliche Herausforderungen abgeschlossen";
+"achievement.timetrial_bronze.desc" = "100+ Punkte im Zeitrennen";
+"achievement.timetrial_silver.desc" = "300+ Punkte im Zeitrennen";
+"achievement.timetrial_gold.desc" = "500+ Punkte im Zeitrennen";
+"achievement.level_5.desc" = "Level 5 erreicht";
+"achievement.level_10.desc" = "Level 10 erreicht";
+"achievement.level_20.desc" = "Level 20 erreicht";
+"achievement.perfectionist.desc" = "Schweres+ Puzzle ohne Zurückgehen gelöst";

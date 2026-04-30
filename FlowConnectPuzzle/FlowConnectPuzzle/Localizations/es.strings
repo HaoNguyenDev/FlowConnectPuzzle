@@ -1,0 +1,176 @@
+/* Difficulty */
+"difficulty.easy" = "Fácil";
+"difficulty.medium" = "Medio";
+"difficulty.hard" = "Difícil";
+"difficulty.veryHard" = "Muy difícil";
+"difficulty.expert" = "Experto";
+
+/* Game */
+"game.daily_challenge" = "Desafío diario";
+"game.weekly_challenge" = "Desafío semanal";
+"game.zen" = "Zen";
+"game.select_difficulty" = "SELECCIONAR DIFICULTAD";
+"game.time_so_far" = "Tiempo: %@";
+"game.resume" = "Continuar";
+"game.start" = "Empezar";
+"game.puzzle_complete" = "¡Puzzle completado!";
+"game.daily_complete" = "¡Desafío diario completado!";
+"game.weekly_complete" = "¡Desafío semanal completado!";
+"game.new_personal_best" = "¡Nuevo récord personal!";
+"game.share_result" = "Compartir resultado";
+"game.back_to_menu" = "Volver al menú";
+"game.next_puzzle" = "Siguiente puzzle";
+
+/* Menu */
+"menu.other_modes" = "OTROS MODOS";
+"menu.time_trial_subtitle" = "Resuelve el máximo de puzzles en 3 minutos";
+"menu.zen_mode" = "Modo Zen";
+"menu.zen_subtitle" = "Relájate — sin cronómetro, sin presión";
+"menu.best" = "Mejor";
+"menu.day_streak" = "Racha de %d días";
+"menu.done_badge" = "Hecho";
+"menu.weekly_bonus" = "XP extra por completar todas las dificultades";
+
+/* Settings */
+"settings.title" = "Configuración";
+"settings.done" = "Listo";
+"settings.theme" = "Tema";
+"settings.language" = "Idioma";
+"settings.sound" = "Sonido";
+"settings.sound_effects" = "Efectos de sonido";
+"settings.notifications" = "Notificaciones";
+"settings.daily_reminders" = "Recordatorios diarios";
+"settings.reminder_notice" = "Recibirás un aviso cada día para mantener tu racha.";
+"settings.social" = "Social";
+"settings.challenge_friend" = "Desafiar a un amigo";
+"settings.tutorial" = "Tutorial";
+"settings.show_onboarding" = "Ver tutorial de nuevo";
+
+/* Stats */
+"stats.title" = "Estadísticas";
+"stats.progression" = "Progresión";
+"stats.level" = "Nivel %d — %@";
+"stats.xp_to_next" = "%d XP para %@";
+"stats.max_level" = "¡Nivel máximo alcanzado!";
+"stats.calendar_header" = "Actividad diaria";
+"stats.streak" = "Racha";
+"stats.current_streak" = "Racha actual";
+"stats.best_streak" = "Mejor racha";
+"stats.best_times" = "Mejores tiempos";
+"stats.puzzles_solved" = "Puzzles resueltos";
+"stats.total" = "Total";
+"stats.achievements" = "Logros";
+"stats.streak_singular" = "Racha de 1 día";
+"stats.streak_plural" = "Racha de %d días";
+"stats.day_singular" = "1 día";
+"stats.days_plural" = "%d días";
+
+/* Time Trial */
+"timetrial.title" = "Contrarreloj";
+"timetrial.score" = "Puntuación";
+"timetrial.solved" = "Resueltos";
+"timetrial.subtitle" = "Resuelve el máximo de puzzles en 3 minutos.\nLa dificultad aumenta cada 5 puzzles.";
+"timetrial.times_up" = "¡Tiempo agotado!";
+"timetrial.puzzles_solved" = "Puzzles resueltos";
+"timetrial.total_score" = "Puntuación total";
+"timetrial.best_difficulty" = "Mejor dificultad";
+"timetrial.pts" = "%d pts";
+"timetrial.share" = "🕐 Contrarreloj: resolví %d puzzles con %d pts. ¡Juega Flow Connect Puzzle!";
+"timetrial.share_result" = "Compartir resultado";
+"timetrial.back_to_menu" = "Volver al menú";
+"timetrial.start" = "Empezar";
+
+/* Challenge */
+"challenge.title" = "Desafiar a un amigo";
+"challenge.accept_title" = "Aceptar desafío";
+"challenge.your_code" = "Tu código de desafío";
+"challenge.share_code" = "Compartir código";
+"challenge.enter_code" = "Introduce el código…";
+"challenge.start_btn" = "Iniciar desafío";
+"challenge.copied" = "¡Código copiado!";
+"challenge.invalid_title" = "Código inválido";
+"challenge.invalid_message" = "No se pudo decodificar el desafío. Comprueba el código e inténtalo de nuevo.";
+"challenge.ok" = "OK";
+"challenge.difficulty_label" = "Dificultad";
+"challenge.done" = "Listo";
+
+/* Onboarding */
+"onboarding.skip" = "Omitir";
+"onboarding.next" = "Siguiente";
+"onboarding.get_started" = "Empezar";
+"onboarding.step1_title" = "Bienvenido a Flow Connect";
+"onboarding.step1_body" = "Conecta los números en orden del 1 → 2 → 3 … para completar cada puzzle. ¡Rellena todas las celdas para ganar!";
+"onboarding.step2_title" = "Traza tu camino";
+"onboarding.step2_body" = "Arrastra el dedo por la cuadrícula para trazar un camino a través de los números en secuencia.";
+"onboarding.step3_title" = "Retrocede libremente";
+"onboarding.step3_body" = "¿Te equivocaste? Arrastra hacia atrás para deshacer el último paso, o levanta el dedo y empieza de nuevo.";
+"onboarding.step4_title" = "¿Listo para jugar?";
+"onboarding.step4_body" = "Comienza con Fácil y avanza hasta Experto. ¡Buena suerte!";
+
+/* Share */
+"share.solved_puzzle" = "¡Resolví un puzzle %@ en %@! ¿Puedes superarlo? ¡Juega Flow Connect Puzzle!";
+"share.daily" = "¡Completé el Desafío Diario (%@) en %@! ¡Juega Flow Connect Puzzle!";
+"share.weekly" = "¡Completé el Desafío Semanal en %@! ¡Juega Flow Connect Puzzle!";
+"share.zen" = "Disfrutando del modo Zen en Flow Connect Puzzle. Sin cronómetro, pura relajación.";
+
+/* Streak Calendar */
+"calendar.header" = "Actividad diaria — Últimos 3 meses";
+"calendar.less" = "Menos";
+"calendar.more" = "Más";
+
+/* Achievement banner */
+"achievement.unlocked" = "¡Logro desbloqueado!";
+
+/* Achievement titles */
+"achievement.first_solve.title" = "Primeros pasos";
+"achievement.solve_10.title" = "Empezando";
+"achievement.solve_50.title" = "Entusiasta";
+"achievement.solve_100.title" = "Centenario";
+"achievement.solve_500.title" = "Maestro";
+"achievement.easy_master.title" = "As de Fácil";
+"achievement.medium_master.title" = "As de Medio";
+"achievement.hard_master.title" = "Conquistador Difícil";
+"achievement.very_hard_master.title" = "Extremo";
+"achievement.expert_master.title" = "Élite Experto";
+"achievement.speed_demon.title" = "Demonio veloz";
+"achievement.lightning.title" = "Rayo";
+"achievement.streak_3.title" = "Hat Trick";
+"achievement.streak_7.title" = "Guerrero semanal";
+"achievement.streak_30.title" = "Devoción mensual";
+"achievement.streak_100.title" = "Centurión";
+"achievement.daily_7.title" = "Devoto diario";
+"achievement.daily_30.title" = "Regular mensual";
+"achievement.timetrial_bronze.title" = "Contrarreloj Bronce";
+"achievement.timetrial_silver.title" = "Contrarreloj Plata";
+"achievement.timetrial_gold.title" = "Contrarreloj Oro";
+"achievement.level_5.title" = "Estrella en alza";
+"achievement.level_10.title" = "Veterano";
+"achievement.level_20.title" = "Leyenda";
+"achievement.perfectionist.title" = "Perfeccionista";
+
+/* Achievement descriptions */
+"achievement.first_solve.desc" = "Resolviste tu primer puzzle";
+"achievement.solve_10.desc" = "Resolviste 10 puzzles";
+"achievement.solve_50.desc" = "Resolviste 50 puzzles";
+"achievement.solve_100.desc" = "Resolviste 100 puzzles";
+"achievement.solve_500.desc" = "Resolviste 500 puzzles";
+"achievement.easy_master.desc" = "Resolviste 20 puzzles Fácil";
+"achievement.medium_master.desc" = "Resolviste 15 puzzles Medio";
+"achievement.hard_master.desc" = "Resolviste 10 puzzles Difícil";
+"achievement.very_hard_master.desc" = "Resolviste 5 puzzles Muy difícil";
+"achievement.expert_master.desc" = "Resolviste 3 puzzles Experto";
+"achievement.speed_demon.desc" = "Resolviste un puzzle Fácil en menos de 10 segundos";
+"achievement.lightning.desc" = "Resolviste un puzzle Medio en menos de 20 segundos";
+"achievement.streak_3.desc" = "Jugaste 3 días seguidos";
+"achievement.streak_7.desc" = "Jugaste 7 días seguidos";
+"achievement.streak_30.desc" = "Jugaste 30 días seguidos";
+"achievement.streak_100.desc" = "Jugaste 100 días seguidos";
+"achievement.daily_7.desc" = "Completaste 7 desafíos diarios";
+"achievement.daily_30.desc" = "Completaste 30 desafíos diarios";
+"achievement.timetrial_bronze.desc" = "Consigue 100+ puntos en Contrarreloj";
+"achievement.timetrial_silver.desc" = "Consigue 300+ puntos en Contrarreloj";
+"achievement.timetrial_gold.desc" = "Consigue 500+ puntos en Contrarreloj";
+"achievement.level_5.desc" = "Alcanzaste el Nivel 5";
+"achievement.level_10.desc" = "Alcanzaste el Nivel 10";
+"achievement.level_20.desc" = "Alcanzaste el Nivel 20";
+"achievement.perfectionist.desc" = "Resolviste un puzzle Difícil+ sin retroceder";

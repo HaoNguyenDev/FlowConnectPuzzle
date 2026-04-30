@@ -1,0 +1,176 @@
+/* Difficulty */
+"difficulty.easy" = "Easy";
+"difficulty.medium" = "Medium";
+"difficulty.hard" = "Hard";
+"difficulty.veryHard" = "Very Hard";
+"difficulty.expert" = "Expert";
+
+/* Game */
+"game.daily_challenge" = "Daily Challenge";
+"game.weekly_challenge" = "Weekly Challenge";
+"game.zen" = "Zen";
+"game.select_difficulty" = "SELECT DIFFICULTY";
+"game.time_so_far" = "Time so far: %@";
+"game.resume" = "Resume";
+"game.start" = "Start";
+"game.puzzle_complete" = "Puzzle Complete!";
+"game.daily_complete" = "Daily Complete!";
+"game.weekly_complete" = "Weekly Complete!";
+"game.new_personal_best" = "New personal best!";
+"game.share_result" = "Share Result";
+"game.back_to_menu" = "Back to Menu";
+"game.next_puzzle" = "Next Puzzle";
+
+/* Menu */
+"menu.other_modes" = "OTHER MODES";
+"menu.time_trial_subtitle" = "Solve as many puzzles as you can in 3 minutes";
+"menu.zen_mode" = "Zen Mode";
+"menu.zen_subtitle" = "Relax — no timer, no pressure";
+"menu.best" = "Best";
+"menu.day_streak" = "%d day streak";
+"menu.done_badge" = "Done";
+"menu.weekly_bonus" = "Bonus XP for completing all difficulties";
+
+/* Settings */
+"settings.title" = "Settings";
+"settings.done" = "Done";
+"settings.theme" = "Theme";
+"settings.language" = "Language";
+"settings.sound" = "Sound";
+"settings.sound_effects" = "Sound Effects";
+"settings.notifications" = "Notifications";
+"settings.daily_reminders" = "Daily Reminders";
+"settings.reminder_notice" = "You'll get a nudge each day to keep your streak alive.";
+"settings.social" = "Social";
+"settings.challenge_friend" = "Challenge a Friend";
+"settings.tutorial" = "Tutorial";
+"settings.show_onboarding" = "Show Tutorial Again";
+
+/* Stats */
+"stats.title" = "Statistics";
+"stats.progression" = "Progression";
+"stats.level" = "Level %d — %@";
+"stats.xp_to_next" = "%d XP to %@";
+"stats.max_level" = "Max Level Reached!";
+"stats.calendar_header" = "Daily Activity";
+"stats.streak" = "Streak";
+"stats.current_streak" = "Current Streak";
+"stats.best_streak" = "Best Streak";
+"stats.best_times" = "Best Times";
+"stats.puzzles_solved" = "Puzzles Solved";
+"stats.total" = "Total";
+"stats.achievements" = "Achievements";
+"stats.streak_singular" = "1 day streak";
+"stats.streak_plural" = "%d day streak";
+"stats.day_singular" = "1 day";
+"stats.days_plural" = "%d days";
+
+/* Time Trial */
+"timetrial.title" = "Time Trial";
+"timetrial.score" = "Score";
+"timetrial.solved" = "Solved";
+"timetrial.subtitle" = "Solve as many puzzles as you can in 3 minutes.\nDifficulty increases every 5 puzzles.";
+"timetrial.times_up" = "Time's Up!";
+"timetrial.puzzles_solved" = "Puzzles Solved";
+"timetrial.total_score" = "Total Score";
+"timetrial.best_difficulty" = "Best Difficulty";
+"timetrial.pts" = "%d pts";
+"timetrial.share" = "🕐 Time Trial: solved %d puzzles for %d pts! Play Flow Connect Puzzle!";
+"timetrial.share_result" = "Share Result";
+"timetrial.back_to_menu" = "Back to Menu";
+"timetrial.start" = "Start";
+
+/* Challenge */
+"challenge.title" = "Challenge a Friend";
+"challenge.accept_title" = "Accept a Challenge";
+"challenge.your_code" = "Your Challenge Code";
+"challenge.share_code" = "Share Code";
+"challenge.enter_code" = "Enter challenge code…";
+"challenge.start_btn" = "Start Challenge";
+"challenge.copied" = "Code copied!";
+"challenge.invalid_title" = "Invalid Code";
+"challenge.invalid_message" = "Could not decode challenge. Check the code and try again.";
+"challenge.ok" = "OK";
+"challenge.difficulty_label" = "Difficulty";
+"challenge.done" = "Done";
+
+/* Onboarding */
+"onboarding.skip" = "Skip";
+"onboarding.next" = "Next";
+"onboarding.get_started" = "Get Started";
+"onboarding.step1_title" = "Welcome to Flow Connect";
+"onboarding.step1_body" = "Connect numbers in order from 1 → 2 → 3 … to complete each puzzle. Fill every cell to win!";
+"onboarding.step2_title" = "Draw Your Path";
+"onboarding.step2_body" = "Drag your finger across the grid to trace a path through the numbers in sequence.";
+"onboarding.step3_title" = "Backtrack Freely";
+"onboarding.step3_body" = "Made a wrong turn? Drag back to undo your last step — or lift your finger and start over.";
+"onboarding.step4_title" = "Ready to Play?";
+"onboarding.step4_body" = "Start with Easy and work your way up to Expert. Good luck!";
+
+/* Share */
+"share.solved_puzzle" = "Solved a %@ puzzle in %@! Can you beat it? Play Flow Connect Puzzle!";
+"share.daily" = "Completed today's Daily Challenge (%@) in %@! Play Flow Connect Puzzle!";
+"share.weekly" = "Completed the Weekly Challenge in %@! Play Flow Connect Puzzle!";
+"share.zen" = "Enjoying Zen mode in Flow Connect Puzzle. No timer, pure relaxation.";
+
+/* Streak Calendar */
+"calendar.header" = "Daily Activity — Last 3 Months";
+"calendar.less" = "Less";
+"calendar.more" = "More";
+
+/* Achievement banner */
+"achievement.unlocked" = "Achievement Unlocked!";
+
+/* Achievement titles */
+"achievement.first_solve.title" = "First Steps";
+"achievement.solve_10.title" = "Getting Started";
+"achievement.solve_50.title" = "Puzzle Enthusiast";
+"achievement.solve_100.title" = "Century Solver";
+"achievement.solve_500.title" = "Puzzle Master";
+"achievement.easy_master.title" = "Easy Master";
+"achievement.medium_master.title" = "Medium Master";
+"achievement.hard_master.title" = "Hard Conqueror";
+"achievement.very_hard_master.title" = "Extreme Solver";
+"achievement.expert_master.title" = "Expert Elite";
+"achievement.speed_demon.title" = "Speed Demon";
+"achievement.lightning.title" = "Lightning Fast";
+"achievement.streak_3.title" = "Hat Trick";
+"achievement.streak_7.title" = "Week Warrior";
+"achievement.streak_30.title" = "Monthly Devotion";
+"achievement.streak_100.title" = "Centurion";
+"achievement.daily_7.title" = "Daily Devotee";
+"achievement.daily_30.title" = "Monthly Regular";
+"achievement.timetrial_bronze.title" = "Time Trial Bronze";
+"achievement.timetrial_silver.title" = "Time Trial Silver";
+"achievement.timetrial_gold.title" = "Time Trial Gold";
+"achievement.level_5.title" = "Rising Star";
+"achievement.level_10.title" = "Veteran";
+"achievement.level_20.title" = "Legend";
+"achievement.perfectionist.title" = "Perfectionist";
+
+/* Achievement descriptions */
+"achievement.first_solve.desc" = "Solved your first puzzle";
+"achievement.solve_10.desc" = "Solved 10 puzzles";
+"achievement.solve_50.desc" = "Solved 50 puzzles";
+"achievement.solve_100.desc" = "Solved 100 puzzles";
+"achievement.solve_500.desc" = "Solved 500 puzzles";
+"achievement.easy_master.desc" = "Solved 20 Easy puzzles";
+"achievement.medium_master.desc" = "Solved 15 Medium puzzles";
+"achievement.hard_master.desc" = "Solved 10 Hard puzzles";
+"achievement.very_hard_master.desc" = "Solved 5 Very Hard puzzles";
+"achievement.expert_master.desc" = "Solved 3 Expert puzzles";
+"achievement.speed_demon.desc" = "Solved an Easy puzzle in under 10 seconds";
+"achievement.lightning.desc" = "Solved a Medium puzzle in under 20 seconds";
+"achievement.streak_3.desc" = "Played 3 days in a row";
+"achievement.streak_7.desc" = "Played 7 days in a row";
+"achievement.streak_30.desc" = "Played 30 days in a row";
+"achievement.streak_100.desc" = "Played 100 days in a row";
+"achievement.daily_7.desc" = "Completed 7 daily challenges";
+"achievement.daily_30.desc" = "Completed 30 daily challenges";
+"achievement.timetrial_bronze.desc" = "Score 100+ in Time Trial";
+"achievement.timetrial_silver.desc" = "Score 300+ in Time Trial";
+"achievement.timetrial_gold.desc" = "Score 500+ in Time Trial";
+"achievement.level_5.desc" = "Reached Level 5";
+"achievement.level_10.desc" = "Reached Level 10";
+"achievement.level_20.desc" = "Reached Level 20";
+"achievement.perfectionist.desc" = "Solved a Hard+ puzzle without backtracking";

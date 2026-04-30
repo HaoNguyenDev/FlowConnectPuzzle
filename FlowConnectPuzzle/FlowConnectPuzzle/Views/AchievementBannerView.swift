@@ -9,6 +9,8 @@ struct AchievementBannerView: View {
     let achievement: Achievement
     let onDismiss: () -> Void
 
+    @State private var lm = LocalizationManager.shared
+
     var body: some View {
         HStack(spacing: 12) {
             Image(systemName: achievement.iconName)
@@ -16,13 +18,13 @@ struct AchievementBannerView: View {
                 .foregroundColor(.yellow)
 
             VStack(alignment: .leading, spacing: 2) {
-                Text("Achievement Unlocked!")
+                Text(lm.t("achievement.unlocked"))
                     .font(.system(size: 11, weight: .semibold))
                     .foregroundColor(.white.opacity(0.7))
-                Text(achievement.title)
+                Text(lm.achievementTitle(achievement.id))
                     .font(.system(size: 16, weight: .bold))
                     .foregroundColor(.white)
-                Text(achievement.description)
+                Text(lm.achievementDesc(achievement.id))
                     .font(.system(size: 12))
                     .foregroundColor(.white.opacity(0.7))
                     .lineLimit(1)
