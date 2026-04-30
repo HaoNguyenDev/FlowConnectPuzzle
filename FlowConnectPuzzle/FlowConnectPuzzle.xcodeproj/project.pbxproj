@@ -7,6 +7,17 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		DA02D8BC2FA345ED00284697 /* StreakManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA02D8BB2FA345ED00284697 /* StreakManager.swift */; };
+		DA02D8BE2FA3460000284697 /* NotificationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA02D8BD2FA3460000284697 /* NotificationManager.swift */; };
+		DA02D8C02FA3470F00284697 /* ProgressionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA02D8BF2FA3470F00284697 /* ProgressionManager.swift */; };
+		DA02D8C22FA3472500284697 /* WeeklyChallenge.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA02D8C12FA3472500284697 /* WeeklyChallenge.swift */; };
+		DA02D8C42FA3473100284697 /* StreakCalendarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA02D8C32FA3473100284697 /* StreakCalendarView.swift */; };
+		DA02D8C62FA347A700284697 /* GameMode.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA02D8C52FA347A700284697 /* GameMode.swift */; };
+		DA02D8C82FA347D500284697 /* TimeTrialView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA02D8C72FA347D500284697 /* TimeTrialView.swift */; };
+		DA02D8CA2FA348AE00284697 /* SoundManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA02D8C92FA348AE00284697 /* SoundManager.swift */; };
+		DA02D8CC2FA348B900284697 /* GameCenterManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA02D8CB2FA348B900284697 /* GameCenterManager.swift */; };
+		DA02D8CE2FA348CF00284697 /* ChallengeFriendView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA02D8CD2FA348CF00284697 /* ChallengeFriendView.swift */; };
+		DA02D8D02FA350FB00284697 /* ToastModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA02D8CF2FA350FB00284697 /* ToastModifier.swift */; };
 		DA85AC982F9356580088A534 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DA85AC912F9356580088A534 /* Assets.xcassets */; };
 		DA85AC9A2F9356580088A534 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA85AC922F9356580088A534 /* ContentView.swift */; };
 		DA85AC9B2F9356580088A534 /* FlowConnectPuzzleApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA85AC942F9356580088A534 /* FlowConnectPuzzleApp.swift */; };
@@ -50,6 +61,17 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		DA02D8BB2FA345ED00284697 /* StreakManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StreakManager.swift; sourceTree = "<group>"; };
+		DA02D8BD2FA3460000284697 /* NotificationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationManager.swift; sourceTree = "<group>"; };
+		DA02D8BF2FA3470F00284697 /* ProgressionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressionManager.swift; sourceTree = "<group>"; };
+		DA02D8C12FA3472500284697 /* WeeklyChallenge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeeklyChallenge.swift; sourceTree = "<group>"; };
+		DA02D8C32FA3473100284697 /* StreakCalendarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StreakCalendarView.swift; sourceTree = "<group>"; };
+		DA02D8C52FA347A700284697 /* GameMode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameMode.swift; sourceTree = "<group>"; };
+		DA02D8C72FA347D500284697 /* TimeTrialView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeTrialView.swift; sourceTree = "<group>"; };
+		DA02D8C92FA348AE00284697 /* SoundManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SoundManager.swift; sourceTree = "<group>"; };
+		DA02D8CB2FA348B900284697 /* GameCenterManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameCenterManager.swift; sourceTree = "<group>"; };
+		DA02D8CD2FA348CF00284697 /* ChallengeFriendView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChallengeFriendView.swift; sourceTree = "<group>"; };
+		DA02D8CF2FA350FB00284697 /* ToastModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToastModifier.swift; sourceTree = "<group>"; };
 		DA85AC622F93563B0088A534 /* FlowConnectPuzzle.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FlowConnectPuzzle.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		DA85AC732F93563C0088A534 /* FlowConnectPuzzleTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = FlowConnectPuzzleTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		DA85AC7D2F93563C0088A534 /* FlowConnectPuzzleUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = FlowConnectPuzzleUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -176,6 +198,8 @@
 				DA85ACBD2F93845D0088A534 /* Difficulty.swift */,
 				DAA6DC272F9D450900062038 /* GameTheme.swift */,
 				DAA6DC292F9D451A00062038 /* DailyChallenge.swift */,
+				DA02D8C12FA3472500284697 /* WeeklyChallenge.swift */,
+				DA02D8C52FA347A700284697 /* GameMode.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -203,6 +227,10 @@
 				DAA6DC2B2F9D452E00062038 /* AchievementBannerView.swift */,
 				DAA6DC2D2F9D454600062038 /* OnboardingView.swift */,
 				DAA6DC2F2F9D455C00062038 /* StatisticsView.swift */,
+				DA02D8C32FA3473100284697 /* StreakCalendarView.swift */,
+				DA02D8C72FA347D500284697 /* TimeTrialView.swift */,
+				DA02D8CD2FA348CF00284697 /* ChallengeFriendView.swift */,
+				DA02D8CF2FA350FB00284697 /* ToastModifier.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -215,6 +243,11 @@
 				DA85ACBF2F9384730088A534 /* PuzzleGenerator.swift */,
 				DAA6DC232F9D44DD00062038 /* StatisticsManager.swift */,
 				DAA6DC252F9D44F600062038 /* AchievementManager.swift */,
+				DA02D8BB2FA345ED00284697 /* StreakManager.swift */,
+				DA02D8BD2FA3460000284697 /* NotificationManager.swift */,
+				DA02D8BF2FA3470F00284697 /* ProgressionManager.swift */,
+				DA02D8C92FA348AE00284697 /* SoundManager.swift */,
+				DA02D8CB2FA348B900284697 /* GameCenterManager.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -357,11 +390,14 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DA02D8D02FA350FB00284697 /* ToastModifier.swift in Sources */,
 				DA85AC9A2F9356580088A534 /* ContentView.swift in Sources */,
 				DA85AC9B2F9356580088A534 /* FlowConnectPuzzleApp.swift in Sources */,
 				DA85AC9C2F9356580088A534 /* Item.swift in Sources */,
 				DAA6DC242F9D44DD00062038 /* StatisticsManager.swift in Sources */,
 				DA85ACC02F9384730088A534 /* PuzzleGenerator.swift in Sources */,
+				DA02D8C62FA347A700284697 /* GameMode.swift in Sources */,
+				DA02D8C02FA3470F00284697 /* ProgressionManager.swift in Sources */,
 				DA85ACB02F9356A60088A534 /* PuzzleGameView.swift in Sources */,
 				DAA6DC282F9D450900062038 /* GameTheme.swift in Sources */,
 				DA85ACB12F9356A60088A534 /* HapticManager.swift in Sources */,
@@ -369,11 +405,19 @@
 				DA85ACB22F9356A60088A534 /* GridCell.swift in Sources */,
 				DA85ACB32F9356A60088A534 /* PuzzleSolver.swift in Sources */,
 				DAA6DC2C2F9D452E00062038 /* AchievementBannerView.swift in Sources */,
+				DA02D8CA2FA348AE00284697 /* SoundManager.swift in Sources */,
 				DA85ACB52F9356A60088A534 /* GameState.swift in Sources */,
 				DAA6DC302F9D455C00062038 /* StatisticsView.swift in Sources */,
+				DA02D8CE2FA348CF00284697 /* ChallengeFriendView.swift in Sources */,
 				DAA6DC2E2F9D454600062038 /* OnboardingView.swift in Sources */,
+				DA02D8CC2FA348B900284697 /* GameCenterManager.swift in Sources */,
+				DA02D8BE2FA3460000284697 /* NotificationManager.swift in Sources */,
+				DA02D8C22FA3472500284697 /* WeeklyChallenge.swift in Sources */,
 				DAA6DC262F9D44F600062038 /* AchievementManager.swift in Sources */,
+				DA02D8C82FA347D500284697 /* TimeTrialView.swift in Sources */,
 				DAA6DC2A2F9D451A00062038 /* DailyChallenge.swift in Sources */,
+				DA02D8C42FA3473100284697 /* StreakCalendarView.swift in Sources */,
+				DA02D8BC2FA345ED00284697 /* StreakManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

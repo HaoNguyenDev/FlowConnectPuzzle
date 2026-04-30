@@ -26,6 +26,14 @@ struct FlowConnectPuzzleApp: App {
     var body: some Scene {
         WindowGroup {
             ContentView()
+                .task {
+                    // Request notification permission after onboarding
+                    if UserDefaults.standard.bool(forKey: "onboarding_done") {
+                        await NotificationManager.shared.requestPermission()
+                    }
+                    // Authenticate Game Center
+                    GameCenterManager.shared.authenticate()
+                }
         }
         .modelContainer(sharedModelContainer)
     }

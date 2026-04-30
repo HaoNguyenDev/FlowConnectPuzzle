@@ -19,6 +19,8 @@ struct PuzzleGameView: View {
     @State private var isPersonalBest: Bool = false
     @State private var achievementManager = AchievementManager.shared
     @State private var themeManager = ThemeManager.shared
+    @State private var streakManager = StreakManager.shared
+    @State private var soundManager = SoundManager.shared
     @State private var showAchievementBanner: Bool = false
     /// Controls blur overlay — game only starts (and timer only ticks) after user taps Start.
     @State private var gameStarted: Bool = false
@@ -26,21 +28,25 @@ struct PuzzleGameView: View {
     private let ledTimer  = Timer.publish(every: 1.0 / 60.0, on: .main, in: .common).autoconnect()
     private let gameTimer = Timer.publish(every: 0.01, on: .main, in: .common).autoconnect()
 
-    let difficulty: Difficulty
-    let isDaily: Bool
+    let mode: GameMode
     let onBack: () -> Void
 
-    init(difficulty: Difficulty, isDaily: Bool = false, onBack: @escaping () -> Void) {
-        self.difficulty = difficulty
-        self.isDaily = isDaily
+    // Convenience shorthands so existing call-sites within the view need no changes
+    private var difficulty: Difficulty { mode.difficulty }
+    private var isDaily:   Bool { mode == .daily }
+    private var isWeekly:  Bool { mode == .weekly }
+    private var isZen:     Bool { mode.isZen }
+
+    init(mode: GameMode, onBack: @escaping () -> Void) {
+        self.mode = mode
         self.onBack = onBack
-        if isDaily {
+        if let seed = mode.seed {
             _gameState = State(initialValue: GameState(
-                dailyDifficulty: difficulty,
-                seed: DailyChallenge.todaySeed
+                dailyDifficulty: mode.difficulty,
+                seed: seed
             ))
         } else {
-            _gameState = State(initialValue: GameState(difficulty: difficulty))
+            _gameState = State(initialValue: GameState(difficulty: mode.difficulty))
         }
     }
 
@@ -66,23 +72,38 @@ struct PuzzleGameView: View {
                         Image(systemName: "calendar")
                             .font(.system(size: 12, weight: .medium))
                             .foregroundColor(themeManager.current.pathColor)
+                    } else if isWeekly {
+                        Image(systemName: "crown.fill")
+                            .font(.system(size: 12, weight: .medium))
+                            .foregroundColor(.purple)
                     }
-                    Text(isDaily ? "Daily Challenge" : difficulty.displayName)
+                    Text(isWeekly ? "Weekly Challenge" : (isDaily ? "Daily Challenge" : difficulty.displayName))
                         .font(.system(size: 14, weight: .medium))
                         .foregroundColor(.secondary)
                 }
 
                 Spacer()
 
-                // Timer display — grayed out while waiting for Start
-                HStack(spacing: 6) {
-                    Image(systemName: "clock")
-                        .font(.system(size: 14, weight: .medium))
-                        .foregroundColor(gameStarted ? .secondary : .secondary.opacity(0.4))
-                    Text(formattedTime)
-                        .font(.system(size: 14, weight: .medium))
-                        .foregroundColor(gameStarted ? .secondary : .secondary.opacity(0.4))
-                        .monospacedDigit()
+                // Timer display — hidden in zen mode
+                if isZen {
+                    HStack(spacing: 4) {
+                        Image(systemName: "leaf.fill")
+                            .font(.system(size: 12))
+                            .foregroundColor(.green.opacity(0.7))
+                        Text("Zen")
+                            .font(.system(size: 13, weight: .medium))
+                            .foregroundColor(.secondary)
+                    }
+                } else {
+                    HStack(spacing: 6) {
+                        Image(systemName: "clock")
+                            .font(.system(size: 14, weight: .medium))
+                            .foregroundColor(gameStarted ? .secondary : .secondary.opacity(0.4))
+                        Text(formattedTime)
+                            .font(.system(size: 14, weight: .medium))
+                            .foregroundColor(gameStarted ? .secondary : .secondary.opacity(0.4))
+                            .monospacedDigit()
+                    }
                 }
             }
             .padding(.horizontal, 16)
@@ -144,8 +165,8 @@ struct PuzzleGameView: View {
                 .opacity(!gameStarted || gameState.allNumbersConnected || gameState.path.isEmpty ? 0.4 : 1)
                 .accessibilityLabel("Hint")
 
-                // New puzzle (hidden during daily)
-                if !isDaily {
+                // New puzzle (hidden during daily or weekly)
+                if !isDaily && !isWeekly {
                     Button(action: {
                         gameState.newGame()
                         resetTimer()
@@ -283,13 +304,13 @@ struct PuzzleGameView: View {
                     Circle()
                         .fill(theme.pathColor.opacity(0.15))
                         .frame(width: 72, height: 72)
-                    Image(systemName: isDaily ? "calendar" : difficulty.iconName)
+                    Image(systemName: isWeekly ? "crown.fill" : (isDaily ? "calendar" : difficulty.iconName))
                         .font(.system(size: 32))
-                        .foregroundColor(theme.pathColor)
+                        .foregroundColor(isWeekly ? .purple : theme.pathColor)
                 }
 
                 VStack(spacing: 6) {
-                    Text(isDaily ? "Daily Challenge" : difficulty.displayName)
+                    Text(isWeekly ? "Weekly Challenge" : (isDaily ? "Daily Challenge" : difficulty.displayName))
                         .font(.system(size: 22, weight: .bold))
                         .foregroundColor(.primary)
                     Text(difficulty.description)
@@ -329,22 +350,48 @@ struct PuzzleGameView: View {
     // MARK: - Completion Handling
 
     private func handleCompletion() {
-        isPersonalBest = StatisticsManager.shared.recordCompletion(
+        soundManager.playComplete()
+
+        // Zen completions don't update personal best (no time pressure)
+        let recorded = StatisticsManager.shared.recordCompletion(
             difficulty: difficulty,
             time: elapsedTime,
             usedUndo: gameState.usedUndo
         )
+        isPersonalBest = recorded && !isZen
 
+        if isWeekly {
+            WeeklyChallenge.isCompletedThisWeek = true
+        }
+        if isDaily {
+            StreakManager.shared.recordDailyCompletion()
+            DailyChallenge.isCompletedToday = true
+        }
+
+        // Record XP — must run after StatisticsManager so isPersonalBest is known
+        ProgressionManager.shared.recordCompletion(
+            difficulty: difficulty,
+            isPersonalBest: isPersonalBest,
+            usedUndo: gameState.usedUndo,
+            isDaily: isDaily,
+            isWeekly: isWeekly
+        )
+
+        // Submit to Game Center if a personal best was set
+        if isPersonalBest {
+            GameCenterManager.shared.submitBestTime(elapsedTime, for: difficulty)
+        }
+        GameCenterManager.shared.submitXP(ProgressionManager.shared.totalXP)
+
+        // Must run after StreakManager + ProgressionManager so all counts are updated
         AchievementManager.shared.check(
             difficulty: difficulty,
             time: elapsedTime,
             usedUndo: gameState.usedUndo,
-            isDaily: isDaily
+            isDaily: isDaily,
+            isWeekly: isWeekly,
+            isZen: isZen
         )
-
-        if isDaily {
-            DailyChallenge.isCompletedToday = true
-        }
     }
 
     // MARK: - Timer Management
@@ -386,6 +433,7 @@ struct PuzzleGameView: View {
     }
 
     private func addTimePenalty() {
+        guard !isZen else { return }  // Zen mode has no undo penalty
         elapsedTime += 3.0
     }
 
@@ -533,10 +581,23 @@ struct PuzzleGameView: View {
         let col = Int(point.x / cellSize)
         let row = Int(point.y / cellSize)
         guard row >= 0, row < gameState.gridSize, col >= 0, col < gameState.gridSize else { return }
-        _ = gameState.addToPath(GridPosition(row: row, col: col))
+        let added = gameState.addToPath(GridPosition(row: row, col: col))
+        if added { soundManager.playStep() }
     }
 
     // MARK: - Completion Overlay
+
+    private var shareResultText: String {
+        if isWeekly {
+            return "🏆 Weekly Challenge conquered in \(formattedTime)! Play Flow Connect Puzzle!"
+        } else if isDaily {
+            let streak = streakManager.currentStreak
+            let streakPart = streak > 1 ? " 🔥 \(streak)-day streak!" : ""
+            return "🧩 Daily Challenge solved in \(formattedTime)!\(streakPart) Play Flow Connect Puzzle!"
+        } else {
+            return "🧩 Solved \(difficulty.displayName) in \(formattedTime) on Flow Connect Puzzle!"
+        }
+    }
 
     private var completionOverlay: some View {
         let theme = themeManager.current
@@ -547,11 +608,14 @@ struct PuzzleGameView: View {
 
             VStack(spacing: 20) {
                 HStack(spacing: 8) {
-                    if isDaily {
+                    if isWeekly {
+                        Image(systemName: "crown.fill")
+                            .foregroundColor(.yellow)
+                    } else if isDaily {
                         Image(systemName: "calendar.badge.checkmark")
                             .foregroundColor(.yellow)
                     }
-                    Text(isDaily ? "Daily Complete!" : "Puzzle Complete!")
+                    Text(isWeekly ? "Weekly Complete!" : (isDaily ? "Daily Complete!" : "Puzzle Complete!"))
                         .font(.system(size: 28, weight: .bold))
                         .foregroundColor(.white)
                 }
@@ -584,7 +648,22 @@ struct PuzzleGameView: View {
                     .cornerRadius(12)
                 }
 
-                if isDaily {
+                // Share result
+                ShareLink(item: shareResultText) {
+                    HStack(spacing: 8) {
+                        Image(systemName: "square.and.arrow.up")
+                            .font(.system(size: 14))
+                        Text("Share Result")
+                            .font(.system(size: 14, weight: .medium))
+                    }
+                    .foregroundColor(.white.opacity(0.85))
+                    .padding(.horizontal, 20)
+                    .padding(.vertical, 9)
+                    .background(Color.white.opacity(0.2))
+                    .cornerRadius(12)
+                }
+
+                if isDaily || isWeekly {
                     Button(action: onBack) {
                         Text("Back to Menu")
                             .font(.system(size: 18, weight: .semibold))
@@ -619,35 +698,37 @@ struct PuzzleGameView: View {
 /// Helper that auto-starts the game after a short delay so the in-progress
 /// state is visible in the canvas without needing to tap Start manually.
 private struct AutoStartPreview: View {
-    let difficulty: Difficulty
-    let isDaily: Bool
+    let mode: GameMode
     let colorScheme: ColorScheme?
 
-    init(_ difficulty: Difficulty, isDaily: Bool = false, colorScheme: ColorScheme? = nil) {
-        self.difficulty = difficulty
-        self.isDaily = isDaily
+    init(_ mode: GameMode, colorScheme: ColorScheme? = nil) {
+        self.mode = mode
         self.colorScheme = colorScheme
     }
 
     var body: some View {
-        PuzzleGameView(difficulty: difficulty, isDaily: isDaily, onBack: {})
+        PuzzleGameView(mode: mode, onBack: {})
             .preferredColorScheme(colorScheme)
     }
 }
 
 #Preview("Start Screen — Medium") {
-    AutoStartPreview(.medium)
+    AutoStartPreview(.normal(.medium))
 }
 
 #Preview("Start Screen — Easy, Dark") {
-    AutoStartPreview(.easy, colorScheme: .dark)
+    AutoStartPreview(.normal(.easy), colorScheme: .dark)
 }
 
 #Preview("Start Screen — Expert") {
-    AutoStartPreview(.expert)
+    AutoStartPreview(.normal(.expert))
 }
 
 #Preview("Daily Challenge") {
-    AutoStartPreview(.medium, isDaily: true)
+    AutoStartPreview(.daily)
+}
+
+#Preview("Zen Mode") {
+    AutoStartPreview(.zen(.medium))
 }
 
