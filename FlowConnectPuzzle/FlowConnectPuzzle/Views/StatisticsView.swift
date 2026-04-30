@@ -8,11 +8,83 @@ import SwiftUI
 struct StatisticsView: View {
     @State private var stats = StatisticsManager.shared
     @State private var achievements = AchievementManager.shared
+    @State private var streak = StreakManager.shared
+    @State private var progression = ProgressionManager.shared
+    @State private var themeManager = ThemeManager.shared
     @Environment(\.dismiss) private var dismiss
 
     var body: some View {
         NavigationView {
             List {
+                // MARK: Progression
+                Section("Progression") {
+                    VStack(alignment: .leading, spacing: 10) {
+                        HStack {
+                            VStack(alignment: .leading, spacing: 2) {
+                                Text("Level \(progression.level + 1) — \(progression.levelName)")
+                                    .font(.system(size: 16, weight: .bold))
+                                if let nextXP = progression.xpForNextLevel {
+                                    Text("\(nextXP - progression.totalXP) XP to \(ProgressionManager.levelNames[progression.level + 1])")
+                                        .font(.system(size: 12))
+                                        .foregroundColor(.secondary)
+                                } else {
+                                    Text("Maximum level reached! 🏆")
+                                        .font(.system(size: 12, weight: .semibold))
+                                        .foregroundColor(.yellow)
+                                }
+                            }
+                            Spacer()
+                            Text("\(progression.totalXP) XP")
+                                .font(.system(size: 14, weight: .semibold))
+                                .foregroundColor(themeManager.current.pathColor)
+                        }
+
+                        GeometryReader { geo in
+                            ZStack(alignment: .leading) {
+                                Capsule()
+                                    .fill(Color(uiColor: .systemFill))
+                                    .frame(height: 8)
+                                Capsule()
+                                    .fill(themeManager.current.pathColor)
+                                    .frame(width: geo.size.width * progression.progressInCurrentLevel, height: 8)
+                            }
+                        }
+                        .frame(height: 8)
+                    }
+                    .padding(.vertical, 4)
+                }
+
+                // MARK: Daily Activity Calendar
+                Section("Daily Activity") {
+                    StreakCalendarView()
+                        .padding(.vertical, 4)
+                }
+
+                // MARK: Daily Streak
+                Section("Daily Streak") {
+                    HStack {
+                        Label("Current Streak", systemImage: "flame.fill")
+                            .foregroundColor(.orange)
+                        Spacer()
+                        Text(streak.currentStreak == 1 ? "1 day" : "\(streak.currentStreak) days")
+                            .foregroundColor(.secondary)
+                    }
+                    HStack {
+                        Label("Best Streak", systemImage: "trophy.fill")
+                            .foregroundColor(.yellow)
+                        Spacer()
+                        Text(streak.bestStreak == 1 ? "1 day" : "\(streak.bestStreak) days")
+                            .foregroundColor(.secondary)
+                    }
+                    HStack {
+                        Label("Daily Challenges", systemImage: "calendar.badge.checkmark")
+                            .foregroundColor(.blue)
+                        Spacer()
+                        Text("\(streak.totalDailySolves) solved")
+                            .foregroundColor(.secondary)
+                    }
+                }
+
                 // MARK: Best Times
                 Section("Best Times") {
                     ForEach(Difficulty.allCases) { difficulty in
