@@ -38,13 +38,16 @@ This includes:
 
 ### Platform & Tech Stack
 
-- **Platform**: iOS/iPadOS
-- **Language**: Swift
+- **Platform**: iOS/iPadOS (iOS 17+)
+- **Language**: Swift 5.9+
 - **UI Framework**: SwiftUI
 - **State Management**: `@Observable` macro (Swift 5.9+)
-- **Haptics**: UIKit's UIFeedbackGenerator
-- **Persistence**: UserDefaults (statistics, achievements, theme, onboarding state)
-- **Architecture**: MVVM-like with GameState as the central controller
+- **Haptics**: UIKit's UIFeedbackGenerator (via `HapticManager`)
+- **Sound**: AudioToolbox `AudioServicesPlaySystemSound` (via `SoundManager`)
+- **Persistence**: UserDefaults (all managers use stored property + `didSet` pattern)
+- **Notifications**: `UNUserNotificationCenter` (via `NotificationManager`)
+- **Game Center**: `GameKit` `GKLeaderboard.submitScore` (via `GameCenterManager`)
+- **Architecture**: MVVM-like with `@Observable` singletons for cross-cutting concerns
 
 ---
 
@@ -53,14 +56,16 @@ This includes:
 ```
 FlowConnectPuzzle/
 ├── App Entry
-│   ├── FlowConnectPuzzleApp.swift          # @main App
-│   └── ContentView.swift                   # Home screen (difficulty selection, daily challenge, settings)
+│   ├── FlowConnectPuzzleApp.swift          # @main App — requests notifications + authenticates Game Center on launch
+│   └── ContentView.swift                   # Home screen — GameMode-based navigation
 │
 ├── Models
 │   ├── GridCell.swift                      # GridPosition, GridCell, PathSegment
 │   ├── Difficulty.swift                    # enum Difficulty: easy/medium/hard/veryHard/expert
 │   ├── GameTheme.swift                     # GameTheme struct + ThemeManager (@Observable)
-│   └── DailyChallenge.swift                # Daily puzzle seed, completion tracking
+│   ├── DailyChallenge.swift                # Daily puzzle seed, completion tracking
+│   ├── GameMode.swift                      # enum GameMode: normal/daily/weekly/zen/timeTrial
+│   └── WeeklyChallenge.swift               # ISO week-based seed, expert difficulty, completion tracking
 │
 ├── ViewModels
 │   └── GameState.swift                     # @Observable class — core game logic + undo tracking
@@ -68,19 +73,123 @@ FlowConnectPuzzle/
 ├── Services
 │   ├── PuzzleGenerator.swift               # Puzzle generation (Warnsdorff + SeededRNG)
 │   ├── StatisticsManager.swift             # Best times + solve counts (UserDefaults)
-│   ├── AchievementManager.swift            # 10 achievements, unlock logic
-│   └── HapticManager.swift                 # Centralized haptic feedback
+│   ├── AchievementManager.swift            # 25 achievements, unlock logic
+│   ├── HapticManager.swift                 # Centralized haptic feedback
+│   ├── StreakManager.swift                 # Daily streak tracking + completion history
+│   ├── NotificationManager.swift           # Local push notifications (8am + 8pm reminders)
+│   ├── ProgressionManager.swift            # XP + level system (10 levels, Novice → Champion)
+│   ├── SoundManager.swift                  # Sound effects via AudioToolbox
+│   ├── GameCenterManager.swift             # Game Center auth + leaderboard submission
+│   └── LocalizationManager.swift          # @Observable singleton, loads .strings files at runtime
+│
+├── Localizations
+│   ├── en.strings                          # English (required — fallback for all languages)
+│   ├── vi.strings                          # Tiếng Việt
+│   ├── es.strings                          # Español
+│   ├── fr.strings                          # Français
+│   ├── de.strings                          # Deutsch
+│   ├── ja.strings                          # 日本語
+│   ├── zh_Hans.strings                     # 简体中文
+│   ├── pt.strings                          # Português
+│   └── ko.strings                          # 한국어
 │
 ├── Views
-│   ├── PuzzleGameView.swift                # Main game UI
-│   ├── StatisticsView.swift                # Stats + achievements sheet
+│   ├── PuzzleGameView.swift                # Main game UI — accepts GameMode, handles all modes
+│   ├── StatisticsView.swift                # Stats + achievements + progression + streak calendar
 │   ├── OnboardingView.swift                # First-launch 4-step tutorial
-│   └── AchievementBannerView.swift         # Achievement unlock notification banner
+│   ├── AchievementBannerView.swift         # Achievement unlock notification banner
+│   ├── StreakCalendarView.swift            # GitHub-style 13-week heatmap of daily completions
+│   ├── TimeTrialView.swift                 # 3-minute countdown mode, escalating difficulty
+│   ├── ChallengeFriendView.swift           # Generate/share/enter challenge codes
+│   └── ToastModifier.swift                 # Reusable toast notification ViewModifier
 │
 └── Documentation
     ├── README.md                           # User-facing documentation
     └── AGENT.md                            # This file (AI assistant guide)
 ```
+
+---
+
+## 🎮 Game Modes
+
+The `GameMode` enum is the single source of truth for which mode is active. `PuzzleGameView` accepts `mode: GameMode` instead of separate boolean flags.
+
+```swift
+enum GameMode: Equatable {
+    case normal(Difficulty)   // Standard timed puzzle
+    case daily                // Daily challenge — date-seeded, one per day
+    case weekly               // Weekly challenge — ISO week-seeded, always Expert
+    case zen(Difficulty)      // No timer display, no time penalties, no personal best
+    case timeTrial            // Separate view (TimeTrialView) — 3-min countdown
+
+    var difficulty: Difficulty  // Derived difficulty for this mode
+    var isSeeded: Bool          // true for daily/weekly
+    var seed: UInt64?           // Seed value for seeded modes
+    var isZen: Bool             // true for zen(_)
+    var displayTitle: String    // Human-readable title for the header
+}
+```
+
+**Key behavioral differences by mode:**
+
+| Mode | Timer | Undo Penalty | Personal Best | New Puzzle Button |
+|------|-------|-------------|---------------|-------------------|
+| `normal` | Counts up | +3 sec | Yes | Shown |
+| `daily` | Counts up | +3 sec | Yes | Hidden |
+| `weekly` | Counts up | +3 sec | Yes | Hidden |
+| `zen` | Hidden (leaf icon) | None (skipped) | No | Shown |
+| `timeTrial` | Counts down (3 min) | N/A (auto-advance) | N/A | N/A |
+
+**Computed shorthands in `PuzzleGameView`** (so internal code stays readable):
+```swift
+private var difficulty: Difficulty { mode.difficulty }
+private var isDaily: Bool { mode == .daily }
+private var isWeekly: Bool { mode == .weekly }
+private var isZen: Bool { mode.isZen }
+```
+
+---
+
+## 🗓️ Daily Challenge System
+
+```swift
+enum DailyChallenge {
+    static var todaySeed: UInt64          // UInt64(year * 10000 + month * 100 + day)
+    static var todayDifficulty: Difficulty // Rotates through all 5 difficulties by dayOfYear % 5
+    static var isCompletedToday: Bool     // Persisted in UserDefaults per seed key ("daily_done_{seed}")
+    static var formattedDate: String      // Human-readable date string
+}
+```
+
+**Daily puzzle rules:**
+- Same seed → same puzzle for all users on the same day
+- Only one attempt — "New Puzzle" button is hidden during daily mode
+- After completion, the card shows "Done" badge on the home screen
+- +50 XP bonus on top of base XP
+- Recorded in `StreakManager` for streak tracking
+
+---
+
+## 📅 Weekly Challenge System
+
+```swift
+@Observable
+class WeeklyChallenge {
+    // ISO week-based seed: UInt64(year * 1000 + week)
+    // Always .expert difficulty
+    // Completion stored per seed in UserDefaults
+
+    var isCompletedThisWeek: Bool   // Persisted
+    var currentSeed: UInt64         // Computed from current ISO week
+    var formattedDateRange: String  // "Mon Apr 28 – Sun May 4"
+}
+```
+
+**Weekly puzzle rules:**
+- Always Expert (9×9, 17 numbers) difficulty — hardest possible
+- One per ISO calendar week
+- +200 XP bonus on top of base (Expert: 100 XP base + 200 weekly = 300 XP)
+- "Weekly Champion" achievement on first completion
 
 ---
 
@@ -134,7 +243,7 @@ enum Difficulty: String, CaseIterable, Identifiable {
 // Random game
 static func generate(for difficulty: Difficulty) -> PuzzleConfiguration
 
-// Daily Challenge — deterministic, same puzzle for all players on the same day
+// Seeded (Daily / Weekly / Challenge) — deterministic, same puzzle for same seed
 static func generate(for difficulty: Difficulty, seed: UInt64) -> PuzzleConfiguration
 ```
 
@@ -178,25 +287,6 @@ Warnsdorff's Rule:
 
 ---
 
-## 🗓️ Daily Challenge System
-
-```swift
-enum DailyChallenge {
-    static var todaySeed: UInt64          // Based on YYYYMMDD integer
-    static var todayDifficulty: Difficulty // Rotates through all 5 difficulties by day-of-year
-    static var isCompletedToday: Bool     // Persisted in UserDefaults per seed key
-    static var formattedDate: String      // Human-readable date string
-}
-```
-
-**Daily puzzle rules:**
-- Same seed → same puzzle for all users on the same day
-- Only one attempt — "New Puzzle" button is hidden during daily mode
-- After completion, the card shows "Done" badge on the home screen
-- Unlocks "Daily Champion" achievement on first completion
-
----
-
 ## 🎮 Game State Management
 
 ### GameState (@Observable)
@@ -211,7 +301,6 @@ class GameState {
     var allNumbersConnected: Bool // WIN condition
     var usedUndo: Bool            // Whether Undo was used this session (for achievements/stats)
 
-    private(set) var isDaily: Bool
     private(set) var gridSize: Int
     private(set) var maxNumber: Int
     private(set) var numberPositions: [Int: GridPosition]
@@ -220,7 +309,7 @@ class GameState {
     // Random game
     init(difficulty: Difficulty = .medium)
 
-    // Daily Challenge
+    // Seeded game (Daily, Weekly, Challenge)
     init(dailyDifficulty: Difficulty, seed: UInt64)
 }
 ```
@@ -253,9 +342,82 @@ class StatisticsManager {
 
 ---
 
+## 🔥 Streak System
+
+```swift
+@Observable
+class StreakManager {
+    static let shared = StreakManager()
+
+    var currentStreak: Int         // Consecutive days with a daily completion (persisted)
+    var bestStreak: Int            // All-time best streak (persisted)
+    var totalDailySolves: Int      // Total daily challenges completed (persisted)
+    var completionDates: Set<String> // "yyyy-MM-dd" strings of completed days (persisted)
+
+    func recordDailyCompletion()   // Idempotent — safe to call multiple times per day
+    func hasCompleted(on date: Date) -> Bool
+}
+```
+
+**Streak logic**: `recordDailyCompletion()` checks if yesterday's date key is in `completionDates`. If yes → increment streak. If no → reset to 1. The method is idempotent so duplicate calls on the same day are safe.
+
+**CRITICAL ORDER**: `StreakManager.recordDailyCompletion()` must be called BEFORE `AchievementManager.check()` so streak-based achievements (`streak_14`) see the updated streak value.
+
+---
+
+## ⭐ XP & Level System
+
+```swift
+@Observable
+class ProgressionManager {
+    static let shared = ProgressionManager()
+
+    var totalXP: Int            // Persisted — stored property + didSet
+    var level: Int              // Computed from totalXP
+    var levelName: String       // "Novice", "Apprentice", ... "Champion"
+    var progressInCurrentLevel: Double  // 0.0–1.0 progress bar value
+
+    func recordCompletion(difficulty:, isPersonalBest:, usedUndo:, isDaily:, isWeekly:)
+    static func baseXP(for difficulty: Difficulty) -> Int
+}
+```
+
+**XP values:**
+
+| Difficulty | Base XP |
+|-----------|---------|
+| Easy | 10 |
+| Medium | 20 |
+| Hard | 40 |
+| Very Hard | 60 |
+| Expert | 100 |
+
+**XP bonuses:**
+- Personal Best: +25
+- No Undo used: +10
+- Daily mode: +50
+- Weekly mode: +200
+
+**Level thresholds (cumulative XP):**
+
+| Level | Name | XP Required |
+|-------|------|-------------|
+| 1 | Novice | 0 |
+| 2 | Apprentice | 100 |
+| 3 | Solver | 250 |
+| 4 | Thinker | 500 |
+| 5 | Explorer | 1,000 |
+| 6 | Tactician | 2,000 |
+| 7 | Strategist | 4,000 |
+| 8 | Master | 7,500 |
+| 9 | Grandmaster | 12,500 |
+| 10 | Champion | 20,000 |
+
+---
+
 ## 🏆 Achievement System
 
-### Achievement Definitions
+### Achievement Definitions (25 total)
 
 | ID | Title | Condition |
 |----|-------|-----------|
@@ -263,12 +425,24 @@ class StatisticsManager {
 | `speed_easy` | Speed Demon | Easy in under 60 seconds |
 | `speed_medium` | Lightning | Medium in under 2 minutes |
 | `speed_hard` | Blazing | Hard in under 5 minutes |
+| `speed_veryhard` | Unstoppable | Very Hard in under 8 minutes |
 | `purist` | Purist | Any puzzle without using Undo |
 | `iron_will` | Iron Will | Hard/Very Hard/Expert without Undo |
 | `collector` | Collector | 10 total puzzles solved |
 | `veteran` | Veteran | 50 total puzzles solved |
+| `solver_100` | Century Solver | 100 total puzzles solved |
+| `solver_200` | Legend | 200 total puzzles solved |
 | `expert_solver` | Expert | Complete Expert difficulty |
 | `daily_champion` | Daily Champion | Complete the Daily Challenge |
+| `streak_14` | On Fire | 14-day daily challenge streak |
+| `weekly_champion` | Weekly Champion | Complete the Weekly Challenge |
+| `zen_master` | Zen Master | Complete 10 Zen mode puzzles |
+| `time_trial_debut` | Time Trialist | Complete first Time Trial session |
+| `time_trial_100` | Century Sprint | Score 100 in a single Time Trial |
+| `time_trial_500` | Speed Demon Elite | Score 500 in a single Time Trial |
+| `level_5` | Rising Star | Reach Level 5 (Explorer) |
+| `level_10` | Champion | Reach Level 10 (Champion) |
+| `dedicated` | Dedicated | Open the app 7 days in a row |
 
 ```swift
 @Observable
@@ -276,17 +450,108 @@ class AchievementManager {
     static let shared = AchievementManager()
     var recentlyUnlocked: Achievement?  // Observed by PuzzleGameView to show banner
 
-    func check(difficulty:, time:, usedUndo:, isDaily:)  // Call AFTER recordCompletion
+    // Call AFTER StatisticsManager.recordCompletion() and ProgressionManager.recordCompletion()
+    func check(difficulty:, time:, usedUndo:, isDaily:, isWeekly: Bool = false, isZen: Bool = false)
+    func checkTimeTrial(score: Int)   // Called from TimeTrialView when time expires
     func isUnlocked(_ achievement: Achievement) -> Bool
     func clearRecentlyUnlocked()
 }
 ```
 
-**Achievement unlock flow** (called in `PuzzleGameView.handleCompletion()`):
-1. `StatisticsManager.shared.recordCompletion(...)` → updates counts + best time
-2. `AchievementManager.shared.check(...)` → reads updated stats, unlocks achievements
-3. If daily: `DailyChallenge.isCompletedToday = true`
-4. `AchievementManager.recentlyUnlocked` changes → banner appears for 4 seconds
+### Completion Flow in `PuzzleGameView.handleCompletion()`
+
+**Critical ordering — must follow this exact sequence:**
+
+```
+1. StatisticsManager.shared.recordCompletion(...)       → updates best times + solve counts
+2. StreakManager.shared.recordDailyCompletion()         → (daily/weekly only) updates streak
+3. WeeklyChallenge.shared.isCompletedThisWeek = true    → (weekly only)
+4. ProgressionManager.shared.recordCompletion(...)      → awards XP, updates level
+5. GameCenterManager.shared.submitBestTime(...)         → syncs to leaderboard
+6. AchievementManager.shared.check(...)                 → reads all updated state, unlocks achievements
+```
+
+**Why this order matters:**
+- `AchievementManager.check()` reads `StreakManager.currentStreak` for `streak_14`
+- `AchievementManager.check()` reads `ProgressionManager.level` for `level_5`/`level_10`
+- If `check()` runs before these are updated, achievements won't unlock correctly
+
+---
+
+## 🌐 Localization System
+
+All user-visible strings are externalized into `.strings` files loaded at runtime by `LocalizationManager`. Language switches take effect **immediately** without restart.
+
+### Supported Languages
+
+| Code | Language | File |
+|------|----------|------|
+| `en` | English | `Localizations/en.strings` |
+| `vi` | Tiếng Việt | `Localizations/vi.strings` |
+| `es` | Español | `Localizations/es.strings` |
+| `fr` | Français | `Localizations/fr.strings` |
+| `de` | Deutsch | `Localizations/de.strings` |
+| `ja` | 日本語 | `Localizations/ja.strings` |
+| `zh-Hans` | 简体中文 | `Localizations/zh_Hans.strings` (hyphen → underscore) |
+| `pt` | Português | `Localizations/pt.strings` |
+| `ko` | 한국어 | `Localizations/ko.strings` |
+
+### LocalizationManager
+
+```swift
+@Observable
+class LocalizationManager {
+    static let shared = LocalizationManager()
+
+    var language: AppLanguage {
+        didSet {
+            UserDefaults.standard.set(language.rawValue, forKey: "selected_language")
+            loadStrings(for: language)   // triggers @Observable re-render in all views
+        }
+    }
+
+    func t(_ key: String) -> String          // primary lookup with English fallback
+    func difficultyName(_ difficulty: Difficulty) -> String  // "difficulty.{rawValue}"
+    func achievementTitle(_ id: String) -> String           // "achievement.{id}.title"
+    func achievementDesc(_ id: String) -> String            // "achievement.{id}.desc"
+    func streakText(_ count: Int) -> String  // handles singular/plural
+    func daysText(_ count: Int) -> String    // handles singular/plural
+}
+```
+
+**Fallback chain**: `currentLanguageStrings[key] ?? englishStrings[key] ?? key`
+
+English is always loaded first; other languages are merged on top, so any missing translation gracefully falls back to English rather than showing a raw key.
+
+**How to use in views:**
+```swift
+@State private var lm = LocalizationManager.shared
+
+// Simple string
+Text(lm.t("settings.title"))
+
+// Format string
+Text(String(format: lm.t("stats.level"), level, levelName))
+
+// Difficulty name
+Text(lm.difficultyName(difficulty))
+```
+
+**CJK word-order format specifiers**: Japanese, Korean, and Chinese use positional specifiers (`%1$d`, `%2$@`) to handle different word order:
+```
+// English: "200 XP to Master"
+"stats.xp_to_next" = "%d XP to %@";
+// Japanese: "Masterまで200 XP"
+"stats.xp_to_next" = "%2$@まで%1$d XP";
+```
+
+**Adding a new string**: Add the key to `en.strings` first (required for fallback), then add translations to the other 8 files. The key itself is displayed if it's missing from English.
+
+**Adding a new language**: Add a case to `AppLanguage` enum in `LocalizationManager.swift`, create `Localizations/{code}.strings`, and it will appear in the Settings language picker automatically.
+
+### File Location
+
+All `.strings` files are in the `Localizations/` group in the Xcode project navigator (under `FlowConnectPuzzle/Localizations/`). They are loaded at runtime via `Bundle.main.path(forResource:ofType:)` — no `.lproj` folder structure required.
 
 ---
 
@@ -323,17 +588,80 @@ class ThemeManager {
     var current: GameTheme {
         didSet { UserDefaults.standard.set(current.id, forKey: "selected_theme_id") }
     }
-
-    private init() {
-        let savedId = UserDefaults.standard.string(forKey: "selected_theme_id") ?? "ocean"
-        current = GameTheme.all.first { $0.id == savedId } ?? .ocean
-    }
 }
 ```
 
 **Critical rule**: `current` MUST remain a **stored property** with `didSet`. Using a computed property (custom getter/setter) breaks `@Observable` tracking — the UI will not update when the theme changes.
 
 **Usage in views**: Always read `ThemeManager.shared.current` — never hardcode `.blue` for game colors.
+
+---
+
+## 🔔 Notification System
+
+```swift
+@Observable
+class NotificationManager {
+    static let shared = NotificationManager()
+
+    var isEnabled: Bool {   // Stored property + didSet — schedules/cancels on change
+        didSet { isEnabled ? scheduleReminders() : cancelAllReminders() }
+    }
+
+    func requestPermission() async  // Shows system dialog, sets isEnabled = granted
+}
+```
+
+**Scheduled reminders (when enabled):**
+- **8:00 AM daily**: "Daily Challenge Ready! 🧩"
+- **8:00 PM daily**: "Don't break your streak! 🔥"
+
+Permission is requested in `FlowConnectPuzzleApp.swift` `.task {}` block (only after onboarding is complete).
+
+---
+
+## 🎵 Sound System
+
+```swift
+@Observable
+class SoundManager {
+    static let shared = SoundManager()
+
+    var isEnabled: Bool { didSet { UserDefaults.standard.set(isEnabled, forKey: "sound_enabled") } }
+
+    func playStep()      // Cell added to path — subtle tick
+    func playComplete()  // Puzzle solved — success chime
+    func playUndo()      // Undo action — soft pop
+    func playTap()       // Button tap — light click
+    func playError()     // Invalid move — error buzz
+}
+```
+
+Uses `AudioToolbox.AudioServicesPlaySystemSound` with system sound IDs. `playStep()` is called in `PuzzleGameView.handleDrag()` on each new cell; `playComplete()` in `handleCompletion()`.
+
+---
+
+## 🏅 Game Center
+
+```swift
+@Observable
+class GameCenterManager {
+    static let shared = GameCenterManager()
+
+    var isAuthenticated: Bool
+
+    func authenticate()               // Called on app launch via FlowConnectPuzzleApp
+    func submitBestTime(_ time: TimeInterval, for difficulty: Difficulty)
+    func submitXP(_ xp: Int)
+    func submitPendingScores()        // Called after successful auth to sync all existing bests
+
+    enum Leaderboard: String {
+        // One leaderboard ID per difficulty (best time in milliseconds) + one for total XP
+    }
+}
+```
+
+`submitBestTime` is called from `handleCompletion()` only when `isPersonalBest == true`. Times are submitted as milliseconds (Int).
 
 ---
 
@@ -349,21 +677,24 @@ VStack {
     └─ Settings button → Settings sheet (right)
 
     ScrollView
-    ├─ Daily Challenge Card
-    │   ├─ Calendar icon
-    │   ├─ Date + today's difficulty description
-    │   └─ "Done" badge if completed today
+    ├─ Daily Challenge Card        → mode: .daily
+    ├─ Weekly Challenge Card       → mode: .weekly (purple, crown icon, "+200 XP bonus")
+    │
+    ├─ "Other Modes" section
+    │   ├─ Time Trial button       → TimeTrialView sheet
+    │   └─ Zen Mode Menu picker    → mode: .zen(selectedDifficulty)
     │
     └─ Difficulty List (ForEach Difficulty.allCases)
-        └─ Each row: icon, name, description, personal best time, chevron
+        └─ Each row → mode: .normal(difficulty)
 }
 
 Sheets:
-├─ StatisticsView  — best times, solve counts, achievements grid
-└─ Settings Sheet  — theme picker, replay onboarding
+├─ StatisticsView     — progression, streak calendar, best times, achievements
+├─ Settings Sheet     — theme picker, sound toggle, "Challenge a Friend", onboarding replay
+├─ TimeTrialView      — 3-minute countdown mode
+└─ ChallengeFriendView — generate/share/enter challenge codes
 
-Full Screen Overlay (on first launch):
-└─ OnboardingView  — 4-step tutorial
+Navigation: selectedMode: GameMode? drives full-screen PuzzleGameView push
 ```
 
 ### PuzzleGameView Structure
@@ -372,8 +703,10 @@ Full Screen Overlay (on first launch):
 VStack {
     Header Row
     ├─ Back button (left)
-    ├─ Difficulty name or "Daily Challenge" label (with calendar icon) (center-left)
-    └─ Timer (right) — Clock icon + elapsed time (MM:SS.CS format)
+    ├─ Mode title (center-left) — from mode.displayTitle
+    └─ Timer (right):
+        - normal/daily/weekly: Clock icon + elapsed time (MM:SS.CS)
+        - zen: Leaf icon + "Zen" label (no time shown)
 
     Puzzle Grid (DragGesture — blocked until gameStarted = true)
     │
@@ -388,25 +721,135 @@ VStack {
     │
     └─ Start Overlay (shown when gameStarted = false)
         ├─ .ultraThinMaterial blur (covers grid — hides numbers/path)
-        ├─ Difficulty icon + name + grid description
-        ├─ "Time so far: X:XX.XX" (only shown after Reset, as penalty reminder)
+        ├─ Mode icon + title + grid description
+        ├─ "Time so far: X:XX.XX" (only shown after Reset in timed modes, as penalty reminder)
         └─ "Start" / "Resume" button (play.fill icon)
 
     Action Buttons Row
-    ├─ Undo (adds +3 second time penalty) — disabled until game started
-    ├─ Reset (shows start overlay again, timer pauses — elapsed time kept as penalty)
+    ├─ Undo (adds +3 second time penalty in timed modes; skipped in zen) — disabled until game started
+    ├─ Reset (shows start overlay, timer pauses in timed modes)
     ├─ Hint (breathing glow on next number) — disabled until game started
-    └─ New (regenerate + reset timer + show start overlay) — HIDDEN during daily mode
+    └─ New (regenerate + reset timer + show start overlay) — HIDDEN for daily/weekly modes
 
     Achievement Banner (top overlay, auto-dismisses after 4 seconds)
 
     Completion Overlay (if allNumbersConnected)
-    ├─ "Puzzle Complete!" or "Daily Complete!" title
-    ├─ Completion time badge
-    ├─ "New Personal Best!" badge (if isPersonalBest == true)
-    └─ "Next Puzzle" button (or "Back to Menu" for daily)
+    ├─ Title: "Puzzle Complete!" / "Daily Complete!" / "Weekly Complete!" / "Zen Complete!"
+    ├─ Completion time badge (hidden in zen mode)
+    ├─ "New Personal Best!" badge (timed, non-zen modes only)
+    ├─ XP earned badge
+    ├─ ShareLink — share result text
+    └─ "Next Puzzle" / "Back to Menu" button
 }
 ```
+
+---
+
+## 🕹️ Time Trial Mode
+
+`TimeTrialView` is a separate view (not `PuzzleGameView`) with its own state machine.
+
+```
+Start Overlay → 3-minute countdown begins → auto-generates puzzles
+
+Puzzle auto-advances on completion (no user action needed)
+Difficulty escalates every 5 solved puzzles:
+  easy (0-4) → medium (5-9) → hard (10-14) → veryHard (15-19) → expert (20+)
+
+Score = sum of ProgressionManager.baseXP(for: currentDifficulty) per solved puzzle
+
+When countdown reaches 0:
+  → Finish overlay shows score, solved count, ShareLink
+  → AchievementManager.shared.checkTimeTrial(score:) is called
+```
+
+Uses `Timer.publish` + `Combine` for the countdown. Requires `import Combine`.
+
+### Undo / Reset Buttons in Time Trial
+
+From **Medium difficulty onwards** (`currentDifficulty != .easy`, i.e. puzzle #5+), two action buttons appear below the grid:
+
+| Button | Action | Enabled condition |
+|--------|--------|-------------------|
+| **Undo** (`arrow.uturn.backward`) | `gameState.undo()` — steps back one cell in the path | `isRunning && !path.isEmpty` |
+| **Reset** (`arrow.counterclockwise`) | `gameState.reset()` — clears the entire path for the current puzzle | `isRunning && !path.isEmpty` |
+
+**No extra time penalty**: the countdown timer continues while the player undoes/resets — that is the natural penalty. Buttons are hidden (`.opacity(0.4)`) when disabled and fade in with `.animation(.easeInOut(duration: 0.25))` when difficulty first crosses into Medium.
+
+---
+
+## 👥 Challenge a Friend
+
+`ChallengeFriendView` lets players generate and share puzzle codes.
+
+**Code generation:**
+```swift
+// 6-character base-36 code from seed + difficulty index
+let diffIndex = Difficulty.allCases.firstIndex(of: selectedDifficulty) ?? 0
+let combined = (seed << 4) | UInt64(diffIndex)
+// Encode as 6 base-36 characters (digits 0-9, letters a-z)
+```
+
+**Copy to clipboard:**
+```swift
+UIPasteboard.general.string = generatedCode
+// Shows toast: .toast("Đã sao chép mã!", isShowing: $codeCopied)
+```
+
+**Enter friend's code → decode seed + difficulty → launch PuzzleGameView with that seed.**
+
+---
+
+## 🍞 Toast Notification System
+
+Reusable `ViewModifier` in `ToastModifier.swift`:
+
+```swift
+struct ToastModifier: ViewModifier {
+    let message: String
+    let systemImage: String    // default: "checkmark.circle.fill"
+    let imageColor: Color      // default: .green
+    @Binding var isShowing: Bool
+    // Auto-dismisses after 2 seconds
+}
+
+extension View {
+    func toast(_ message: String,
+               systemImage: String = "checkmark.circle.fill",
+               imageColor: Color = .green,
+               isShowing: Binding<Bool>) -> some View
+}
+```
+
+**Usage in any view:**
+```swift
+@State private var showToast = false
+
+someView
+    .toast("Copied!", isShowing: $showToast)
+
+// To trigger:
+showToast = true  // auto-dismisses after 2 seconds
+```
+
+Toast renders as a capsule with black background, white text + icon, sliding up from bottom with fade transition.
+
+---
+
+## 📈 Statistics View
+
+`StatisticsView` now contains these sections (in order):
+
+1. **Progression** — Level badge, XP progress bar, level name + next threshold
+2. **Daily Activity** — `StreakCalendarView` (13-week GitHub-style heatmap)
+3. **Daily Streak** — Current streak / Best streak / Total daily solves
+4. **Best Times** — Per-difficulty personal bests
+5. **Solve Counts** — Per-difficulty solve counts + no-undo counts
+6. **Achievements** — 25-achievement grid with lock/unlock state
+
+### StreakCalendarView
+
+13 columns (weeks) × 7 rows (days). Cells colored with `themeManager.current.pathColor` when completed, `Color(uiColor: .systemFill)` otherwise. Reads `StreakManager.shared.hasCompleted(on:)` for each cell.
 
 ---
 
@@ -414,13 +857,13 @@ VStack {
 
 - **Does NOT start automatically** — timer only begins after user taps the **Start** button on the blur overlay
 - Stops when `allNumbersConnected` becomes `true`
+- **Zen mode**: Timer display replaced with leaf icon + "Zen" label. `addTimePenalty()` is skipped.
 - **State variable**: `gameStarted: Bool` — controls both the blur overlay visibility and timer ticking
-- **Penalties & Resets:**
 
 | Button | Overlay | Timer Behavior | Rationale |
 |--------|---------|---------------|-----------|
 | **Start** | Dismissed | Begins counting | User-controlled start |
-| **Undo** | — | +3 seconds penalty | Discourages excessive undo |
+| **Undo** | — | +3 seconds penalty (skipped in zen) | Discourages excessive undo |
 | **Reset** | Shown again | Pauses (elapsed time kept) | Penalty stays; user must re-tap Start |
 | **New** | Shown again | Reset to 0:00.00 | Fresh puzzle = fresh time |
 | **Next Puzzle** | Shown again | Reset to 0:00.00 | Fresh puzzle after win |
@@ -469,6 +912,7 @@ All haptics go through `HapticManager.shared`. Never call UIKit haptic generator
 - [ ] Warnsdorff's algorithm creates valid Hamiltonian path
 - [ ] Seeded generation produces identical output for same seed
 - [ ] Daily seed is consistent within the same calendar day
+- [ ] Weekly seed is consistent within the same ISO week
 - [ ] Fallback snake pattern always works
 - [ ] All 5 difficulty levels generate correct grid sizes
 
@@ -480,16 +924,19 @@ All haptics go through `HapticManager.shared`. Never call UIKit haptic generator
 - [ ] **Medium/Hard/Very Hard/Expert**: No backtracking by dragging
 - [ ] **Undo button**: `usedUndo` set to true after first use
 - [ ] Win condition triggers when `currentNumber == maxNumber`
+- [ ] **Zen mode**: timer not shown, undo penalty not applied
 
-**3. Statistics:**
+**3. Statistics & Progression:**
 - [ ] `recordCompletion` returns `true` only when new best is set
 - [ ] `totalSolveCount` sums across all difficulties
 - [ ] Best time is not overwritten if time is worse
+- [ ] XP formula: base + bonuses, all applied correctly
+- [ ] `StreakManager.recordDailyCompletion()` is idempotent (same day = no double increment)
 
 **4. Achievements:**
 - [ ] Each achievement unlocks exactly once (idempotent)
 - [ ] `recentlyUnlocked` is nil after `clearRecentlyUnlocked()`
-- [ ] `check()` must be called AFTER `recordCompletion()` for count-based achievements
+- [ ] `check()` must be called AFTER all managers update their state
 
 ---
 
@@ -500,6 +947,7 @@ All haptics go through `HapticManager.shared`. Never call UIKit haptic generator
 3. **Haptics** — All generators pre-prepared in `HapticManager.init()`
 4. **Puzzle Generation** — O(N) Warnsdorff + O(K×15) placement = very fast on all grid sizes
 5. **Seeded RNG** — Xorshift64 is extremely fast; no performance difference vs. system RNG
+6. **`@Observable` singletons** — All managers use stored properties + `didSet` for UserDefaults; computed properties would break reactivity
 
 ---
 
@@ -509,6 +957,8 @@ All haptics go through `HapticManager.shared`. Never call UIKit haptic generator
 2. **No solution validator** — Assumes all generated puzzles are solvable (they are, by construction)
 3. **No game persistence** — Closing the app mid-game loses current progress
 4. **Daily challenge: one attempt only** — No way to retry a failed daily puzzle
+5. **Game Center: requires network** — Leaderboard submission silently fails when offline (scores are not queued)
+6. **Localization `.strings` files require manual Target Membership** — When adding new `.strings` files to the Xcode project, they must be checked under **Target Membership → FlowConnectPuzzle** in the File Inspector. Without this, `Bundle.main.path(forResource:ofType:)` returns `nil` and `LocalizationManager.t()` falls back to returning the raw key string instead of the translated value.
 
 ---
 
@@ -524,6 +974,25 @@ All haptics go through `HapticManager.shared`. Never call UIKit haptic generator
 class GameState: ObservableObject { @Published var grid: [[GridCell]] }
 ```
 
+### @Observable + UserDefaults Pattern
+
+```swift
+// ✅ CORRECT: stored property + didSet
+@Observable class SomeManager {
+    var someValue: Int = 0 {
+        didSet { UserDefaults.standard.set(someValue, forKey: "key") }
+    }
+}
+
+// ❌ WRONG: computed property breaks @Observable tracking
+@Observable class SomeManager {
+    var someValue: Int {
+        get { UserDefaults.standard.integer(forKey: "key") }
+        set { UserDefaults.standard.set(newValue, forKey: "key") }
+    }
+}
+```
+
 ### Naming Conventions
 
 - **Properties**: camelCase (`gridSize`, `usedUndo`, `allNumbersConnected`)
@@ -536,7 +1005,9 @@ class GameState: ObservableObject { @Published var grid: [[GridCell]] }
 - `isComplete` is deprecated — use `allNumbersConnected`
 - Never use hardcoded colors (`.blue`, `.green`) for game elements — read from `ThemeManager.shared.current`
 - All haptic calls go through `HapticManager.shared`
-- `AchievementManager.check()` MUST be called after `StatisticsManager.recordCompletion()` — achievements read updated stats
+- All sound calls go through `SoundManager.shared`
+- **Completion call order is critical** — see "Completion Flow" section above
+- `ThemeManager.current` MUST be a stored property with `didSet` — computed property breaks `@Observable`
 
 ---
 
@@ -544,23 +1015,51 @@ class GameState: ObservableObject { @Published var grid: [[GridCell]] }
 
 ```
 ContentView.swift
+  ├─→ GameMode.swift
   ├─→ DailyChallenge.swift
+  ├─→ WeeklyChallenge.swift
   ├─→ StatisticsManager.swift
-  ├─→ AchievementManager.swift
+  ├─→ ProgressionManager.swift
   ├─→ ThemeManager (GameTheme.swift)
   ├─→ OnboardingView.swift
   ├─→ StatisticsView.swift
-  └─→ PuzzleGameView.swift
+  ├─→ TimeTrialView.swift
+  ├─→ ChallengeFriendView.swift
+  └─→ PuzzleGameView.swift (mode: GameMode)
         ├─→ GameState.swift
         │     ├─→ GridCell.swift
         │     ├─→ PuzzleGenerator.swift (SeededRNG + Warnsdorff)
         │     │     └─→ Difficulty.swift
         │     └─→ HapticManager.swift
         ├─→ StatisticsManager.swift
+        ├─→ StreakManager.swift
+        ├─→ ProgressionManager.swift
         ├─→ AchievementManager.swift
+        ├─→ SoundManager.swift
+        ├─→ GameCenterManager.swift
         ├─→ ThemeManager (GameTheme.swift)
         ├─→ DailyChallenge.swift
+        ├─→ WeeklyChallenge.swift
         └─→ AchievementBannerView.swift
+
+StatisticsView.swift
+  ├─→ ProgressionManager.swift
+  ├─→ StreakManager.swift
+  ├─→ StreakCalendarView.swift
+  ├─→ StatisticsManager.swift
+  ├─→ AchievementManager.swift
+  └─→ ThemeManager (GameTheme.swift)
+
+TimeTrialView.swift
+  ├─→ GameState.swift
+  ├─→ PuzzleGenerator.swift
+  ├─→ ProgressionManager.swift
+  ├─→ AchievementManager.swift
+  ├─→ ThemeManager (GameTheme.swift)
+  └─→ import Combine (for Timer.publish)
+
+ChallengeFriendView.swift
+  └─→ ToastModifier.swift
 ```
 
 ---
@@ -571,18 +1070,28 @@ ContentView.swift
 1. **Check GameState.swift first** — source of most logic errors
 2. **Check `allNumbersConnected` vs `isComplete`** — only use `allNumbersConnected`
 3. **Check `usedUndo` reset** — must be false after `newGame()` and `reset()`
+4. **Check completion call order** — StreakManager → ProgressionManager → AchievementManager
 
 ### When asked to add features:
 1. **Use `@Observable`** — never `@ObservableObject`
-2. **Use theme colors** — read `ThemeManager.shared.current.pathColor` etc., don't hardcode
-3. **Thread haptics** — every user action needs feedback via `HapticManager.shared`
-4. **Statistics integration** — new game modes must call `StatisticsManager.shared.recordCompletion()`
+2. **Use stored property + `didSet`** — never computed property for `@Observable` persistence
+3. **Use theme colors** — read `ThemeManager.shared.current.pathColor` etc., don't hardcode
+4. **Thread haptics** — every user action needs feedback via `HapticManager.shared`
+5. **Statistics integration** — new game modes must call `StatisticsManager.shared.recordCompletion()`
+6. **XP integration** — call `ProgressionManager.shared.recordCompletion()` after stats
+7. **Sound integration** — call `SoundManager.shared.playStep()` etc. for UX polish
 
-### When working with Daily Challenge:
+### When working with Game Modes:
+1. `PuzzleGameView` takes `mode: GameMode` — use computed shorthands `isDaily`, `isZen`, etc.
+2. Zen mode: skip timer display, skip `addTimePenalty()`, set `isPersonalBest = false`
+3. Seeded modes (daily/weekly): `mode.seed` provides the seed for `GameState.init(dailyDifficulty:seed:)`
+4. Weekly challenge always uses `.expert` difficulty
+
+### When working with Daily/Weekly Challenge:
 1. Daily seed = `UInt64(year * 10000 + month * 100 + day)`
-2. Difficulty rotates by `dayOfYear % 5`
-3. Completion is stored per-seed in UserDefaults (`"daily_done_{seed}"`)
-4. `isDaily = true` in `GameState` disables the "New Puzzle" button in the view
+2. Weekly seed = `UInt64(year * 1000 + isoWeek)`
+3. Completion is stored per-seed in UserDefaults
+4. Daily/Weekly modes hide "New Puzzle" button
 
 ---
 
@@ -592,6 +1101,7 @@ ContentView.swift
 - **Warnsdorff's Algorithm**: [Wikipedia](https://en.wikipedia.org/wiki/Knight%27s_tour#Warnsdorff's_rule)
 - **Xorshift RNG**: [Wikipedia](https://en.wikipedia.org/wiki/Xorshift)
 - **Manhattan Distance**: Taxicab geometry metric
+- **ISO Week Numbering**: [Wikipedia](https://en.wikipedia.org/wiki/ISO_week_date)
 
 ### SwiftUI APIs Used
 - `@Observable` macro (iOS 17+)
@@ -601,11 +1111,15 @@ ContentView.swift
 - `.onReceive(timer)` for animations and game timer
 - `.sheet()` for Stats and Settings
 - `.overlay(alignment:)` for achievement banner
+- `ShareLink` (iOS 16+) for share sheets
+- `ViewModifier` for `ToastModifier`
 
-### UIKit Haptics
-- `UIImpactFeedbackGenerator`
-- `UINotificationFeedbackGenerator`
-- `UISelectionFeedbackGenerator`
+### System Frameworks Used
+- `UIKit` — `UIFeedbackGenerator`, `UIPasteboard`
+- `AudioToolbox` — `AudioServicesPlaySystemSound`
+- `GameKit` — `GKLocalPlayer`, `GKLeaderboard`
+- `UserNotifications` — `UNUserNotificationCenter`
+- `Combine` — `Timer.publish` (in `TimeTrialView`)
 
 ---
 
@@ -618,45 +1132,52 @@ When working with this codebase, remember:
 - [ ] **Easy**: Allows drag-backtracking to previous cell
 - [ ] **Medium/Hard/Very Hard/Expert**: No drag-backtracking — Undo button only
 - [ ] Undo removes path back to (and including) last number checkpoint
-- [ ] `AchievementManager.check()` must be called AFTER `StatisticsManager.recordCompletion()`
+- [ ] **Completion order**: StatisticsManager → StreakManager → ProgressionManager → GameCenterManager → AchievementManager
 - [ ] Never hardcode game colors — always use `ThemeManager.shared.current`
 - [ ] All haptics through `HapticManager.shared`
+- [ ] All sounds through `SoundManager.shared`
 - [ ] Grid coordinates: row (vertical) × col (horizontal)
 - [ ] Adjacency: only 4-directional (no diagonal)
 - [ ] Seeded generation: pass `seed: UInt64` to `PuzzleGenerator.generate(for:seed:)`
-- [ ] Daily mode hides "New Puzzle" button and shows "Back to Menu" on completion
+- [ ] Daily/Weekly mode hides "New Puzzle" button
 - [ ] `gameStarted = false` on initial load, Reset, New, Next Puzzle — timer only ticks when `gameStarted = true`
 - [ ] `ThemeManager.current` MUST be a stored property — computed property breaks `@Observable` reactivity
+- [ ] All `@Observable` managers use **stored property + `didSet`** for UserDefaults — NEVER computed property
+- [ ] Zen mode: no timer display, no time penalties, no personal best tracking
+- [ ] `TimeTrialView` requires `import Combine` for `Timer.publish`
+- [ ] `PuzzleGameView` init signature: `init(mode: GameMode, onBack: @escaping () -> Void)`
 
 ---
 
-**Last Updated**: 2026-04-26
-**Version**: 3.1
+**Last Updated**: 2026-05-01
+**Version**: 4.1
 **Changelog**:
+- v4.1 (2026-05-01): Time Trial UX fix + Localization bug documentation
+  - **TimeTrialView**: Added Undo and Reset buttons that appear from Medium difficulty onwards (`currentDifficulty != .easy`). No extra time penalty — countdown is the natural cost. Buttons are disabled/dimmed when path is empty or game not running.
+  - **Known Issue documented**: `.strings` files added to Xcode must be manually checked under Target Membership → FlowConnectPuzzle, otherwise `Bundle.main.path(forResource:ofType:)` returns `nil` and localization falls back to raw keys.
+- v4.0 (2026-04-30): Daily engagement features — 4 tiers implemented
+  - **New Models**: `GameMode` enum (replaces separate boolean flags), `WeeklyChallenge`
+  - **New Services**: `StreakManager`, `NotificationManager`, `ProgressionManager`, `SoundManager`, `GameCenterManager`
+  - **New Views**: `StreakCalendarView` (heatmap), `TimeTrialView` (3-min countdown), `ChallengeFriendView` (code sharing), `ToastModifier` (reusable toast)
+  - **PuzzleGameView refactor**: replaced `difficulty/isDaily/isWeekly` with `mode: GameMode`; added Zen mode support
+  - **AchievementManager**: expanded from 10 → 25 achievements; added `isWeekly`/`isZen` params + `checkTimeTrial(score:)` method
+  - **StatisticsView**: added Progression section (XP bar), Daily Activity (StreakCalendarView), Daily Streak counters
+  - **ContentView**: added Weekly Challenge card, Time Trial button, Zen Mode picker, sound toggle, Challenge a Friend button
+  - **FlowConnectPuzzleApp**: added `.task {}` for notification permission + Game Center auth on launch
+  - **Critical fix**: completion call order must be StatisticsManager → StreakManager → ProgressionManager → AchievementManager
 - v3.1 (2026-04-26): Start overlay + ThemeManager fix
   - Added **Start Overlay** in `PuzzleGameView` — `.ultraThinMaterial` blur covers grid until user taps Start
   - Timer now starts ONLY when user taps Start (not on view appear)
   - Reset shows overlay again, pausing timer while keeping elapsed time (penalty preserved)
   - New/Next Puzzle shows overlay and resets timer to 0
   - Added `startGame()`, `pauseTimer()` functions; `resetTimer()` no longer auto-starts
-  - Fixed **ThemeManager** — `current` converted from computed property to stored property + `didSet` to fix `@Observable` reactivity (theme changes now update UI immediately)
+  - Fixed **ThemeManager** — `current` converted from computed property to stored property + `didSet` to fix `@Observable` reactivity
   - Added 4 named `#Preview` variants for `PuzzleGameView`
 - v3.0 (2026-04-26): Major feature expansion
-  - Added **Statistics System** (`StatisticsManager`) — best times, solve counts per difficulty
-  - Added **Achievement System** (`AchievementManager`) — 10 unlockable achievements
-  - Added **Theme System** (`GameTheme`, `ThemeManager`) — 4 color themes (Ocean, Sunset, Forest, Cosmos)
-  - Added **Daily Challenge** (`DailyChallenge`) — date-seeded, one-per-day puzzle
-  - Added **Onboarding** (`OnboardingView`) — 4-step first-launch tutorial
-  - Added **Statistics View** (`StatisticsView`) — best times, solve counts, achievement progress
-  - Added **Achievement Banner** (`AchievementBannerView`) — animated unlock notification
-  - Updated `PuzzleGenerator` — `SeededRNG` (Xorshift64) + generic `rng: inout R` methods
-  - Updated `GameState` — `usedUndo` tracking, daily game init, correct resets
-  - Updated `ContentView` — daily card, best times display, stats/settings buttons
-  - Updated `PuzzleGameView` — themes, personal best badge, achievement banner, accessibility labels, daily mode UI
+  - Added Statistics, Achievement, Theme, Daily Challenge, Onboarding systems
 - v2.1 (2026-04-19): Updated timer penalty system
 - v2.0 (2026-04-19): Added Very Hard (8×8) and Expert (9×9) difficulty levels
 - v1.1 (2026-04-19): Added millisecond precision timer
 - v1.0 (2026-04-19): Initial documentation
 
 **Maintained by**: AI Assistant + Development Team
-

@@ -14,6 +14,7 @@ struct ChallengeFriendView: View {
     @State private var alertMessage = ""
     @State private var codeCopied = false
     @State private var themeManager = ThemeManager.shared
+    @State private var lm = LocalizationManager.shared
     @Environment(\.dismiss) private var dismiss
 
     let onStartChallenge: (GameMode) -> Void
@@ -22,21 +23,21 @@ struct ChallengeFriendView: View {
         NavigationView {
             List {
                 // Share a puzzle
-                Section("Challenge a Friend") {
-                    Picker("Difficulty", selection: $selectedDifficulty) {
+                Section(lm.t("challenge.title")) {
+                    Picker(lm.t("challenge.difficulty_label"), selection: $selectedDifficulty) {
                         ForEach(Difficulty.allCases) { d in
-                            Text(d.displayName).tag(d)
+                            Text(lm.difficultyName(d)).tag(d)
                         }
                     }
 
                     Button(action: generateCode) {
-                        Label("Generate Challenge Code", systemImage: "square.and.arrow.up")
+                        Label(lm.t("challenge.your_code"), systemImage: "square.and.arrow.up")
                     }
                     .foregroundColor(themeManager.current.pathColor)
 
                     if !generatedCode.isEmpty {
                         HStack {
-                            Text("Code")
+                            Text(lm.t("challenge.your_code"))
                                 .foregroundColor(.secondary)
                             Spacer()
                             Text(generatedCode)
@@ -65,16 +66,16 @@ struct ChallengeFriendView: View {
                             item: "Try this Flow Connect puzzle! Use code \(generatedCode) to play the same puzzle. 🧩",
                             subject: Text("Flow Connect Challenge")
                         ) {
-                            Label("Share Code", systemImage: "square.and.arrow.up")
+                            Label(lm.t("challenge.share_code"), systemImage: "square.and.arrow.up")
                         }
                         .foregroundColor(.blue)
                     }
                 }
 
                 // Accept a challenge
-                Section("Accept a Challenge") {
+                Section(lm.t("challenge.accept_title")) {
                     HStack {
-                        TextField("Enter 6-character code", text: $inputCode)
+                        TextField(lm.t("challenge.enter_code"), text: $inputCode)
                             .textInputAutocapitalization(.characters)
                             .autocorrectionDisabled()
                             .onChange(of: inputCode) { _, v in
@@ -82,12 +83,12 @@ struct ChallengeFriendView: View {
                             }
 
                         if inputCode.count == 6 {
-                            Button("Play") {
+                            Button(lm.t("timetrial.start")) {
                                 if let mode = decode(code: inputCode) {
                                     dismiss()
                                     onStartChallenge(mode)
                                 } else {
-                                    alertMessage = "Invalid code. Check it and try again."
+                                    alertMessage = lm.t("challenge.invalid_message")
                                     showAlert = true
                                 }
                             }
@@ -103,20 +104,20 @@ struct ChallengeFriendView: View {
                         .foregroundColor(.secondary)
                 }
             }
-            .navigationTitle("Challenge a Friend")
+            .navigationTitle(lm.t("challenge.title"))
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
-                    Button("Done") { dismiss() }
+                    Button(lm.t("challenge.done")) { dismiss() }
                 }
             }
-            .alert("Invalid Code", isPresented: $showAlert) {
-                Button("OK", role: .cancel) {}
+            .alert(lm.t("challenge.invalid_title"), isPresented: $showAlert) {
+                Button(lm.t("challenge.ok"), role: .cancel) {}
             } message: {
                 Text(alertMessage)
             }
         }
-        .toast("Đã sao chép mã!", isShowing: $codeCopied)
+        .toast(lm.t("challenge.copied"), isShowing: $codeCopied)
     }
 
     // MARK: - Code Generation

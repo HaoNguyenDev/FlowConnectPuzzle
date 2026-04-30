@@ -1,0 +1,176 @@
+/* Difficulty */
+"difficulty.easy" = "简单";
+"difficulty.medium" = "中等";
+"difficulty.hard" = "困难";
+"difficulty.veryHard" = "非常困难";
+"difficulty.expert" = "专家";
+
+/* Game */
+"game.daily_challenge" = "每日挑战";
+"game.weekly_challenge" = "每周挑战";
+"game.zen" = "禅";
+"game.select_difficulty" = "选择难度";
+"game.time_so_far" = "用时：%@";
+"game.resume" = "继续";
+"game.start" = "开始";
+"game.puzzle_complete" = "拼图完成！";
+"game.daily_complete" = "每日挑战完成！";
+"game.weekly_complete" = "每周挑战完成！";
+"game.new_personal_best" = "新个人记录！";
+"game.share_result" = "分享结果";
+"game.back_to_menu" = "返回菜单";
+"game.next_puzzle" = "下一题";
+
+/* Menu */
+"menu.other_modes" = "其他模式";
+"menu.time_trial_subtitle" = "在3分钟内尽可能多地解题";
+"menu.zen_mode" = "禅模式";
+"menu.zen_subtitle" = "放松 — 无计时器，无压力";
+"menu.best" = "最佳";
+"menu.day_streak" = "连续%d天";
+"menu.done_badge" = "完成";
+"menu.weekly_bonus" = "完成所有难度可获得额外XP";
+
+/* Settings */
+"settings.title" = "设置";
+"settings.done" = "完成";
+"settings.theme" = "主题";
+"settings.language" = "语言";
+"settings.sound" = "声音";
+"settings.sound_effects" = "音效";
+"settings.notifications" = "通知";
+"settings.daily_reminders" = "每日提醒";
+"settings.reminder_notice" = "每天都会收到提醒，保持连续记录。";
+"settings.social" = "社交";
+"settings.challenge_friend" = "挑战朋友";
+"settings.tutorial" = "教程";
+"settings.show_onboarding" = "再次查看教程";
+
+/* Stats */
+"stats.title" = "统计";
+"stats.progression" = "进度";
+"stats.level" = "等级 %d — %@";
+"stats.xp_to_next" = "距离%2$@还需%1$d XP";
+"stats.max_level" = "已达最高等级！";
+"stats.calendar_header" = "每日活动";
+"stats.streak" = "连续记录";
+"stats.current_streak" = "当前连续";
+"stats.best_streak" = "最佳连续";
+"stats.best_times" = "最佳时间";
+"stats.puzzles_solved" = "已解题数";
+"stats.total" = "合计";
+"stats.achievements" = "成就";
+"stats.streak_singular" = "连续1天";
+"stats.streak_plural" = "连续%d天";
+"stats.day_singular" = "1天";
+"stats.days_plural" = "%d天";
+
+/* Time Trial */
+"timetrial.title" = "限时挑战";
+"timetrial.score" = "分数";
+"timetrial.solved" = "已解";
+"timetrial.subtitle" = "在3分钟内尽可能多地解题。\n每5题难度增加。";
+"timetrial.times_up" = "时间到！";
+"timetrial.puzzles_solved" = "已解题数";
+"timetrial.total_score" = "总分";
+"timetrial.best_difficulty" = "最高难度";
+"timetrial.pts" = "%d分";
+"timetrial.share" = "🕐 限时挑战：解了%d题得%d分！快来玩Flow Connect Puzzle吧！";
+"timetrial.share_result" = "分享结果";
+"timetrial.back_to_menu" = "返回菜单";
+"timetrial.start" = "开始";
+
+/* Challenge */
+"challenge.title" = "挑战朋友";
+"challenge.accept_title" = "接受挑战";
+"challenge.your_code" = "你的挑战码";
+"challenge.share_code" = "分享挑战码";
+"challenge.enter_code" = "输入挑战码…";
+"challenge.start_btn" = "开始挑战";
+"challenge.copied" = "已复制挑战码！";
+"challenge.invalid_title" = "无效的挑战码";
+"challenge.invalid_message" = "无法解码挑战。请检查挑战码后重试。";
+"challenge.ok" = "好的";
+"challenge.difficulty_label" = "难度";
+"challenge.done" = "完成";
+
+/* Onboarding */
+"onboarding.skip" = "跳过";
+"onboarding.next" = "下一步";
+"onboarding.get_started" = "开始游戏";
+"onboarding.step1_title" = "欢迎来到Flow Connect";
+"onboarding.step1_body" = "按顺序连接数字 1 → 2 → 3 … 完成每道谜题。填满所有格子即可获胜！";
+"onboarding.step2_title" = "绘制路径";
+"onboarding.step2_body" = "在格子上拖动手指，按顺序连接数字。";
+"onboarding.step3_title" = "自由回退";
+"onboarding.step3_body" = "走错了？往回拖动即可撤销上一步，或抬起手指重新开始。";
+"onboarding.step4_title" = "准备好了吗？";
+"onboarding.step4_body" = "从简单开始，逐步挑战到专家级别。祝你好运！";
+
+/* Share */
+"share.solved_puzzle" = "用%2$@解出了%1$@难度的谜题！你能超越吗？快来玩Flow Connect Puzzle！";
+"share.daily" = "用%2$@完成了每日挑战（%1$@）！快来玩Flow Connect Puzzle！";
+"share.weekly" = "用%@完成了每周挑战！快来玩Flow Connect Puzzle！";
+"share.zen" = "正在用Flow Connect Puzzle的禅模式放松。无计时器，纯享受。";
+
+/* Streak Calendar */
+"calendar.header" = "每日活动 — 近3个月";
+"calendar.less" = "少";
+"calendar.more" = "多";
+
+/* Achievement banner */
+"achievement.unlocked" = "成就解锁！";
+
+/* Achievement titles */
+"achievement.first_solve.title" = "初次尝试";
+"achievement.solve_10.title" = "起步";
+"achievement.solve_50.title" = "谜题爱好者";
+"achievement.solve_100.title" = "百题达人";
+"achievement.solve_500.title" = "谜题大师";
+"achievement.easy_master.title" = "简单达人";
+"achievement.medium_master.title" = "中等达人";
+"achievement.hard_master.title" = "征服困难";
+"achievement.very_hard_master.title" = "极限挑战者";
+"achievement.expert_master.title" = "专家精英";
+"achievement.speed_demon.title" = "速度恶魔";
+"achievement.lightning.title" = "闪电快手";
+"achievement.streak_3.title" = "帽子戏法";
+"achievement.streak_7.title" = "周战士";
+"achievement.streak_30.title" = "月度坚持";
+"achievement.streak_100.title" = "百日坚守";
+"achievement.daily_7.title" = "每日信徒";
+"achievement.daily_30.title" = "月度常客";
+"achievement.timetrial_bronze.title" = "限时挑战铜牌";
+"achievement.timetrial_silver.title" = "限时挑战银牌";
+"achievement.timetrial_gold.title" = "限时挑战金牌";
+"achievement.level_5.title" = "新星";
+"achievement.level_10.title" = "老将";
+"achievement.level_20.title" = "传奇";
+"achievement.perfectionist.title" = "完美主义者";
+
+/* Achievement descriptions */
+"achievement.first_solve.desc" = "解出了第一道谜题";
+"achievement.solve_10.desc" = "解出了10道谜题";
+"achievement.solve_50.desc" = "解出了50道谜题";
+"achievement.solve_100.desc" = "解出了100道谜题";
+"achievement.solve_500.desc" = "解出了500道谜题";
+"achievement.easy_master.desc" = "解出了20道简单谜题";
+"achievement.medium_master.desc" = "解出了15道中等谜题";
+"achievement.hard_master.desc" = "解出了10道困难谜题";
+"achievement.very_hard_master.desc" = "解出了5道非常困难谜题";
+"achievement.expert_master.desc" = "解出了3道专家谜题";
+"achievement.speed_demon.desc" = "在10秒内解出简单谜题";
+"achievement.lightning.desc" = "在20秒内解出中等谜题";
+"achievement.streak_3.desc" = "连续游戏3天";
+"achievement.streak_7.desc" = "连续游戏7天";
+"achievement.streak_30.desc" = "连续游戏30天";
+"achievement.streak_100.desc" = "连续游戏100天";
+"achievement.daily_7.desc" = "完成7次每日挑战";
+"achievement.daily_30.desc" = "完成30次每日挑战";
+"achievement.timetrial_bronze.desc" = "限时挑战获得100+分";
+"achievement.timetrial_silver.desc" = "限时挑战获得300+分";
+"achievement.timetrial_gold.desc" = "限时挑战获得500+分";
+"achievement.level_5.desc" = "达到等级5";
+"achievement.level_10.desc" = "达到等级10";
+"achievement.level_20.desc" = "达到等级20";
+"achievement.perfectionist.desc" = "不回退完成困难以上谜题";

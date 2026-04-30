@@ -1,0 +1,176 @@
+/* Difficulty */
+"difficulty.easy" = "Dễ";
+"difficulty.medium" = "Trung bình";
+"difficulty.hard" = "Khó";
+"difficulty.veryHard" = "Rất khó";
+"difficulty.expert" = "Chuyên gia";
+
+/* Game */
+"game.daily_challenge" = "Thử thách hằng ngày";
+"game.weekly_challenge" = "Thử thách tuần";
+"game.zen" = "Zen";
+"game.select_difficulty" = "CHỌN ĐỘ KHÓ";
+"game.time_so_far" = "Thời gian: %@";
+"game.resume" = "Tiếp tục";
+"game.start" = "Bắt đầu";
+"game.puzzle_complete" = "Hoàn thành!";
+"game.daily_complete" = "Xong thử thách ngày!";
+"game.weekly_complete" = "Xong thử thách tuần!";
+"game.new_personal_best" = "Kỷ lục cá nhân mới!";
+"game.share_result" = "Chia sẻ kết quả";
+"game.back_to_menu" = "Về menu";
+"game.next_puzzle" = "Câu tiếp theo";
+
+/* Menu */
+"menu.other_modes" = "CHẾ ĐỘ KHÁC";
+"menu.time_trial_subtitle" = "Giải nhiều nhất có thể trong 3 phút";
+"menu.zen_mode" = "Chế độ Zen";
+"menu.zen_subtitle" = "Thư giãn — không đồng hồ, không áp lực";
+"menu.best" = "Tốt nhất";
+"menu.day_streak" = "%d ngày liên tiếp";
+"menu.done_badge" = "Xong";
+"menu.weekly_bonus" = "XP thưởng khi hoàn thành tất cả độ khó";
+
+/* Settings */
+"settings.title" = "Cài đặt";
+"settings.done" = "Xong";
+"settings.theme" = "Giao diện";
+"settings.language" = "Ngôn ngữ";
+"settings.sound" = "Âm thanh";
+"settings.sound_effects" = "Hiệu ứng âm thanh";
+"settings.notifications" = "Thông báo";
+"settings.daily_reminders" = "Nhắc nhở hằng ngày";
+"settings.reminder_notice" = "Bạn sẽ nhận được nhắc nhở mỗi ngày để duy trì chuỗi.";
+"settings.social" = "Xã hội";
+"settings.challenge_friend" = "Thách bạn bè";
+"settings.tutorial" = "Hướng dẫn";
+"settings.show_onboarding" = "Xem lại hướng dẫn";
+
+/* Stats */
+"stats.title" = "Thống kê";
+"stats.progression" = "Tiến trình";
+"stats.level" = "Cấp %d — %@";
+"stats.xp_to_next" = "%d XP để lên %@";
+"stats.max_level" = "Đã đạt cấp tối đa!";
+"stats.calendar_header" = "Hoạt động hằng ngày";
+"stats.streak" = "Chuỗi ngày";
+"stats.current_streak" = "Chuỗi hiện tại";
+"stats.best_streak" = "Chuỗi tốt nhất";
+"stats.best_times" = "Thời gian tốt nhất";
+"stats.puzzles_solved" = "Câu đã giải";
+"stats.total" = "Tổng";
+"stats.achievements" = "Thành tích";
+"stats.streak_singular" = "1 ngày liên tiếp";
+"stats.streak_plural" = "%d ngày liên tiếp";
+"stats.day_singular" = "1 ngày";
+"stats.days_plural" = "%d ngày";
+
+/* Time Trial */
+"timetrial.title" = "Đua thời gian";
+"timetrial.score" = "Điểm";
+"timetrial.solved" = "Đã giải";
+"timetrial.subtitle" = "Giải nhiều câu nhất có thể trong 3 phút.\nĐộ khó tăng sau mỗi 5 câu.";
+"timetrial.times_up" = "Hết giờ!";
+"timetrial.puzzles_solved" = "Câu đã giải";
+"timetrial.total_score" = "Tổng điểm";
+"timetrial.best_difficulty" = "Độ khó cao nhất";
+"timetrial.pts" = "%d điểm";
+"timetrial.share" = "🕐 Đua thời gian: giải %d câu được %d điểm! Thử xem bạn có làm được không?";
+"timetrial.share_result" = "Chia sẻ kết quả";
+"timetrial.back_to_menu" = "Về menu";
+"timetrial.start" = "Bắt đầu";
+
+/* Challenge */
+"challenge.title" = "Thách bạn bè";
+"challenge.accept_title" = "Chấp nhận thử thách";
+"challenge.your_code" = "Mã thử thách của bạn";
+"challenge.share_code" = "Chia sẻ mã";
+"challenge.enter_code" = "Nhập mã thử thách…";
+"challenge.start_btn" = "Bắt đầu thử thách";
+"challenge.copied" = "Đã sao chép mã!";
+"challenge.invalid_title" = "Mã không hợp lệ";
+"challenge.invalid_message" = "Không thể giải mã thử thách. Kiểm tra lại mã và thử lại.";
+"challenge.ok" = "OK";
+"challenge.difficulty_label" = "Độ khó";
+"challenge.done" = "Xong";
+
+/* Onboarding */
+"onboarding.skip" = "Bỏ qua";
+"onboarding.next" = "Tiếp";
+"onboarding.get_started" = "Bắt đầu";
+"onboarding.step1_title" = "Chào mừng đến Flow Connect";
+"onboarding.step1_body" = "Nối các số theo thứ tự từ 1 → 2 → 3 … để hoàn thành câu đố. Lấp đầy mọi ô để thắng!";
+"onboarding.step2_title" = "Vẽ đường đi";
+"onboarding.step2_body" = "Kéo ngón tay qua lưới để tạo đường đi qua các số theo thứ tự.";
+"onboarding.step3_title" = "Quay lui tự do";
+"onboarding.step3_body" = "Đi sai? Kéo ngược lại để hoàn tác bước cuối — hoặc nhấc ngón tay và bắt đầu lại.";
+"onboarding.step4_title" = "Sẵn sàng chưa?";
+"onboarding.step4_body" = "Bắt đầu từ Dễ rồi lên tới Chuyên gia. Chúc may mắn!";
+
+/* Share */
+"share.solved_puzzle" = "Đã giải câu đố %@ trong %@! Bạn có làm được không? Chơi Flow Connect Puzzle!";
+"share.daily" = "Hoàn thành thử thách hằng ngày (%@) trong %@! Chơi Flow Connect Puzzle!";
+"share.weekly" = "Hoàn thành thử thách tuần trong %@! Chơi Flow Connect Puzzle!";
+"share.zen" = "Đang thư giãn với chế độ Zen trong Flow Connect Puzzle. Không đồng hồ, hoàn toàn thư giãn.";
+
+/* Streak Calendar */
+"calendar.header" = "Hoạt động hằng ngày — 3 tháng gần đây";
+"calendar.less" = "Ít";
+"calendar.more" = "Nhiều";
+
+/* Achievement banner */
+"achievement.unlocked" = "Mở khóa thành tích!";
+
+/* Achievement titles */
+"achievement.first_solve.title" = "Bước đầu tiên";
+"achievement.solve_10.title" = "Mới bắt đầu";
+"achievement.solve_50.title" = "Người đam mê";
+"achievement.solve_100.title" = "Bách chiến";
+"achievement.solve_500.title" = "Cao thủ câu đố";
+"achievement.easy_master.title" = "Thạo Dễ";
+"achievement.medium_master.title" = "Thạo Trung bình";
+"achievement.hard_master.title" = "Chinh phục Khó";
+"achievement.very_hard_master.title" = "Siêu khó";
+"achievement.expert_master.title" = "Chuyên gia đỉnh";
+"achievement.speed_demon.title" = "Tốc độ quỷ";
+"achievement.lightning.title" = "Chớp nhoáng";
+"achievement.streak_3.title" = "Hat Trick";
+"achievement.streak_7.title" = "Chiến binh tuần";
+"achievement.streak_30.title" = "Kiên trì tháng";
+"achievement.streak_100.title" = "Trăm ngày";
+"achievement.daily_7.title" = "Tín đồ hằng ngày";
+"achievement.daily_30.title" = "Đều đặn tháng";
+"achievement.timetrial_bronze.title" = "Đua giờ Đồng";
+"achievement.timetrial_silver.title" = "Đua giờ Bạc";
+"achievement.timetrial_gold.title" = "Đua giờ Vàng";
+"achievement.level_5.title" = "Ngôi sao mới";
+"achievement.level_10.title" = "Lão làng";
+"achievement.level_20.title" = "Huyền thoại";
+"achievement.perfectionist.title" = "Cầu toàn";
+
+/* Achievement descriptions */
+"achievement.first_solve.desc" = "Hoàn thành câu đố đầu tiên";
+"achievement.solve_10.desc" = "Giải 10 câu đố";
+"achievement.solve_50.desc" = "Giải 50 câu đố";
+"achievement.solve_100.desc" = "Giải 100 câu đố";
+"achievement.solve_500.desc" = "Giải 500 câu đố";
+"achievement.easy_master.desc" = "Giải 20 câu Dễ";
+"achievement.medium_master.desc" = "Giải 15 câu Trung bình";
+"achievement.hard_master.desc" = "Giải 10 câu Khó";
+"achievement.very_hard_master.desc" = "Giải 5 câu Rất khó";
+"achievement.expert_master.desc" = "Giải 3 câu Chuyên gia";
+"achievement.speed_demon.desc" = "Giải câu Dễ trong dưới 10 giây";
+"achievement.lightning.desc" = "Giải câu Trung bình trong dưới 20 giây";
+"achievement.streak_3.desc" = "Chơi 3 ngày liên tiếp";
+"achievement.streak_7.desc" = "Chơi 7 ngày liên tiếp";
+"achievement.streak_30.desc" = "Chơi 30 ngày liên tiếp";
+"achievement.streak_100.desc" = "Chơi 100 ngày liên tiếp";
+"achievement.daily_7.desc" = "Hoàn thành 7 thử thách hằng ngày";
+"achievement.daily_30.desc" = "Hoàn thành 30 thử thách hằng ngày";
+"achievement.timetrial_bronze.desc" = "Đạt 100+ điểm trong Đua giờ";
+"achievement.timetrial_silver.desc" = "Đạt 300+ điểm trong Đua giờ";
+"achievement.timetrial_gold.desc" = "Đạt 500+ điểm trong Đua giờ";
+"achievement.level_5.desc" = "Đạt Cấp 5";
+"achievement.level_10.desc" = "Đạt Cấp 10";
+"achievement.level_20.desc" = "Đạt Cấp 20";
+"achievement.perfectionist.desc" = "Giải câu Khó+ mà không quay lui";

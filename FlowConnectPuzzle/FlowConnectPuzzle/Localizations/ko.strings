@@ -1,0 +1,176 @@
+/* Difficulty */
+"difficulty.easy" = "쉬움";
+"difficulty.medium" = "보통";
+"difficulty.hard" = "어려움";
+"difficulty.veryHard" = "매우 어려움";
+"difficulty.expert" = "전문가";
+
+/* Game */
+"game.daily_challenge" = "오늘의 도전";
+"game.weekly_challenge" = "이번 주 도전";
+"game.zen" = "선";
+"game.select_difficulty" = "난이도 선택";
+"game.time_so_far" = "경과 시간: %@";
+"game.resume" = "이어하기";
+"game.start" = "시작";
+"game.puzzle_complete" = "퍼즐 완성!";
+"game.daily_complete" = "오늘의 도전 완성!";
+"game.weekly_complete" = "이번 주 도전 완성!";
+"game.new_personal_best" = "개인 최고 기록 갱신!";
+"game.share_result" = "결과 공유";
+"game.back_to_menu" = "메뉴로 돌아가기";
+"game.next_puzzle" = "다음 퍼즐";
+
+/* Menu */
+"menu.other_modes" = "다른 모드";
+"menu.time_trial_subtitle" = "3분 안에 최대한 많은 퍼즐 풀기";
+"menu.zen_mode" = "선 모드";
+"menu.zen_subtitle" = "편안하게 — 타이머 없음, 부담 없음";
+"menu.best" = "최고";
+"menu.day_streak" = "%d일 연속";
+"menu.done_badge" = "완료";
+"menu.weekly_bonus" = "모든 난이도 완료 시 보너스 XP";
+
+/* Settings */
+"settings.title" = "설정";
+"settings.done" = "완료";
+"settings.theme" = "테마";
+"settings.language" = "언어";
+"settings.sound" = "사운드";
+"settings.sound_effects" = "효과음";
+"settings.notifications" = "알림";
+"settings.daily_reminders" = "매일 알림";
+"settings.reminder_notice" = "연속 기록 유지를 위해 매일 알림을 받게 됩니다.";
+"settings.social" = "소셜";
+"settings.challenge_friend" = "친구에게 도전";
+"settings.tutorial" = "튜토리얼";
+"settings.show_onboarding" = "튜토리얼 다시 보기";
+
+/* Stats */
+"stats.title" = "통계";
+"stats.progression" = "진행 상황";
+"stats.level" = "레벨 %d — %@";
+"stats.xp_to_next" = "%2$@까지 %1$d XP";
+"stats.max_level" = "최고 레벨 도달!";
+"stats.calendar_header" = "일일 활동";
+"stats.streak" = "연속 기록";
+"stats.current_streak" = "현재 연속";
+"stats.best_streak" = "최고 연속";
+"stats.best_times" = "최고 기록";
+"stats.puzzles_solved" = "풀린 퍼즐";
+"stats.total" = "합계";
+"stats.achievements" = "업적";
+"stats.streak_singular" = "1일 연속";
+"stats.streak_plural" = "%d일 연속";
+"stats.day_singular" = "1일";
+"stats.days_plural" = "%d일";
+
+/* Time Trial */
+"timetrial.title" = "타임 트라이얼";
+"timetrial.score" = "점수";
+"timetrial.solved" = "해결됨";
+"timetrial.subtitle" = "3분 안에 최대한 많은 퍼즐을 풀어보세요.\n5문제마다 난이도가 올라갑니다.";
+"timetrial.times_up" = "시간 초과!";
+"timetrial.puzzles_solved" = "풀린 퍼즐";
+"timetrial.total_score" = "총 점수";
+"timetrial.best_difficulty" = "최고 난이도";
+"timetrial.pts" = "%d점";
+"timetrial.share" = "🕐 타임 트라이얼: %d문제 풀어서 %d점 획득! Flow Connect Puzzle에 도전해보세요!";
+"timetrial.share_result" = "결과 공유";
+"timetrial.back_to_menu" = "메뉴로 돌아가기";
+"timetrial.start" = "시작";
+
+/* Challenge */
+"challenge.title" = "친구에게 도전";
+"challenge.accept_title" = "도전 받기";
+"challenge.your_code" = "내 도전 코드";
+"challenge.share_code" = "코드 공유";
+"challenge.enter_code" = "도전 코드 입력…";
+"challenge.start_btn" = "도전 시작";
+"challenge.copied" = "코드가 복사되었습니다!";
+"challenge.invalid_title" = "잘못된 코드";
+"challenge.invalid_message" = "도전을 디코딩할 수 없습니다. 코드를 확인하고 다시 시도해 주세요.";
+"challenge.ok" = "확인";
+"challenge.difficulty_label" = "난이도";
+"challenge.done" = "완료";
+
+/* Onboarding */
+"onboarding.skip" = "건너뛰기";
+"onboarding.next" = "다음";
+"onboarding.get_started" = "시작하기";
+"onboarding.step1_title" = "Flow Connect에 오신 것을 환영합니다";
+"onboarding.step1_body" = "1 → 2 → 3 … 순서대로 숫자를 연결하여 각 퍼즐을 완성하세요. 모든 칸을 채우면 승리!";
+"onboarding.step2_title" = "경로 그리기";
+"onboarding.step2_body" = "손가락을 그리드 위로 드래그하여 순서대로 숫자를 통과하는 경로를 그리세요.";
+"onboarding.step3_title" = "자유롭게 되돌아가기";
+"onboarding.step3_body" = "잘못 가셨나요? 뒤로 드래그하면 마지막 단계를 취소할 수 있습니다 — 또는 손가락을 떼고 다시 시작하세요.";
+"onboarding.step4_title" = "플레이할 준비가 됐나요?";
+"onboarding.step4_body" = "쉬움부터 시작하여 전문가까지 도전해보세요. 행운을 빕니다!";
+
+/* Share */
+"share.solved_puzzle" = "%@ 퍼즐을 %@에 풀었어요! 이길 수 있을까요? Flow Connect Puzzle 플레이!";
+"share.daily" = "오늘의 도전 (%@)을 %@에 완료했어요! Flow Connect Puzzle 플레이!";
+"share.weekly" = "이번 주 도전을 %@에 완료했어요! Flow Connect Puzzle 플레이!";
+"share.zen" = "Flow Connect Puzzle의 선 모드로 여유롭게 즐기는 중. 타이머 없이 순수한 힐링.";
+
+/* Streak Calendar */
+"calendar.header" = "일일 활동 — 최근 3개월";
+"calendar.less" = "적음";
+"calendar.more" = "많음";
+
+/* Achievement banner */
+"achievement.unlocked" = "업적 달성!";
+
+/* Achievement titles */
+"achievement.first_solve.title" = "첫 걸음";
+"achievement.solve_10.title" = "시작하는 중";
+"achievement.solve_50.title" = "퍼즐 애호가";
+"achievement.solve_100.title" = "100문제 달성";
+"achievement.solve_500.title" = "퍼즐 마스터";
+"achievement.easy_master.title" = "쉬움 마스터";
+"achievement.medium_master.title" = "보통 마스터";
+"achievement.hard_master.title" = "어려움 정복자";
+"achievement.very_hard_master.title" = "극한 도전자";
+"achievement.expert_master.title" = "전문가 엘리트";
+"achievement.speed_demon.title" = "스피드 데몬";
+"achievement.lightning.title" = "번개 같은 속도";
+"achievement.streak_3.title" = "해트트릭";
+"achievement.streak_7.title" = "주간 전사";
+"achievement.streak_30.title" = "월간 헌신";
+"achievement.streak_100.title" = "백일 기록";
+"achievement.daily_7.title" = "매일 도전자";
+"achievement.daily_30.title" = "월간 단골";
+"achievement.timetrial_bronze.title" = "타임 트라이얼 동메달";
+"achievement.timetrial_silver.title" = "타임 트라이얼 은메달";
+"achievement.timetrial_gold.title" = "타임 트라이얼 금메달";
+"achievement.level_5.title" = "떠오르는 별";
+"achievement.level_10.title" = "베테랑";
+"achievement.level_20.title" = "전설";
+"achievement.perfectionist.title" = "완벽주의자";
+
+/* Achievement descriptions */
+"achievement.first_solve.desc" = "첫 번째 퍼즐을 풀었습니다";
+"achievement.solve_10.desc" = "퍼즐 10개를 풀었습니다";
+"achievement.solve_50.desc" = "퍼즐 50개를 풀었습니다";
+"achievement.solve_100.desc" = "퍼즐 100개를 풀었습니다";
+"achievement.solve_500.desc" = "퍼즐 500개를 풀었습니다";
+"achievement.easy_master.desc" = "쉬움 퍼즐 20개를 풀었습니다";
+"achievement.medium_master.desc" = "보통 퍼즐 15개를 풀었습니다";
+"achievement.hard_master.desc" = "어려움 퍼즐 10개를 풀었습니다";
+"achievement.very_hard_master.desc" = "매우 어려움 퍼즐 5개를 풀었습니다";
+"achievement.expert_master.desc" = "전문가 퍼즐 3개를 풀었습니다";
+"achievement.speed_demon.desc" = "쉬움 퍼즐을 10초 안에 풀었습니다";
+"achievement.lightning.desc" = "보통 퍼즐을 20초 안에 풀었습니다";
+"achievement.streak_3.desc" = "3일 연속 플레이했습니다";
+"achievement.streak_7.desc" = "7일 연속 플레이했습니다";
+"achievement.streak_30.desc" = "30일 연속 플레이했습니다";
+"achievement.streak_100.desc" = "100일 연속 플레이했습니다";
+"achievement.daily_7.desc" = "오늘의 도전 7회 완료";
+"achievement.daily_30.desc" = "오늘의 도전 30회 완료";
+"achievement.timetrial_bronze.desc" = "타임 트라이얼에서 100점 이상";
+"achievement.timetrial_silver.desc" = "타임 트라이얼에서 300점 이상";
+"achievement.timetrial_gold.desc" = "타임 트라이얼에서 500점 이상";
+"achievement.level_5.desc" = "레벨 5 달성";
+"achievement.level_10.desc" = "레벨 10 달성";
+"achievement.level_20.desc" = "레벨 20 달성";
+"achievement.perfectionist.desc" = "어려움 이상 퍼즐을 되돌아가지 않고 풀었습니다";

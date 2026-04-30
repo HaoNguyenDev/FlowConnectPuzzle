@@ -11,24 +11,25 @@ struct StatisticsView: View {
     @State private var streak = StreakManager.shared
     @State private var progression = ProgressionManager.shared
     @State private var themeManager = ThemeManager.shared
+    @State private var lm = LocalizationManager.shared
     @Environment(\.dismiss) private var dismiss
 
     var body: some View {
         NavigationView {
             List {
                 // MARK: Progression
-                Section("Progression") {
+                Section(lm.t("stats.progression")) {
                     VStack(alignment: .leading, spacing: 10) {
                         HStack {
                             VStack(alignment: .leading, spacing: 2) {
-                                Text("Level \(progression.level + 1) — \(progression.levelName)")
+                                Text(String(format: lm.t("stats.level"), progression.level + 1, progression.levelName))
                                     .font(.system(size: 16, weight: .bold))
                                 if let nextXP = progression.xpForNextLevel {
-                                    Text("\(nextXP - progression.totalXP) XP to \(ProgressionManager.levelNames[progression.level + 1])")
+                                    Text(String(format: lm.t("stats.xp_to_next"), nextXP - progression.totalXP, ProgressionManager.levelNames[progression.level + 1]))
                                         .font(.system(size: 12))
                                         .foregroundColor(.secondary)
                                 } else {
-                                    Text("Maximum level reached! 🏆")
+                                    Text(lm.t("stats.max_level"))
                                         .font(.system(size: 12, weight: .semibold))
                                         .foregroundColor(.yellow)
                                 }
@@ -55,44 +56,44 @@ struct StatisticsView: View {
                 }
 
                 // MARK: Daily Activity Calendar
-                Section("Daily Activity") {
+                Section(lm.t("stats.calendar_header")) {
                     StreakCalendarView()
                         .padding(.vertical, 4)
                 }
 
                 // MARK: Daily Streak
-                Section("Daily Streak") {
+                Section(lm.t("stats.streak")) {
                     HStack {
-                        Label("Current Streak", systemImage: "flame.fill")
+                        Label(lm.t("stats.current_streak"), systemImage: "flame.fill")
                             .foregroundColor(.orange)
                         Spacer()
-                        Text(streak.currentStreak == 1 ? "1 day" : "\(streak.currentStreak) days")
+                        Text(lm.daysText(streak.currentStreak))
                             .foregroundColor(.secondary)
                     }
                     HStack {
-                        Label("Best Streak", systemImage: "trophy.fill")
+                        Label(lm.t("stats.best_streak"), systemImage: "trophy.fill")
                             .foregroundColor(.yellow)
                         Spacer()
-                        Text(streak.bestStreak == 1 ? "1 day" : "\(streak.bestStreak) days")
+                        Text(lm.daysText(streak.bestStreak))
                             .foregroundColor(.secondary)
                     }
                     HStack {
-                        Label("Daily Challenges", systemImage: "calendar.badge.checkmark")
+                        Label(lm.t("game.daily_challenge"), systemImage: "calendar.badge.checkmark")
                             .foregroundColor(.blue)
                         Spacer()
-                        Text("\(streak.totalDailySolves) solved")
+                        Text("\(streak.totalDailySolves) \(lm.t("timetrial.solved").lowercased())")
                             .foregroundColor(.secondary)
                     }
                 }
 
                 // MARK: Best Times
-                Section("Best Times") {
+                Section(lm.t("stats.best_times")) {
                     ForEach(Difficulty.allCases) { difficulty in
                         HStack {
                             Image(systemName: difficulty.iconName)
                                 .foregroundColor(.blue)
                                 .frame(width: 28)
-                            Text(difficulty.displayName)
+                            Text(lm.difficultyName(difficulty))
                             Spacer()
                             if let best = stats.bestTime(for: difficulty) {
                                 Text(formatTime(best))
@@ -107,20 +108,20 @@ struct StatisticsView: View {
                 }
 
                 // MARK: Puzzles Solved
-                Section("Puzzles Solved") {
+                Section(lm.t("stats.puzzles_solved")) {
                     ForEach(Difficulty.allCases) { difficulty in
                         HStack {
                             Image(systemName: difficulty.iconName)
                                 .foregroundColor(.blue)
                                 .frame(width: 28)
-                            Text(difficulty.displayName)
+                            Text(lm.difficultyName(difficulty))
                             Spacer()
                             Text("\(stats.solveCount(for: difficulty))")
                                 .foregroundColor(.secondary)
                         }
                     }
                     HStack {
-                        Text("Total")
+                        Text(lm.t("stats.total"))
                             .fontWeight(.semibold)
                         Spacer()
                         Text("\(stats.totalSolveCount)")
@@ -129,7 +130,7 @@ struct StatisticsView: View {
                 }
 
                 // MARK: Achievements
-                Section("Achievements (\(achievements.unlocked.count)/\(achievements.all.count))") {
+                Section("\(lm.t("stats.achievements")) (\(achievements.unlocked.count)/\(achievements.all.count))") {
                     ForEach(achievements.all) { achievement in
                         let unlocked = achievements.isUnlocked(achievement)
                         HStack(spacing: 12) {
@@ -139,10 +140,10 @@ struct StatisticsView: View {
                                 .frame(width: 32)
 
                             VStack(alignment: .leading, spacing: 2) {
-                                Text(achievement.title)
+                                Text(lm.achievementTitle(achievement.id))
                                     .font(.system(size: 15, weight: .medium))
                                     .foregroundColor(unlocked ? .primary : .secondary)
-                                Text(achievement.description)
+                                Text(lm.achievementDesc(achievement.id))
                                     .font(.system(size: 12))
                                     .foregroundColor(.secondary)
                             }
@@ -157,11 +158,11 @@ struct StatisticsView: View {
                     }
                 }
             }
-            .navigationTitle("Statistics")
+            .navigationTitle(lm.t("stats.title"))
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
-                    Button("Done") { dismiss() }
+                    Button(lm.t("settings.done")) { dismiss() }
                 }
             }
         }

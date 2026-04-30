@@ -12,6 +12,7 @@ struct TimeTrialView: View {
     @State private var gameState = GameState(difficulty: .easy)
     @State private var themeManager = ThemeManager.shared
     @State private var achievementManager = AchievementManager.shared
+    @State private var lm = LocalizationManager.shared
 
     // Timer
     @State private var timeRemaining: TimeInterval = 180  // 3 minutes
@@ -67,7 +68,7 @@ struct TimeTrialView: View {
                         Text("\(score)")
                             .font(.system(size: 28, weight: .bold).monospacedDigit())
                             .foregroundColor(themeManager.current.pathColor)
-                        Text("Score")
+                        Text(lm.t("timetrial.score"))
                             .font(.system(size: 11))
                             .foregroundColor(.secondary)
                     }
@@ -78,7 +79,7 @@ struct TimeTrialView: View {
                     VStack(spacing: 2) {
                         Text("\(puzzlesSolved)")
                             .font(.system(size: 28, weight: .bold).monospacedDigit())
-                        Text("Solved")
+                        Text(lm.t("timetrial.solved"))
                             .font(.system(size: 11))
                             .foregroundColor(.secondary)
                     }
@@ -94,7 +95,7 @@ struct TimeTrialView: View {
                             .font(.system(size: 22, weight: .semibold).monospacedDigit())
                             .foregroundColor(timeRemaining < 30 ? .red : .primary)
                         Spacer()
-                        Text(currentDifficulty.displayName)
+                        Text(lm.difficultyName(currentDifficulty))
                             .font(.system(size: 13, weight: .medium))
                             .foregroundColor(.secondary)
                     }
@@ -118,6 +119,24 @@ struct TimeTrialView: View {
                 // Puzzle grid
                 puzzleGrid
                     .padding(.horizontal, 16)
+
+                // Undo / Reset — shown from Medium difficulty onwards
+                if currentDifficulty != .easy {
+                    HStack(spacing: 16) {
+                        actionButton(icon: "arrow.uturn.backward", label: "Undo") {
+                            gameState.undo()
+                        }
+                        .disabled(!isRunning || gameState.path.isEmpty)
+                        .opacity(!isRunning || gameState.path.isEmpty ? 0.4 : 1)
+
+                        actionButton(icon: "arrow.counterclockwise", label: "Reset") {
+                            gameState.reset()
+                        }
+                        .disabled(!isRunning || gameState.path.isEmpty)
+                        .opacity(!isRunning || gameState.path.isEmpty ? 0.4 : 1)
+                    }
+                    .animation(.easeInOut(duration: 0.25), value: currentDifficulty)
+                }
 
                 Spacer()
             }
@@ -255,10 +274,10 @@ struct TimeTrialView: View {
                     .font(.system(size: 48))
                     .foregroundColor(themeManager.current.pathColor)
                 VStack(spacing: 8) {
-                    Text("Time Trial")
+                    Text(lm.t("timetrial.title"))
                         .font(.system(size: 28, weight: .bold))
                         .foregroundColor(.white)
-                    Text("Solve as many puzzles as you can in 3 minutes.\nDifficulty increases every 5 puzzles.")
+                    Text(lm.t("timetrial.subtitle"))
                         .font(.system(size: 14))
                         .foregroundColor(.white.opacity(0.8))
                         .multilineTextAlignment(.center)
@@ -267,7 +286,7 @@ struct TimeTrialView: View {
                 Button(action: { isRunning = true }) {
                     HStack(spacing: 10) {
                         Image(systemName: "play.fill")
-                        Text("Start")
+                        Text(lm.t("timetrial.start"))
                             .font(.system(size: 18, weight: .semibold))
                     }
                     .foregroundColor(.white)
@@ -286,23 +305,23 @@ struct TimeTrialView: View {
         ZStack {
             Color.black.opacity(0.6).ignoresSafeArea()
             VStack(spacing: 20) {
-                Text("Time's Up!")
+                Text(lm.t("timetrial.times_up"))
                     .font(.system(size: 32, weight: .bold))
                     .foregroundColor(.white)
 
                 VStack(spacing: 12) {
-                    scoreRow(label: "Puzzles Solved", value: "\(puzzlesSolved)")
-                    scoreRow(label: "Total Score",    value: "\(score) pts")
-                    scoreRow(label: "Best Difficulty", value: currentDifficulty.displayName)
+                    scoreRow(label: lm.t("timetrial.puzzles_solved"), value: "\(puzzlesSolved)")
+                    scoreRow(label: lm.t("timetrial.total_score"),    value: String(format: lm.t("timetrial.pts"), score))
+                    scoreRow(label: lm.t("timetrial.best_difficulty"), value: lm.difficultyName(currentDifficulty))
                 }
                 .padding(20)
                 .background(Color.white.opacity(0.15))
                 .cornerRadius(16)
 
-                ShareLink(item: "🕐 Time Trial: solved \(puzzlesSolved) puzzles for \(score) pts! Play Flow Connect Puzzle!") {
+                ShareLink(item: String(format: lm.t("timetrial.share"), puzzlesSolved, score)) {
                     HStack(spacing: 8) {
                         Image(systemName: "square.and.arrow.up")
-                        Text("Share Result")
+                        Text(lm.t("timetrial.share_result"))
                     }
                     .font(.system(size: 14, weight: .medium))
                     .foregroundColor(.white.opacity(0.85))
@@ -313,7 +332,7 @@ struct TimeTrialView: View {
                 }
 
                 Button(action: onBack) {
-                    Text("Back to Menu")
+                    Text(lm.t("timetrial.back_to_menu"))
                         .font(.system(size: 18, weight: .semibold))
                         .foregroundColor(themeManager.current.pathColor)
                         .padding(.horizontal, 40)
@@ -330,6 +349,23 @@ struct TimeTrialView: View {
             Text(label).foregroundColor(.white.opacity(0.8))
             Spacer()
             Text(value).fontWeight(.semibold).foregroundColor(.white)
+        }
+    }
+
+    private func actionButton(icon: String, label: String, action: @escaping () -> Void) -> some View {
+        Button(action: action) {
+            HStack(spacing: 6) {
+                Image(systemName: icon)
+                    .font(.system(size: 14, weight: .semibold))
+                Text(label)
+                    .font(.system(size: 14, weight: .medium))
+            }
+            .foregroundColor(.primary)
+            .padding(.horizontal, 20)
+            .padding(.vertical, 10)
+            .background(Color(uiColor: .systemBackground))
+            .cornerRadius(20)
+            .shadow(color: .black.opacity(0.08), radius: 4)
         }
     }
 }

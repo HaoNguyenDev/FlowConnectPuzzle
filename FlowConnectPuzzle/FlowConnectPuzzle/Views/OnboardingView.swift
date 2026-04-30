@@ -7,30 +7,33 @@ import SwiftUI
 
 struct OnboardingView: View {
     @State private var step = 0
+    @State private var lm = LocalizationManager.shared
     let onFinish: () -> Void
 
-    private let steps: [(icon: String, title: String, body: String)] = [
-        (
-            "1.circle.fill",
-            "Connect the Numbers",
-            "Start from 1 and draw a continuous path to connect all numbers in order: 1 → 2 → 3 → …"
-        ),
-        (
-            "arrow.up.and.down.and.arrow.left.and.right",
-            "Draw Your Path",
-            "Drag your finger through adjacent cells. You can only move up, down, left, or right — no diagonals!"
-        ),
-        (
-            "checkmark.seal.fill",
-            "Fill the Grid",
-            "Your path must visit every cell on the grid. Connect all numbers in sequence to win!"
-        ),
-        (
-            "lightbulb.max.fill",
-            "Use Your Tools",
-            "Hint glows the next number. Undo steps back (costs +3 s). Reset replays the same puzzle. New generates a fresh one."
-        ),
-    ]
+    private var steps: [(icon: String, title: String, body: String)] {
+        [
+            (
+                "1.circle.fill",
+                lm.t("onboarding.step1_title"),
+                lm.t("onboarding.step1_body")
+            ),
+            (
+                "arrow.up.and.down.and.arrow.left.and.right",
+                lm.t("onboarding.step2_title"),
+                lm.t("onboarding.step2_body")
+            ),
+            (
+                "checkmark.seal.fill",
+                lm.t("onboarding.step3_title"),
+                lm.t("onboarding.step3_body")
+            ),
+            (
+                "lightbulb.max.fill",
+                lm.t("onboarding.step4_title"),
+                lm.t("onboarding.step4_body")
+            ),
+        ]
+    }
 
     var body: some View {
         VStack(spacing: 0) {
@@ -79,14 +82,14 @@ struct OnboardingView: View {
             // Navigation buttons
             HStack(spacing: 16) {
                 if step < steps.count - 1 {
-                    Button("Skip") { onFinish() }
+                    Button(lm.t("onboarding.skip")) { onFinish() }
                         .foregroundColor(.secondary)
                         .frame(maxWidth: .infinity)
 
                     Button {
                         withAnimation { step += 1 }
                     } label: {
-                        Text("Next")
+                        Text(lm.t("onboarding.next"))
                             .font(.system(size: 17, weight: .semibold))
                             .foregroundColor(.white)
                             .frame(maxWidth: .infinity)
@@ -98,7 +101,7 @@ struct OnboardingView: View {
                     Button {
                         onFinish()
                     } label: {
-                        Text("Let's Play!")
+                        Text(lm.t("onboarding.get_started"))
                             .font(.system(size: 17, weight: .semibold))
                             .foregroundColor(.white)
                             .frame(maxWidth: .infinity)
