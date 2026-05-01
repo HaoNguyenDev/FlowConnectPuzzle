@@ -50,6 +50,10 @@
 "settings.reset_confirm_title" = "Alles zurücksetzen?";
 "settings.reset_confirm_message" = "Dadurch werden alle Fortschritte, Statistiken und Errungenschaften dauerhaft gelöscht. Dies kann nicht rückgängig gemacht werden.";
 "settings.reset_confirm_action" = "Alles zurücksetzen";
+"settings.appearance" = "Erscheinungsbild";
+"settings.appearance_light" = "Hell";
+"settings.appearance_dark" = "Dunkel";
+"settings.appearance_system" = "System";
 
 /* Stats */
 "stats.title" = "Statistiken";

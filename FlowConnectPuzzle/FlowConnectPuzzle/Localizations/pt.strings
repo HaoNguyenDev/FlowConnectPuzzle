@@ -50,6 +50,10 @@
 "settings.reset_confirm_title" = "Redefinir tudo?";
 "settings.reset_confirm_message" = "Isso excluirá permanentemente todo o progresso, estatísticas e conquistas. Não pode ser desfeito.";
 "settings.reset_confirm_action" = "Redefinir tudo";
+"settings.appearance" = "Aparência";
+"settings.appearance_light" = "Claro";
+"settings.appearance_dark" = "Escuro";
+"settings.appearance_system" = "Sistema";
 
 /* Stats */
 "stats.title" = "Estatísticas";

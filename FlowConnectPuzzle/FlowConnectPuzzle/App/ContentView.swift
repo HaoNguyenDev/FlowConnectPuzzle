@@ -22,6 +22,7 @@ struct ContentView: View {
     @State private var showChallengeFriend = false
     @State private var showResetConfirm = false
     @State private var lm = LocalizationManager.shared
+    @State private var appearanceManager = AppearanceManager.shared
 
     var body: some View {
         Group {
@@ -38,6 +39,7 @@ struct ContentView: View {
                 difficultySelectionView
             }
         }
+        .preferredColorScheme(appearanceManager.preferredColorScheme)
     }
 
     // MARK: - Difficulty Selection
@@ -371,6 +373,28 @@ struct ContentView: View {
     private var settingsSheet: some View {
         NavigationStack {
             List {
+                Section(lm.t("settings.appearance")) {
+                    ForEach(AppearanceMode.allCases) { mode in
+                        Button {
+                            appearanceManager.mode = mode
+                        } label: {
+                            HStack(spacing: 12) {
+                                Image(systemName: mode.iconName)
+                                    .foregroundStyle(.primary)
+                                    .frame(width: 22)
+                                Text(lm.t(mode.localizationKey))
+                                    .foregroundStyle(.primary)
+                                Spacer()
+                                if appearanceManager.mode == mode {
+                                    Image(systemName: "checkmark")
+                                        .foregroundStyle(themeManager.current.pathColor)
+                                        .fontWeight(.semibold)
+                                }
+                            }
+                        }
+                    }
+                }
+
                 Section(lm.t("settings.theme")) {
                     ForEach(GameTheme.all) { theme in
                         Button {
@@ -385,7 +409,7 @@ struct ContentView: View {
                                 Spacer()
                                 if themeManager.current == theme {
                                     Image(systemName: "checkmark")
-                                        .foregroundStyle(.blue)
+                                        .foregroundStyle(themeManager.current.pathColor)
                                         .fontWeight(.semibold)
                                 }
                             }
@@ -406,7 +430,7 @@ struct ContentView: View {
                                 Spacer()
                                 if lm.language == lang {
                                     Image(systemName: "checkmark")
-                                        .foregroundStyle(.blue)
+                                        .foregroundStyle(themeManager.current.pathColor)
                                         .fontWeight(.semibold)
                                 }
                             }
@@ -428,7 +452,7 @@ struct ContentView: View {
                     } label: {
                         Label(lm.t("settings.challenge_friend"), systemImage: "person.2.fill")
                     }
-                    .foregroundStyle(.blue)
+                    .foregroundStyle(themeManager.current.pathColor)
                 }
 
                 Section(lm.t("settings.notifications")) {
@@ -457,7 +481,7 @@ struct ContentView: View {
                             showOnboarding = true
                         }
                     }
-                    .foregroundStyle(.blue)
+                    .foregroundStyle(themeManager.current.pathColor)
                 }
 
                 Section(lm.t("settings.data")) {
@@ -476,6 +500,8 @@ struct ContentView: View {
                 }
             }
         }
+        .tint(themeManager.current.pathColor)
+        .preferredColorScheme(appearanceManager.preferredColorScheme)
         .appAlert(
             isPresented: $showResetConfirm,
             icon: "trash.fill",

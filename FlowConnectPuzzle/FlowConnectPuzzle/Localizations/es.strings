@@ -50,6 +50,10 @@
 "settings.reset_confirm_title" = "¿Restablecer todo?";
 "settings.reset_confirm_message" = "Esto eliminará permanentemente todo el progreso, estadísticas y logros. No se puede deshacer.";
 "settings.reset_confirm_action" = "Restablecer todo";
+"settings.appearance" = "Apariencia";
+"settings.appearance_light" = "Claro";
+"settings.appearance_dark" = "Oscuro";
+"settings.appearance_system" = "Sistema";
 
 /* Stats */
 "stats.title" = "Estadísticas";
