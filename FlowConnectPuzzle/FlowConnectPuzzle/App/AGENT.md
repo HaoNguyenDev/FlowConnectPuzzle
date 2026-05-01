@@ -65,7 +65,9 @@ FlowConnectPuzzle/
 │   ├── GameTheme.swift                     # GameTheme struct + ThemeManager (@Observable)
 │   ├── DailyChallenge.swift                # Daily puzzle seed, completion tracking
 │   ├── GameMode.swift                      # enum GameMode: normal/daily/weekly/zen/timeTrial/challenge
-│   └── WeeklyChallenge.swift               # ISO week-based seed, expert difficulty, completion tracking
+│   ├── WeeklyChallenge.swift               # ISO week-based seed, expert difficulty, completion tracking
+│   ├── AppColorScheme.swift                # AppColorSchemeProtocol + LightAppColorScheme + DarkAppColorScheme
+│   └── AppearanceMode.swift                # enum AppearanceMode (.light/.dark/.system) + AppearanceManager singleton
 │
 ├── ViewModels
 │   └── GameState.swift                     # @Observable class — core game logic + undo tracking
@@ -108,6 +110,100 @@ FlowConnectPuzzle/
     ├── README.md                           # User-facing documentation
     └── AGENT.md                            # This file (AI assistant guide)
 ```
+
+---
+
+## 🌗 Appearance Mode System
+
+Separate from the game color *theme* (ocean/sunset/forest/cosmos), the **appearance mode** controls whether the app renders in Light, Dark, or System mode — mirroring iOS's native behavior.
+
+### Protocol and Concrete Schemes
+
+```swift
+protocol AppColorSchemeProtocol {
+    // Backgrounds
+    var pageBackground: Color { get }
+    var groupedBackground: Color { get }
+    var surface: Color { get }
+    var elevatedSurface: Color { get }
+    // Text
+    var primaryText: Color { get }
+    var secondaryText: Color { get }
+    var tertiaryText: Color { get }
+    // UI Elements
+    var separator: Color { get }
+    var destructive: Color { get }
+    // Typography
+    var titleFont: Font { get }
+    var headlineFont: Font { get }
+    var bodyFont: Font { get }
+    var subheadlineFont: Font { get }
+    var captionFont: Font { get }
+}
+```
+
+**`LightAppColorScheme`** uses `#F2F2F7` page background (Apple `systemGroupedBackground` light).
+
+**`DarkAppColorScheme`** uses exact Apple UIColor dark mode values:
+
+| Property | UIColor name | Hex |
+|----------|-------------|-----|
+| `pageBackground` | systemGroupedBackground | `#1C1C1E` |
+| `groupedBackground` | secondarySystemGroupedBackground | `#2C2C2E` |
+| `surface` | secondarySystemBackground | `#2C2C2E` |
+| `elevatedSurface` | tertiarySystemBackground | `#3A3A3C` |
+| `primaryText` | label | `#FFFFFF` |
+| `secondaryText` | secondaryLabel | `#8E8E93` |
+| `tertiaryText` | tertiaryLabel | `#48484A` |
+| `separator` | opaqueSeparator | `#38383A` |
+| `destructive` | systemRed | `#FF453A` |
+
+### AppearanceManager
+
+```swift
+enum AppearanceMode: String, CaseIterable, Identifiable {
+    case light, dark, system
+    var preferredColorScheme: ColorScheme? // .light / .dark / nil (system)
+    var iconName: String       // SF Symbol for picker UI
+    var localizationKey: String // settings.appearance_{case}
+}
+
+@Observable class AppearanceManager {
+    static let shared = AppearanceManager()
+    var mode: AppearanceMode { didSet { UserDefaults.standard.set(mode.rawValue, forKey: "appearance_mode") } }
+    var preferredColorScheme: ColorScheme? { mode.preferredColorScheme }
+    let lightScheme: any AppColorSchemeProtocol = LightAppColorScheme()
+    let darkScheme: any AppColorSchemeProtocol = DarkAppColorScheme()
+}
+```
+
+**Critical rule**: `mode` is a **stored property** with `didSet` (not a computed property) so `@Observable` tracks changes and triggers SwiftUI re-renders.
+
+### Applying the Preference
+
+```swift
+// ContentView.swift — root Group
+Group { ... }
+    .preferredColorScheme(appearanceManager.preferredColorScheme)
+
+// Settings sheet — NavigationStack (sheets don't inherit from parent!)
+NavigationStack { ... }
+    .tint(themeManager.current.pathColor)
+    .preferredColorScheme(appearanceManager.preferredColorScheme)
+```
+
+**Sheet inheritance caveat**: `.sheet()` creates a new `UIViewController` presentation context and does **not** automatically inherit `.preferredColorScheme` from the SwiftUI parent hierarchy. Apply `.preferredColorScheme` directly to the root view inside the sheet (here: the `NavigationStack`).
+
+### Localization Keys Added
+
+```
+"settings.appearance"        // "Appearance" / "Chế độ hiển thị" / ...
+"settings.appearance_light"  // "Light" / "Sáng" / ...
+"settings.appearance_dark"   // "Dark" / "Tối" / ...
+"settings.appearance_system" // "System" / "Theo hệ thống" / ...
+```
+
+Present in all 9 `.strings` files: `en`, `vi`, `es`, `fr`, `de`, `ja`, `zh_Hans`, `pt`, `ko`.
 
 ---
 
@@ -697,7 +793,7 @@ VStack {
 
 Sheets:
 ├─ StatisticsView     — progression, streak calendar, best times, achievements
-├─ Settings Sheet     — theme picker, sound toggle, "Challenge a Friend", onboarding replay
+├─ Settings Sheet     — appearance picker (Light/Dark/System), theme picker, language, sound, notifications, challenge friend, onboarding replay, data reset
 ├─ TimeTrialView      — 3-minute countdown mode
 └─ ChallengeFriendView — generate/share/enter challenge codes
 
@@ -1072,6 +1168,8 @@ class GameState: ObservableObject { @Published var grid: [[GridCell]] }
 
 ```
 ContentView.swift
+  ├─→ AppearanceMode.swift (AppearanceManager)
+  ├─→ AppColorScheme.swift (LightAppColorScheme, DarkAppColorScheme)
   ├─→ GameMode.swift
   ├─→ DailyChallenge.swift
   ├─→ WeeklyChallenge.swift
@@ -1207,12 +1305,22 @@ When working with this codebase, remember:
 - [ ] Zen mode: no timer display, no time penalties, no personal best tracking
 - [ ] `TimeTrialView` requires `import Combine` for `Timer.publish`
 - [ ] `PuzzleGameView` init signature: `init(mode: GameMode, onBack: @escaping () -> Void)`
+- [ ] Appearance mode uses `AppearanceManager.shared` — `mode` is a **stored property** with `didSet` (NOT computed)
+- [ ] `.preferredColorScheme()` must be applied to **both** the root `Group` in `ContentView` AND the `NavigationStack` inside the settings sheet — sheets don't inherit from parent
+- [ ] `DarkAppColorScheme` values are exact Apple UIColor dark-mode values — do not replace with approximations
+- [ ] `AppColorSchemeProtocol` is separate from `GameTheme` — protocol is for light/dark chrome colors; `GameTheme` is for in-game path/accent colors
 
 ---
 
-**Last Updated**: 2026-05-01
-**Version**: 4.3
+**Last Updated**: 2026-05-02
+**Version**: 4.4
 **Changelog**:
+- v4.4 (2026-05-02): Appearance Mode (Light / Dark / System) + Apple HIG dark colors
+  - **AppColorScheme.swift** (new): `AppColorSchemeProtocol` defining backgrounds, text, UI element, and typography tokens. `LightAppColorScheme` and `DarkAppColorScheme` conform to protocol. Dark scheme uses exact Apple UIColor dark-mode resolved values (`#1C1C1E`, `#2C2C2E`, `#3A3A3C`, `#8E8E93`, `#48484A`, `#38383A`, `#FF453A`).
+  - **AppearanceMode.swift** (new): `enum AppearanceMode` (`.light`/`.dark`/`.system`) + `@Observable class AppearanceManager` singleton. `mode` is a stored property with `didSet` persisting to UserDefaults (`"appearance_mode"` key). Exposes `preferredColorScheme: ColorScheme?` (nil = system).
+  - **ContentView.swift**: Added `@State private var appearanceManager = AppearanceManager.shared`. Root `Group.body` gets `.preferredColorScheme(appearanceManager.preferredColorScheme)`. Settings sheet's `NavigationStack` gets the same modifier (sheets don't inherit from parent). Appearance section (first in Settings list) uses `ForEach(AppearanceMode.allCases)` with icon + label + checkmark rows.
+  - **Launch Screen**: Replaced failing `UILaunchStoryboardName` / `LaunchScreen.storyboard` with `UILaunchScreen` dictionary in `Info.plist` referencing `LaunchBackground` named color asset (light: `#F2F2F7`, dark: `#1C1C1E`). Eliminates "com.apple.InterfaceBuilder error -1" parse failures.
+  - **Localization**: Added `settings.appearance`, `settings.appearance_light`, `settings.appearance_dark`, `settings.appearance_system` to all 9 `.strings` files.
 - v4.3 (2026-05-01): UX polish + reusable alert system
   - **AppAlertView.swift** (new): Reusable custom popup component. `AppAlertView` struct + `AppAlertModifier` (private) + `View.appAlert(...)` extension. Replaces native `confirmationDialog` for full design control. Spring/fade animation respects `accessibilityReduceMotion`. Overlay does NOT dismiss on backdrop tap.
   - **Reset All Game Data**: Settings now uses `.appAlert(...)` instead of `.confirmationDialog`. All 9 localization files updated with `common.cancel` key.

@@ -50,6 +50,10 @@
 "settings.reset_confirm_title" = "すべてリセットしますか？";
 "settings.reset_confirm_message" = "進行状況、統計、実績がすべて完全に削除されます。この操作は取り消せません。";
 "settings.reset_confirm_action" = "すべてリセット";
+"settings.appearance" = "外観";
+"settings.appearance_light" = "ライト";
+"settings.appearance_dark" = "ダーク";
+"settings.appearance_system" = "システム";
 
 /* Stats */
 "stats.title" = "統計";

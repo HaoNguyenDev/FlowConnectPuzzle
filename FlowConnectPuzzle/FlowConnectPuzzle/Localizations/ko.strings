@@ -50,6 +50,10 @@
 "settings.reset_confirm_title" = "모든 데이터를 초기화할까요?";
 "settings.reset_confirm_message" = "진행 상황, 통계, 업적이 영구적으로 삭제됩니다. 취소할 수 없습니다.";
 "settings.reset_confirm_action" = "모두 초기화";
+"settings.appearance" = "외관";
+"settings.appearance_light" = "라이트";
+"settings.appearance_dark" = "다크";
+"settings.appearance_system" = "시스템";
 
 /* Stats */
 "stats.title" = "통계";

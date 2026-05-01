@@ -50,6 +50,10 @@
 "settings.reset_confirm_title" = "重置所有数据？";
 "settings.reset_confirm_message" = "这将永久删除所有进度、统计数据和成就。无法撤销。";
 "settings.reset_confirm_action" = "重置所有内容";
+"settings.appearance" = "外观";
+"settings.appearance_light" = "浅色";
+"settings.appearance_dark" = "深色";
+"settings.appearance_system" = "跟随系统";
 
 /* Stats */
 "stats.title" = "统计";

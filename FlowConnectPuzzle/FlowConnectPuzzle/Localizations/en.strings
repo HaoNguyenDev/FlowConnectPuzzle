@@ -51,6 +51,10 @@
 "settings.reset_confirm_title" = "Reset All Data?";
 "settings.reset_confirm_message" = "This will permanently delete all progress, statistics, and achievements. This cannot be undone.";
 "settings.reset_confirm_action" = "Reset Everything";
+"settings.appearance" = "Appearance";
+"settings.appearance_light" = "Light";
+"settings.appearance_dark" = "Dark";
+"settings.appearance_system" = "System";
 
 /* Stats */
 "stats.title" = "Statistics";

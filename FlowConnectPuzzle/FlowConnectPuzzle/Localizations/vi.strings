@@ -50,6 +50,10 @@
 "settings.reset_confirm_title" = "Đặt lại tất cả?";
 "settings.reset_confirm_message" = "Thao tác này sẽ xóa vĩnh viễn toàn bộ tiến trình, thống kê và thành tích. Không thể hoàn tác.";
 "settings.reset_confirm_action" = "Đặt lại tất cả";
+"settings.appearance" = "Chế độ hiển thị";
+"settings.appearance_light" = "Sáng";
+"settings.appearance_dark" = "Tối";
+"settings.appearance_system" = "Theo hệ thống";
 
 /* Stats */
 "stats.title" = "Thống kê";

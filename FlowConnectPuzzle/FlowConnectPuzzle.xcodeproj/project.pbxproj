@@ -70,6 +70,8 @@
 		DAA6DC302F9D455C00062038 /* StatisticsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAA6DC2F2F9D455C00062038 /* StatisticsView.swift */; };
 		DADDDEA22F93F0D400D51A57 /* AGENT.md in Resources */ = {isa = PBXBuildFile; fileRef = DADDDEA12F93F0D300D51A57 /* AGENT.md */; };
 		DAF7BEE72FA4D32B00FD445C /* AppAlertView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAF7BEE62FA4D32B00FD445C /* AppAlertView.swift */; };
+		DAF7BEEB2FA51ECB00FD445C /* AppColorScheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAF7BEEA2FA51ECB00FD445C /* AppColorScheme.swift */; };
+		DAF7BEED2FA51ECB00FD445C /* AppearanceMode.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAF7BEEC2FA51ECB00FD445C /* AppearanceMode.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -140,6 +142,8 @@
 		DAA6DC2F2F9D455C00062038 /* StatisticsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatisticsView.swift; sourceTree = "<group>"; };
 		DADDDEA12F93F0D300D51A57 /* AGENT.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = AGENT.md; sourceTree = "<group>"; };
 		DAF7BEE62FA4D32B00FD445C /* AppAlertView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppAlertView.swift; sourceTree = "<group>"; };
+		DAF7BEEA2FA51ECB00FD445C /* AppColorScheme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppColorScheme.swift; sourceTree = "<group>"; };
+		DAF7BEEC2FA51ECB00FD445C /* AppearanceMode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppearanceMode.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -257,6 +261,8 @@
 				DAA6DC292F9D451A00062038 /* DailyChallenge.swift */,
 				DA02D8C12FA3472500284697 /* WeeklyChallenge.swift */,
 				DA02D8C52FA347A700284697 /* GameMode.swift */,
+				DAF7BEEA2FA51ECB00FD445C /* AppColorScheme.swift */,
+				DAF7BEEC2FA51ECB00FD445C /* AppearanceMode.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -480,6 +486,7 @@
 				DA85AC9A2F9356580088A534 /* ContentView.swift in Sources */,
 				DA85AC9B2F9356580088A534 /* FlowConnectPuzzleApp.swift in Sources */,
 				DA85AC9C2F9356580088A534 /* Item.swift in Sources */,
+				DAF7BEED2FA51ECB00FD445C /* AppearanceMode.swift in Sources */,
 				DAA6DC242F9D44DD00062038 /* StatisticsManager.swift in Sources */,
 				DA85ACC02F9384730088A534 /* PuzzleGenerator.swift in Sources */,
 				DA02D8C62FA347A700284697 /* GameMode.swift in Sources */,
@@ -505,6 +512,7 @@
 				DA02D8C82FA347D500284697 /* TimeTrialView.swift in Sources */,
 				DAA6DC2A2F9D451A00062038 /* DailyChallenge.swift in Sources */,
 				DA02D8C42FA3473100284697 /* StreakCalendarView.swift in Sources */,
+				DAF7BEEB2FA51ECB00FD445C /* AppColorScheme.swift in Sources */,
 				DA02D8BC2FA345ED00284697 /* StreakManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

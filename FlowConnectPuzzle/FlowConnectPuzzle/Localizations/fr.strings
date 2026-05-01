@@ -50,6 +50,10 @@
 "settings.reset_confirm_title" = "Tout réinitialiser ?";
 "settings.reset_confirm_message" = "Cela supprimera définitivement toute la progression, les statistiques et les succès. Impossible à annuler.";
 "settings.reset_confirm_action" = "Tout réinitialiser";
+"settings.appearance" = "Apparence";
+"settings.appearance_light" = "Clair";
+"settings.appearance_dark" = "Sombre";
+"settings.appearance_system" = "Système";
 
 /* Stats */
 "stats.title" = "Statistiques";
