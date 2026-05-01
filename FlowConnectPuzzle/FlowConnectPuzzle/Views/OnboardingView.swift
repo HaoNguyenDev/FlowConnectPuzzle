@@ -58,7 +58,7 @@ struct OnboardingView: View {
 
             Text(steps[step].body)
                 .font(.system(size: 16))
-                .foregroundColor(.secondary)
+                .foregroundStyle(.secondary)
                 .multilineTextAlignment(.center)
                 .lineSpacing(4)
                 .padding(.horizontal, 40)
@@ -83,7 +83,7 @@ struct OnboardingView: View {
             HStack(spacing: 16) {
                 if step < steps.count - 1 {
                     Button(lm.t("onboarding.skip")) { onFinish() }
-                        .foregroundColor(.secondary)
+                        .foregroundStyle(.secondary)
                         .frame(maxWidth: .infinity)
 
                     Button {
@@ -91,11 +91,11 @@ struct OnboardingView: View {
                     } label: {
                         Text(lm.t("onboarding.next"))
                             .font(.system(size: 17, weight: .semibold))
-                            .foregroundColor(.white)
+                            .foregroundStyle(.white)
                             .frame(maxWidth: .infinity)
                             .padding(.vertical, 14)
                             .background(Color.blue)
-                            .cornerRadius(14)
+                            .clipShape(RoundedRectangle(cornerRadius: 14))
                     }
                 } else {
                     Button {
@@ -103,11 +103,11 @@ struct OnboardingView: View {
                     } label: {
                         Text(lm.t("onboarding.get_started"))
                             .font(.system(size: 17, weight: .semibold))
-                            .foregroundColor(.white)
+                            .foregroundStyle(.white)
                             .frame(maxWidth: .infinity)
                             .padding(.vertical, 14)
                             .background(Color.blue)
-                            .cornerRadius(14)
+                            .clipShape(RoundedRectangle(cornerRadius: 14))
                     }
                 }
             }

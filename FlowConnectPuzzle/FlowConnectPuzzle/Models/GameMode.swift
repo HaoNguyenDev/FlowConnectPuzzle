@@ -17,29 +17,34 @@ enum GameMode: Equatable {
     case zen(Difficulty)
     /// 3-minute sprint — solve as many puzzles as possible.
     case timeTrial
+    /// Friend challenge — seeded puzzle shared via a challenge code.
+    case challenge(Difficulty, UInt64)
 
     var difficulty: Difficulty {
         switch self {
-        case .normal(let d): return d
-        case .daily:         return DailyChallenge.todayDifficulty
-        case .weekly:        return WeeklyChallenge.difficulty
-        case .zen(let d):    return d
-        case .timeTrial:     return .easy
+        case .normal(let d):       return d
+        case .daily:               return DailyChallenge.todayDifficulty
+        case .weekly:              return WeeklyChallenge.difficulty
+        case .zen(let d):          return d
+        case .timeTrial:           return .easy
+        case .challenge(let d, _): return d
         }
     }
 
     var isSeeded: Bool {
         switch self {
-        case .daily, .weekly: return true
-        default:              return false
+        case .daily, .weekly:   return true
+        case .challenge(_, _):  return true
+        default:                return false
         }
     }
 
     var seed: UInt64? {
         switch self {
-        case .daily:  return DailyChallenge.todaySeed
-        case .weekly: return WeeklyChallenge.thisWeekSeed
-        default:      return nil
+        case .daily:               return DailyChallenge.todaySeed
+        case .weekly:              return WeeklyChallenge.thisWeekSeed
+        case .challenge(_, let s): return s
+        default:                   return nil
         }
     }
 
@@ -53,12 +58,14 @@ enum GameMode: Equatable {
     }
 
     var displayTitle: String {
+        let lm = LocalizationManager.shared
         switch self {
-        case .normal(let d): return d.displayName
-        case .daily:         return "Daily Challenge"
-        case .weekly:        return "Weekly Challenge"
-        case .zen(let d):    return "\(d.displayName) — Zen"
-        case .timeTrial:     return "Time Trial"
+        case .normal(let d):       return lm.difficultyName(d)
+        case .daily:               return lm.t("game.daily_challenge")
+        case .weekly:              return lm.t("game.weekly_challenge")
+        case .zen(let d):          return "\(lm.difficultyName(d)) — \(lm.t("game.zen"))"
+        case .timeTrial:           return lm.t("timetrial.title")
+        case .challenge(let d, _): return "\(lm.difficultyName(d)) — \(lm.t("game.challenge"))"
         }
     }
 }

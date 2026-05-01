@@ -15,7 +15,7 @@ struct StatisticsView: View {
     @Environment(\.dismiss) private var dismiss
 
     var body: some View {
-        NavigationView {
+        NavigationStack {
             List {
                 // MARK: Progression
                 Section(lm.t("stats.progression")) {
@@ -27,17 +27,17 @@ struct StatisticsView: View {
                                 if let nextXP = progression.xpForNextLevel {
                                     Text(String(format: lm.t("stats.xp_to_next"), nextXP - progression.totalXP, ProgressionManager.levelNames[progression.level + 1]))
                                         .font(.system(size: 12))
-                                        .foregroundColor(.secondary)
+                                        .foregroundStyle(.secondary)
                                 } else {
                                     Text(lm.t("stats.max_level"))
                                         .font(.system(size: 12, weight: .semibold))
-                                        .foregroundColor(.yellow)
+                                        .foregroundStyle(.yellow)
                                 }
                             }
                             Spacer()
                             Text("\(progression.totalXP) XP")
                                 .font(.system(size: 14, weight: .semibold))
-                                .foregroundColor(themeManager.current.pathColor)
+                                .foregroundStyle(themeManager.current.pathColor)
                         }
 
                         GeometryReader { geo in
@@ -65,24 +65,24 @@ struct StatisticsView: View {
                 Section(lm.t("stats.streak")) {
                     HStack {
                         Label(lm.t("stats.current_streak"), systemImage: "flame.fill")
-                            .foregroundColor(.orange)
+                            .foregroundStyle(.orange)
                         Spacer()
                         Text(lm.daysText(streak.currentStreak))
-                            .foregroundColor(.secondary)
+                            .foregroundStyle(.secondary)
                     }
                     HStack {
                         Label(lm.t("stats.best_streak"), systemImage: "trophy.fill")
-                            .foregroundColor(.yellow)
+                            .foregroundStyle(.yellow)
                         Spacer()
                         Text(lm.daysText(streak.bestStreak))
-                            .foregroundColor(.secondary)
+                            .foregroundStyle(.secondary)
                     }
                     HStack {
                         Label(lm.t("game.daily_challenge"), systemImage: "calendar.badge.checkmark")
-                            .foregroundColor(.blue)
+                            .foregroundStyle(.blue)
                         Spacer()
                         Text("\(streak.totalDailySolves) \(lm.t("timetrial.solved").lowercased())")
-                            .foregroundColor(.secondary)
+                            .foregroundStyle(.secondary)
                     }
                 }
 
@@ -91,17 +91,17 @@ struct StatisticsView: View {
                     ForEach(Difficulty.allCases) { difficulty in
                         HStack {
                             Image(systemName: difficulty.iconName)
-                                .foregroundColor(.blue)
+                                .foregroundStyle(.blue)
                                 .frame(width: 28)
                             Text(lm.difficultyName(difficulty))
                             Spacer()
                             if let best = stats.bestTime(for: difficulty) {
                                 Text(formatTime(best))
                                     .font(.system(size: 14, weight: .medium).monospacedDigit())
-                                    .foregroundColor(.secondary)
+                                    .foregroundStyle(.secondary)
                             } else {
                                 Text("—")
-                                    .foregroundColor(.secondary)
+                                    .foregroundStyle(.secondary)
                             }
                         }
                     }
@@ -112,12 +112,12 @@ struct StatisticsView: View {
                     ForEach(Difficulty.allCases) { difficulty in
                         HStack {
                             Image(systemName: difficulty.iconName)
-                                .foregroundColor(.blue)
+                                .foregroundStyle(.blue)
                                 .frame(width: 28)
                             Text(lm.difficultyName(difficulty))
                             Spacer()
                             Text("\(stats.solveCount(for: difficulty))")
-                                .foregroundColor(.secondary)
+                                .foregroundStyle(.secondary)
                         }
                     }
                     HStack {
@@ -136,22 +136,22 @@ struct StatisticsView: View {
                         HStack(spacing: 12) {
                             Image(systemName: achievement.iconName)
                                 .font(.system(size: 20))
-                                .foregroundColor(unlocked ? .yellow : .gray.opacity(0.3))
+                                .foregroundStyle(unlocked ? .yellow : .gray.opacity(0.3))
                                 .frame(width: 32)
 
                             VStack(alignment: .leading, spacing: 2) {
                                 Text(lm.achievementTitle(achievement.id))
                                     .font(.system(size: 15, weight: .medium))
-                                    .foregroundColor(unlocked ? .primary : .secondary)
+                                    .foregroundStyle(unlocked ? .primary : .secondary)
                                 Text(lm.achievementDesc(achievement.id))
                                     .font(.system(size: 12))
-                                    .foregroundColor(.secondary)
+                                    .foregroundStyle(.secondary)
                             }
 
                             if unlocked {
                                 Spacer()
                                 Image(systemName: "checkmark.circle.fill")
-                                    .foregroundColor(.green)
+                                    .foregroundStyle(.green)
                             }
                         }
                         .opacity(unlocked ? 1.0 : 0.5)
@@ -161,7 +161,7 @@ struct StatisticsView: View {
             .navigationTitle(lm.t("stats.title"))
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
+                ToolbarItem(placement: .topBarTrailing) {
                     Button(lm.t("settings.done")) { dismiss() }
                 }
             }

@@ -64,7 +64,7 @@ FlowConnectPuzzle/
 │   ├── Difficulty.swift                    # enum Difficulty: easy/medium/hard/veryHard/expert
 │   ├── GameTheme.swift                     # GameTheme struct + ThemeManager (@Observable)
 │   ├── DailyChallenge.swift                # Daily puzzle seed, completion tracking
-│   ├── GameMode.swift                      # enum GameMode: normal/daily/weekly/zen/timeTrial
+│   ├── GameMode.swift                      # enum GameMode: normal/daily/weekly/zen/timeTrial/challenge
 │   └── WeeklyChallenge.swift               # ISO week-based seed, expert difficulty, completion tracking
 │
 ├── ViewModels
@@ -116,17 +116,18 @@ The `GameMode` enum is the single source of truth for which mode is active. `Puz
 
 ```swift
 enum GameMode: Equatable {
-    case normal(Difficulty)   // Standard timed puzzle
-    case daily                // Daily challenge — date-seeded, one per day
-    case weekly               // Weekly challenge — ISO week-seeded, always Expert
-    case zen(Difficulty)      // No timer display, no time penalties, no personal best
-    case timeTrial            // Separate view (TimeTrialView) — 3-min countdown
+    case normal(Difficulty)          // Standard timed puzzle
+    case daily                       // Daily challenge — date-seeded, one per day
+    case weekly                      // Weekly challenge — ISO week-seeded, always Expert
+    case zen(Difficulty)             // No timer display, no time penalties, no personal best
+    case timeTrial                   // Separate view (TimeTrialView) — 3-min countdown
+    case challenge(Difficulty, UInt64) // Friend challenge — seeded puzzle shared via code
 
     var difficulty: Difficulty  // Derived difficulty for this mode
-    var isSeeded: Bool          // true for daily/weekly
+    var isSeeded: Bool          // true for daily/weekly/challenge
     var seed: UInt64?           // Seed value for seeded modes
     var isZen: Bool             // true for zen(_)
-    var displayTitle: String    // Human-readable title for the header
+    var displayTitle: String    // Localized title via LocalizationManager.shared
 }
 ```
 
@@ -139,6 +140,7 @@ enum GameMode: Equatable {
 | `weekly` | Counts up | +3 sec | Yes | Hidden |
 | `zen` | Hidden (leaf icon) | None (skipped) | No | Shown |
 | `timeTrial` | Counts down (3 min) | N/A (auto-advance) | N/A | N/A |
+| `challenge` | Counts up | +3 sec | Yes | Shown |
 
 **Computed shorthands in `PuzzleGameView`** (so internal code stays readable):
 ```swift
@@ -297,7 +299,6 @@ class GameState {
     var grid: [[GridCell]]
     var path: [GridPosition]
     var currentNumber: Int
-    var isComplete: Bool          // Deprecated — DO NOT USE
     var allNumbersConnected: Bool // WIN condition
     var usedUndo: Bool            // Whether Undo was used this session (for achievements/stats)
 
@@ -316,8 +317,7 @@ class GameState {
 
 **Key Rules:**
 - `usedUndo` is set to `true` in `undo()` and reset on `newGame()` / `reset()`
-- `isComplete` is deprecated — always use `allNumbersConnected`
-- Win condition: `currentNumber == maxNumber`
+- Win condition: `currentNumber == maxNumber` → sets `allNumbersConnected = true`
 
 ---
 
@@ -796,7 +796,11 @@ UIPasteboard.general.string = generatedCode
 // Shows toast: .toast("Đã sao chép mã!", isShowing: $codeCopied)
 ```
 
-**Enter friend's code → decode seed + difficulty → launch PuzzleGameView with that seed.**
+**Enter friend's code → decode seed + difficulty → launch `PuzzleGameView` with `.challenge(difficulty, seed)`.**
+
+**Bug fixes applied (v4.2):**
+- Input filter now accepts both letters AND digits: `{ $0.isLetter || $0.isNumber }` (was `\.isLetter`, silently dropped numeric characters)
+- `decode()` now returns `.challenge(difficulty, seed)` instead of `.normal(difficulty)` — the decoded seed is now actually used for deterministic puzzle generation
 
 ---
 
@@ -974,6 +978,14 @@ All haptics go through `HapticManager.shared`. Never call UIKit haptic generator
 class GameState: ObservableObject { @Published var grid: [[GridCell]] }
 ```
 
+**Modern API requirements (iOS 17+/SwiftUI):**
+- Use `.foregroundStyle()` — never `.foregroundColor()` (deprecated)
+- Use `.clipShape(RoundedRectangle(cornerRadius: X))` — never `.cornerRadius(X)` (deprecated)
+- Use `NavigationStack` — never `NavigationView` (deprecated)
+- Use `.topBarTrailing` — never `.navigationBarTrailing` (deprecated)
+- Use `Bindable(observableObject).property` for bindings — never `Binding(get:set:)` for simple cases
+- Use `Task { try? await Task.sleep(for: .seconds(X)) }` — never `DispatchQueue.main.asyncAfter`
+
 ### @Observable + UserDefaults Pattern
 
 ```swift
@@ -1002,7 +1014,7 @@ class GameState: ObservableObject { @Published var grid: [[GridCell]] }
 
 ### Critical Rules
 
-- `isComplete` is deprecated — use `allNumbersConnected`
+- Win condition is `allNumbersConnected` — there is no `isComplete` property
 - Never use hardcoded colors (`.blue`, `.green`) for game elements — read from `ThemeManager.shared.current`
 - All haptic calls go through `HapticManager.shared`
 - All sound calls go through `SoundManager.shared`
@@ -1068,7 +1080,7 @@ ChallengeFriendView.swift
 
 ### When asked about bugs:
 1. **Check GameState.swift first** — source of most logic errors
-2. **Check `allNumbersConnected` vs `isComplete`** — only use `allNumbersConnected`
+2. **Use `allNumbersConnected`** — `isComplete` has been removed; `allNumbersConnected` is the only win flag
 3. **Check `usedUndo` reset** — must be false after `newGame()` and `reset()`
 4. **Check completion call order** — StreakManager → ProgressionManager → AchievementManager
 
@@ -1084,8 +1096,9 @@ ChallengeFriendView.swift
 ### When working with Game Modes:
 1. `PuzzleGameView` takes `mode: GameMode` — use computed shorthands `isDaily`, `isZen`, etc.
 2. Zen mode: skip timer display, skip `addTimePenalty()`, set `isPersonalBest = false`
-3. Seeded modes (daily/weekly): `mode.seed` provides the seed for `GameState.init(dailyDifficulty:seed:)`
+3. Seeded modes (daily/weekly/challenge): `mode.seed` provides the seed for `GameState.init(dailyDifficulty:seed:)`
 4. Weekly challenge always uses `.expert` difficulty
+5. `.challenge(difficulty, seed)` behaves like `.normal` but is seeded — `mode.isSeeded = true`, personal best tracked
 
 ### When working with Daily/Weekly Challenge:
 1. Daily seed = `UInt64(year * 10000 + month * 100 + day)`
@@ -1127,7 +1140,7 @@ ChallengeFriendView.swift
 
 When working with this codebase, remember:
 
-- [ ] Win condition is `allNumbersConnected` (NOT `isComplete`)
+- [ ] Win condition is `allNumbersConnected` — `isComplete` no longer exists
 - [ ] `usedUndo` is `true` after first Undo, reset on `newGame()` / `reset()`
 - [ ] **Easy**: Allows drag-backtracking to previous cell
 - [ ] **Medium/Hard/Very Hard/Expert**: No drag-backtracking — Undo button only
@@ -1150,8 +1163,18 @@ When working with this codebase, remember:
 ---
 
 **Last Updated**: 2026-05-01
-**Version**: 4.1
+**Version**: 4.2
 **Changelog**:
+- v4.2 (2026-05-01): SwiftUI Pro review — API modernisation + bug fixes + `.challenge` game mode
+  - **GameMode**: Added `.challenge(Difficulty, UInt64)` case for friend challenges; `isSeeded`/`seed`/`displayTitle` updated; `displayTitle` now reads from `LocalizationManager.shared` (all languages supported); added `"game.challenge"` and `"challenge.instructions"` keys to `en.strings`
+  - **GameState**: Removed dead `isComplete: Bool` property (was never read, only written); simplified backtracking check from 4-way OR to `if difficulty != .easy`
+  - **ChallengeFriendView bugs fixed**: (1) Input filter now accepts digits — was `\.isLetter`, silently dropping `0–9`; (2) `decode()` now returns `.challenge(difficulty, seed)` so the seeded puzzle actually loads
+  - **Deprecated API replaced across all views**: `.foregroundColor()` → `.foregroundStyle()`, `.cornerRadius(X)` → `.clipShape(RoundedRectangle(cornerRadius: X))`, `NavigationView` → `NavigationStack`, `.navigationBarTrailing` → `.topBarTrailing`
+  - **Concurrency**: All `DispatchQueue.main.asyncAfter` in SwiftUI views replaced with `Task { try? await Task.sleep(for:) }`
+  - **Data flow**: `Binding(get:set:)` for `SoundManager.isEnabled` replaced with `Bindable(soundManager).isEnabled`
+  - **Accessibility**: Added `.accessibilityLabel` to icon-only buttons (Statistics, Settings, Close) across `ContentView` and `TimeTrialView`
+  - **Performance**: `sortedNumberPositions` pre-computed as a view-level computed property in `PuzzleGameView` — avoids re-sorting on every 60fps render
+  - **Localization**: Hardcoded English instruction string in `ChallengeFriendView` replaced with `lm.t("challenge.instructions")`
 - v4.1 (2026-05-01): Time Trial UX fix + Localization bug documentation
   - **TimeTrialView**: Added Undo and Reset buttons that appear from Medium difficulty onwards (`currentDifficulty != .easy`). No extra time penalty — countdown is the natural cost. Buttons are disabled/dimmed when path is empty or game not running.
   - **Known Issue documented**: `.strings` files added to Xcode must be manually checked under Target Membership → FlowConnectPuzzle, otherwise `Bundle.main.path(forResource:ofType:)` returns `nil` and localization falls back to raw keys.

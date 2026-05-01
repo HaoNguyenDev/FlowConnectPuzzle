@@ -12,7 +12,6 @@ class GameState {
     var grid: [[GridCell]]
     var path: [GridPosition] = []
     var currentNumber: Int = 1
-    var isComplete: Bool = false
     var allNumbersConnected: Bool = false
 
     /// Whether the player used the Undo button at least once this session.
@@ -65,7 +64,6 @@ class GameState {
 
         path.removeAll()
         currentNumber = 1
-        isComplete = false
         allNumbersConnected = false
         usedUndo = false
 
@@ -76,7 +74,6 @@ class GameState {
     func reset() {
         path.removeAll()
         currentNumber = 1
-        isComplete = false
         allNumbersConnected = false
         usedUndo = false
 
@@ -188,7 +185,7 @@ class GameState {
         // - Easy: Allow backtracking by dragging to the second-to-last cell
         // - Medium/Hard/Very Hard/Expert: No backtracking (must use Undo button)
         if path.contains(position) {
-            if difficulty == .medium || difficulty == .hard || difficulty == .veryHard || difficulty == .expert {
+            if difficulty != .easy {
                 HapticManager.shared.invalidMove()
                 return true
             }

@@ -8,6 +8,7 @@
 /* Game */
 "game.daily_challenge" = "Daily Challenge";
 "game.weekly_challenge" = "Weekly Challenge";
+"game.challenge" = "Challenge";
 "game.zen" = "Zen";
 "game.select_difficulty" = "SELECT DIFFICULTY";
 "game.time_so_far" = "Time so far: %@";
@@ -93,6 +94,7 @@
 "challenge.ok" = "OK";
 "challenge.difficulty_label" = "Difficulty";
 "challenge.done" = "Done";
+"challenge.instructions" = "Share a code with a friend to challenge them to the exact same puzzle. Codes expire after 7 days.";
 
 /* Onboarding */
 "onboarding.skip" = "Skip";
