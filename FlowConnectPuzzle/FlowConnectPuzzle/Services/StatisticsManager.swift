@@ -32,6 +32,14 @@ class StatisticsManager {
         Difficulty.allCases.reduce(0) { $0 + solveCount(for: $1) }
     }
 
+    func reset() {
+        for difficulty in Difficulty.allCases {
+            defaults.removeObject(forKey: key("bestTime", difficulty))
+            defaults.removeObject(forKey: key("solveCount", difficulty))
+            defaults.removeObject(forKey: key("noUndoCount", difficulty))
+        }
+    }
+
     /// Records a completed puzzle. Returns true if a new personal best was set.
     @discardableResult
     func recordCompletion(difficulty: Difficulty, time: TimeInterval, usedUndo: Bool) -> Bool {

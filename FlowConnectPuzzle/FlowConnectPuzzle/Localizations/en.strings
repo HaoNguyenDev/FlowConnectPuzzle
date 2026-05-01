@@ -46,6 +46,11 @@
 "settings.challenge_friend" = "Challenge a Friend";
 "settings.tutorial" = "Tutorial";
 "settings.show_onboarding" = "Show Tutorial Again";
+"settings.data" = "Data";
+"settings.reset_data" = "Reset All Game Data";
+"settings.reset_confirm_title" = "Reset All Data?";
+"settings.reset_confirm_message" = "This will permanently delete all progress, statistics, and achievements. This cannot be undone.";
+"settings.reset_confirm_action" = "Reset Everything";
 
 /* Stats */
 "stats.title" = "Statistics";
@@ -176,3 +181,6 @@
 "achievement.level_10.desc" = "Reached Level 10";
 "achievement.level_20.desc" = "Reached Level 20";
 "achievement.perfectionist.desc" = "Solved a Hard+ puzzle without backtracking";
+
+/* Common */
+"common.cancel" = "Cancel";

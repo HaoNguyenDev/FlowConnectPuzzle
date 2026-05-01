@@ -130,7 +130,7 @@ struct PuzzleGameView: View {
                 }
                 .disabled(!gameStarted || gameState.path.isEmpty)
                 .opacity(!gameStarted || gameState.path.isEmpty ? 0.4 : 1)
-                .accessibilityLabel("Undo (adds 3 second penalty)")
+                .accessibilityLabel("Undo (adds 2 second penalty)")
 
                 // Reset — shows start overlay again (timer pauses, keeps elapsed time as penalty)
                 Button(action: {
@@ -188,6 +188,11 @@ struct PuzzleGameView: View {
             Spacer()
         }
         .background(Color(uiColor: .systemGroupedBackground).ignoresSafeArea())
+        .overlay {
+            if gameState.allNumbersConnected {
+                completionOverlay
+            }
+        }
         .overlay(alignment: .top) {
             if showAchievementBanner, let achievement = achievementManager.recentlyUnlocked {
                 AchievementBannerView(achievement: achievement) {
@@ -195,12 +200,6 @@ struct PuzzleGameView: View {
                     achievementManager.clearRecentlyUnlocked()
                 }
                 .padding(.top, 16)
-                .zIndex(10)
-            }
-        }
-        .overlay {
-            if gameState.allNumbersConnected {
-                completionOverlay
             }
         }
     }
@@ -436,7 +435,7 @@ struct PuzzleGameView: View {
 
     private func addTimePenalty() {
         guard !isZen else { return }  // Zen mode has no undo penalty
-        elapsedTime += 3.0
+        elapsedTime += 2.0
     }
 
     // MARK: - Cell View
@@ -610,7 +609,8 @@ struct PuzzleGameView: View {
         let theme = themeManager.current
 
         return ZStack {
-            Color.black.opacity(0.45)
+            Rectangle()
+                .fill(.ultraThinMaterial)
                 .ignoresSafeArea()
 
             VStack(spacing: 20) {
@@ -624,21 +624,21 @@ struct PuzzleGameView: View {
                     }
                     Text(isWeekly ? lm.t("game.weekly_complete") : (isDaily ? lm.t("game.daily_complete") : lm.t("game.puzzle_complete")))
                         .font(.system(size: 28, weight: .bold))
-                        .foregroundStyle(.white)
+                        .foregroundStyle(.primary)
                 }
 
                 HStack(spacing: 8) {
                     Image(systemName: "clock.fill")
                         .font(.system(size: 20))
-                        .foregroundStyle(.white.opacity(0.9))
+                        .foregroundStyle(.secondary)
                     Text(formattedTime)
                         .font(.system(size: 24, weight: .semibold))
-                        .foregroundStyle(.white.opacity(0.9))
+                        .foregroundStyle(.primary)
                         .monospacedDigit()
                 }
                 .padding(.horizontal, 24)
                 .padding(.vertical, 12)
-                .background(Color.white.opacity(0.2))
+                .background(.regularMaterial)
                 .clipShape(RoundedRectangle(cornerRadius: 16))
 
                 if isPersonalBest {
@@ -651,7 +651,7 @@ struct PuzzleGameView: View {
                     }
                     .padding(.horizontal, 16)
                     .padding(.vertical, 8)
-                    .background(Color.yellow.opacity(0.2))
+                    .background(Color.yellow.opacity(0.15))
                     .clipShape(RoundedRectangle(cornerRadius: 12))
                 }
 
@@ -663,10 +663,10 @@ struct PuzzleGameView: View {
                         Text(lm.t("game.share_result"))
                             .font(.system(size: 14, weight: .medium))
                     }
-                    .foregroundStyle(.white.opacity(0.85))
+                    .foregroundStyle(.primary)
                     .padding(.horizontal, 20)
                     .padding(.vertical, 9)
-                    .background(Color.white.opacity(0.2))
+                    .background(.regularMaterial)
                     .clipShape(RoundedRectangle(cornerRadius: 12))
                 }
 
@@ -674,11 +674,12 @@ struct PuzzleGameView: View {
                     Button(action: onBack) {
                         Text(lm.t("game.back_to_menu"))
                             .font(.system(size: 18, weight: .semibold))
-                            .foregroundStyle(theme.pathColor)
+                            .foregroundStyle(.white)
                             .padding(.horizontal, 32)
                             .padding(.vertical, 12)
-                            .background(Color.white)
+                            .background(theme.pathColor)
                             .clipShape(RoundedRectangle(cornerRadius: 24))
+                            .shadow(color: theme.pathColor.opacity(0.35), radius: 8, x: 0, y: 4)
                     }
                 } else {
                     Button(action: {
@@ -688,14 +689,16 @@ struct PuzzleGameView: View {
                     }) {
                         Text(lm.t("game.next_puzzle"))
                             .font(.system(size: 18, weight: .semibold))
-                            .foregroundStyle(theme.pathColor)
+                            .foregroundStyle(.white)
                             .padding(.horizontal, 32)
                             .padding(.vertical, 12)
-                            .background(Color.white)
+                            .background(theme.pathColor)
                             .clipShape(RoundedRectangle(cornerRadius: 24))
+                            .shadow(color: theme.pathColor.opacity(0.35), radius: 8, x: 0, y: 4)
                     }
                 }
             }
+            .padding(32)
         }
     }
 }

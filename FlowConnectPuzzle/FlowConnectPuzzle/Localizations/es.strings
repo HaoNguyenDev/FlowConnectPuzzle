@@ -45,6 +45,11 @@
 "settings.challenge_friend" = "Desafiar a un amigo";
 "settings.tutorial" = "Tutorial";
 "settings.show_onboarding" = "Ver tutorial de nuevo";
+"settings.data" = "Datos";
+"settings.reset_data" = "Restablecer todos los datos";
+"settings.reset_confirm_title" = "¿Restablecer todo?";
+"settings.reset_confirm_message" = "Esto eliminará permanentemente todo el progreso, estadísticas y logros. No se puede deshacer.";
+"settings.reset_confirm_action" = "Restablecer todo";
 
 /* Stats */
 "stats.title" = "Estadísticas";
@@ -174,3 +179,6 @@
 "achievement.level_10.desc" = "Alcanzaste el Nivel 10";
 "achievement.level_20.desc" = "Alcanzaste el Nivel 20";
 "achievement.perfectionist.desc" = "Resolviste un puzzle Difícil+ sin retroceder";
+
+/* Common */
+"common.cancel" = "Cancelar";

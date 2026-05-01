@@ -45,6 +45,11 @@
 "settings.challenge_friend" = "Freund herausfordern";
 "settings.tutorial" = "Tutorial";
 "settings.show_onboarding" = "Tutorial erneut anzeigen";
+"settings.data" = "Daten";
+"settings.reset_data" = "Alle Spieldaten zurücksetzen";
+"settings.reset_confirm_title" = "Alles zurücksetzen?";
+"settings.reset_confirm_message" = "Dadurch werden alle Fortschritte, Statistiken und Errungenschaften dauerhaft gelöscht. Dies kann nicht rückgängig gemacht werden.";
+"settings.reset_confirm_action" = "Alles zurücksetzen";
 
 /* Stats */
 "stats.title" = "Statistiken";
@@ -174,3 +179,6 @@
 "achievement.level_10.desc" = "Level 10 erreicht";
 "achievement.level_20.desc" = "Level 20 erreicht";
 "achievement.perfectionist.desc" = "Schweres+ Puzzle ohne Zurückgehen gelöst";
+
+/* Common */
+"common.cancel" = "Abbrechen";

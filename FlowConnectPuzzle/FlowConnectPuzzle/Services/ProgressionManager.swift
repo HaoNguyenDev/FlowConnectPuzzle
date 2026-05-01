@@ -50,6 +50,8 @@ class ProgressionManager {
         return min(Double(totalXP - xpForCurrentLevel) / range, 1.0)
     }
 
+    func reset() { totalXP = 0 }
+
     func recordCompletion(
         difficulty: Difficulty,
         isPersonalBest: Bool,

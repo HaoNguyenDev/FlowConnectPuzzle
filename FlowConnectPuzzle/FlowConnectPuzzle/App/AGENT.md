@@ -101,6 +101,7 @@ FlowConnectPuzzle/
 │   ├── StreakCalendarView.swift            # GitHub-style 13-week heatmap of daily completions
 │   ├── TimeTrialView.swift                 # 3-minute countdown mode, escalating difficulty
 │   ├── ChallengeFriendView.swift           # Generate/share/enter challenge codes
+│   ├── AppAlertView.swift                  # Reusable custom alert popup + .appAlert() ViewModifier
 │   └── ToastModifier.swift                 # Reusable toast notification ViewModifier
 │
 └── Documentation
@@ -135,12 +136,12 @@ enum GameMode: Equatable {
 
 | Mode | Timer | Undo Penalty | Personal Best | New Puzzle Button |
 |------|-------|-------------|---------------|-------------------|
-| `normal` | Counts up | +3 sec | Yes | Shown |
-| `daily` | Counts up | +3 sec | Yes | Hidden |
-| `weekly` | Counts up | +3 sec | Yes | Hidden |
+| `normal` | Counts up | +2 sec | Yes | Shown |
+| `daily` | Counts up | +2 sec | Yes | Hidden |
+| `weekly` | Counts up | +2 sec | Yes | Hidden |
 | `zen` | Hidden (leaf icon) | None (skipped) | No | Shown |
 | `timeTrial` | Counts down (3 min) | N/A (auto-advance) | N/A | N/A |
-| `challenge` | Counts up | +3 sec | Yes | Shown |
+| `challenge` | Counts up | +2 sec | Yes | Shown |
 
 **Computed shorthands in `PuzzleGameView`** (so internal code stays readable):
 ```swift
@@ -421,28 +422,31 @@ class ProgressionManager {
 
 | ID | Title | Condition |
 |----|-------|-----------|
-| `first_solve` | First Step | Solve first puzzle (any difficulty) |
-| `speed_easy` | Speed Demon | Easy in under 60 seconds |
-| `speed_medium` | Lightning | Medium in under 2 minutes |
-| `speed_hard` | Blazing | Hard in under 5 minutes |
-| `speed_veryhard` | Unstoppable | Very Hard in under 8 minutes |
-| `purist` | Purist | Any puzzle without using Undo |
-| `iron_will` | Iron Will | Hard/Very Hard/Expert without Undo |
-| `collector` | Collector | 10 total puzzles solved |
-| `veteran` | Veteran | 50 total puzzles solved |
-| `solver_100` | Century Solver | 100 total puzzles solved |
-| `solver_200` | Legend | 200 total puzzles solved |
-| `expert_solver` | Expert | Complete Expert difficulty |
-| `daily_champion` | Daily Champion | Complete the Daily Challenge |
-| `streak_14` | On Fire | 14-day daily challenge streak |
-| `weekly_champion` | Weekly Champion | Complete the Weekly Challenge |
-| `zen_master` | Zen Master | Complete 10 Zen mode puzzles |
-| `time_trial_debut` | Time Trialist | Complete first Time Trial session |
-| `time_trial_100` | Century Sprint | Score 100 in a single Time Trial |
-| `time_trial_500` | Speed Demon Elite | Score 500 in a single Time Trial |
-| `level_5` | Rising Star | Reach Level 5 (Explorer) |
-| `level_10` | Champion | Reach Level 10 (Champion) |
-| `dedicated` | Dedicated | Open the app 7 days in a row |
+| `first_solve` | First Steps | Solve 1 puzzle |
+| `solve_10` | Getting Started | Solve 10 puzzles |
+| `solve_50` | Puzzle Enthusiast | Solve 50 puzzles |
+| `solve_100` | Century Solver | Solve 100 puzzles |
+| `solve_500` | Puzzle Master | Solve 500 puzzles |
+| `easy_master` | Easy Master | Solve 20 Easy puzzles |
+| `medium_master` | Medium Master | Solve 15 Medium puzzles |
+| `hard_master` | Hard Conqueror | Solve 10 Hard puzzles |
+| `very_hard_master` | Extreme Solver | Solve 5 Very Hard puzzles |
+| `expert_master` | Expert Elite | Complete any Expert puzzle |
+| `speed_demon` | Speed Demon | Solve Easy in under 10 seconds |
+| `lightning` | Lightning Fast | Solve Medium in under 20 seconds |
+| `streak_3` | Hat Trick | 3-day daily streak |
+| `streak_7` | Week Warrior | 7-day daily streak |
+| `streak_30` | Monthly Devotion | 30-day daily streak |
+| `streak_100` | Centurion | 100-day daily streak |
+| `daily_7` | Daily Devotee | Complete 7 daily challenges |
+| `daily_30` | Monthly Regular | Complete 30 daily challenges |
+| `timetrial_bronze` | Time Trial Bronze | Score 100+ in Time Trial |
+| `timetrial_silver` | Time Trial Silver | Score 300+ in Time Trial |
+| `timetrial_gold` | Time Trial Gold | Score 500+ in Time Trial |
+| `level_5` | Rising Star | Reach Level 5 |
+| `level_10` | Veteran | Reach Level 10 |
+| `level_20` | Legend | Reach Level 20 |
+| `perfectionist` | Perfectionist | Complete Hard+ without backtracking |
 
 ```swift
 @Observable
@@ -546,6 +550,9 @@ Text(lm.difficultyName(difficulty))
 ```
 
 **Adding a new string**: Add the key to `en.strings` first (required for fallback), then add translations to the other 8 files. The key itself is displayed if it's missing from English.
+
+**Common keys** (available in all 9 languages — use for shared UI):
+- `common.cancel` — "Cancel" / "Hủy" / "Cancelar" / "Annuler" / "Abbrechen" / "キャンセル" / "取消" / "Cancelar" / "취소"
 
 **Adding a new language**: Add a case to `AppLanguage` enum in `LocalizationManager.swift`, create `Localizations/{code}.strings`, and it will appear in the Settings language picker automatically.
 
@@ -733,13 +740,12 @@ VStack {
 
     Achievement Banner (top overlay, auto-dismisses after 4 seconds)
 
-    Completion Overlay (if allNumbersConnected)
-    ├─ Title: "Puzzle Complete!" / "Daily Complete!" / "Weekly Complete!" / "Zen Complete!"
-    ├─ Completion time badge (hidden in zen mode)
+    Completion Overlay (if allNumbersConnected) — .ultraThinMaterial blur background
+    ├─ Title: "Puzzle Complete!" / "Daily Complete!" / "Weekly Complete!"
+    ├─ Completion time badge (.regularMaterial pill)
     ├─ "New Personal Best!" badge (timed, non-zen modes only)
-    ├─ XP earned badge
-    ├─ ShareLink — share result text
-    └─ "Next Puzzle" / "Back to Menu" button
+    ├─ ShareLink — share result text (.regularMaterial pill)
+    └─ "Next Puzzle" / "Back to Menu" button (theme.pathColor filled, shadow)
 }
 ```
 
@@ -801,6 +807,45 @@ UIPasteboard.general.string = generatedCode
 **Bug fixes applied (v4.2):**
 - Input filter now accepts both letters AND digits: `{ $0.isLetter || $0.isNumber }` (was `\.isLetter`, silently dropped numeric characters)
 - `decode()` now returns `.challenge(difficulty, seed)` instead of `.normal(difficulty)` — the decoded seed is now actually used for deterministic puzzle generation
+
+---
+
+## 🚨 Custom Alert System
+
+Reusable popup component in `AppAlertView.swift`. Replaces `confirmationDialog` for full design control.
+
+```swift
+struct AppAlertView: View {
+    let icon: String?        // SF Symbol name (optional) — shown in circle at top
+    let iconColor: Color     // Circle + confirm button color (default .red for destructive)
+    let title: String
+    let message: String
+    let confirmLabel: String
+    let cancelLabel: String
+    let onConfirm: () -> Void
+    let onCancel: () -> Void
+}
+```
+
+**Usage via `View.appAlert(...)` modifier:**
+```swift
+.appAlert(
+    isPresented: $showAlert,
+    icon: "trash.fill",
+    iconColor: .red,
+    title: lm.t("settings.reset_confirm_title"),
+    message: lm.t("settings.reset_confirm_message"),
+    confirmLabel: lm.t("settings.reset_confirm_action"),
+    cancelLabel: lm.t("common.cancel"),
+    onConfirm: { /* action */ }
+)
+```
+
+**Animation**: Spring appear (scale 0.86 → 1.0 + fade), ease-out dismiss. Respects `accessibilityReduceMotion` — animation skipped when enabled.
+
+**Overlay background**: `Color.black.opacity(0.45)` + `.ultraThinMaterial` blur — does NOT dismiss on backdrop tap for destructive actions.
+
+**Localization**: All cancel labels use `lm.t("common.cancel")` — key exists in all 9 `.strings` files.
 
 ---
 
@@ -867,7 +912,7 @@ Toast renders as a capsule with black background, white text + icon, sliding up 
 | Button | Overlay | Timer Behavior | Rationale |
 |--------|---------|---------------|-----------|
 | **Start** | Dismissed | Begins counting | User-controlled start |
-| **Undo** | — | +3 seconds penalty (skipped in zen) | Discourages excessive undo |
+| **Undo** | — | +2 seconds penalty (skipped in zen) | Discourages excessive undo |
 | **Reset** | Shown again | Pauses (elapsed time kept) | Penalty stays; user must re-tap Start |
 | **New** | Shown again | Reset to 0:00.00 | Fresh puzzle = fresh time |
 | **Next Puzzle** | Shown again | Reset to 0:00.00 | Fresh puzzle after win |
@@ -1125,7 +1170,7 @@ ChallengeFriendView.swift
 - `.sheet()` for Stats and Settings
 - `.overlay(alignment:)` for achievement banner
 - `ShareLink` (iOS 16+) for share sheets
-- `ViewModifier` for `ToastModifier`
+- `ViewModifier` for `ToastModifier` and `AppAlertModifier`
 
 ### System Frameworks Used
 - `UIKit` — `UIFeedbackGenerator`, `UIPasteboard`
@@ -1154,6 +1199,9 @@ When working with this codebase, remember:
 - [ ] Seeded generation: pass `seed: UInt64` to `PuzzleGenerator.generate(for:seed:)`
 - [ ] Daily/Weekly mode hides "New Puzzle" button
 - [ ] `gameStarted = false` on initial load, Reset, New, Next Puzzle — timer only ticks when `gameStarted = true`
+- [ ] Undo penalty is **+2 seconds** (not 3) — skip in Zen mode
+- [ ] `completionOverlay` background is `.ultraThinMaterial` — overlay order: completion first, then achievement banner (banner always on top)
+- [ ] Custom alerts use `.appAlert(...)` modifier — NOT `confirmationDialog`; cancel label uses `lm.t("common.cancel")`
 - [ ] `ThemeManager.current` MUST be a stored property — computed property breaks `@Observable` reactivity
 - [ ] All `@Observable` managers use **stored property + `didSet`** for UserDefaults — NEVER computed property
 - [ ] Zen mode: no timer display, no time penalties, no personal best tracking
@@ -1163,8 +1211,15 @@ When working with this codebase, remember:
 ---
 
 **Last Updated**: 2026-05-01
-**Version**: 4.2
+**Version**: 4.3
 **Changelog**:
+- v4.3 (2026-05-01): UX polish + reusable alert system
+  - **AppAlertView.swift** (new): Reusable custom popup component. `AppAlertView` struct + `AppAlertModifier` (private) + `View.appAlert(...)` extension. Replaces native `confirmationDialog` for full design control. Spring/fade animation respects `accessibilityReduceMotion`. Overlay does NOT dismiss on backdrop tap.
+  - **Reset All Game Data**: Settings now uses `.appAlert(...)` instead of `.confirmationDialog`. All 9 localization files updated with `common.cancel` key.
+  - **completionOverlay**: Background changed from `Color.black.opacity(0.7)` to `.ultraThinMaterial` frosted glass. Text uses `.primary`/`.secondary` for adaptive light/dark mode. Inner pills use `.regularMaterial`. Overlay order fixed — achievement banner now renders after completion overlay so it always appears on top.
+  - **Undo penalty**: Reduced from +3 seconds to +2 seconds. Accessibility label updated to match.
+  - **Achievement icons**: Fixed two invalid SF Symbol names — `solve_100` (`100.circle.fill` → `checkmark.seal.fill`), `level_20` (`crown.circle.fill` → `trophy.fill`).
+  - **Achievement table**: AGENT.md corrected to match actual 25 achievement IDs in `AchievementManager.swift`.
 - v4.2 (2026-05-01): SwiftUI Pro review — API modernisation + bug fixes + `.challenge` game mode
   - **GameMode**: Added `.challenge(Difficulty, UInt64)` case for friend challenges; `isSeeded`/`seed`/`displayTitle` updated; `displayTitle` now reads from `LocalizationManager.shared` (all languages supported); added `"game.challenge"` and `"challenge.instructions"` keys to `en.strings`
   - **GameState**: Removed dead `isComplete: Bool` property (was never read, only written); simplified backtracking check from 4-way OR to `if difficulty != .easy`
