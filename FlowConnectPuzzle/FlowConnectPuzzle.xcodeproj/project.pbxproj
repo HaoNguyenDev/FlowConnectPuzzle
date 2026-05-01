@@ -69,6 +69,7 @@
 		DAA6DC2E2F9D454600062038 /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAA6DC2D2F9D454600062038 /* OnboardingView.swift */; };
 		DAA6DC302F9D455C00062038 /* StatisticsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAA6DC2F2F9D455C00062038 /* StatisticsView.swift */; };
 		DADDDEA22F93F0D400D51A57 /* AGENT.md in Resources */ = {isa = PBXBuildFile; fileRef = DADDDEA12F93F0D300D51A57 /* AGENT.md */; };
+		DAF7BEE72FA4D32B00FD445C /* AppAlertView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAF7BEE62FA4D32B00FD445C /* AppAlertView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -138,6 +139,7 @@
 		DAA6DC2D2F9D454600062038 /* OnboardingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingView.swift; sourceTree = "<group>"; };
 		DAA6DC2F2F9D455C00062038 /* StatisticsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatisticsView.swift; sourceTree = "<group>"; };
 		DADDDEA12F93F0D300D51A57 /* AGENT.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = AGENT.md; sourceTree = "<group>"; };
+		DAF7BEE62FA4D32B00FD445C /* AppAlertView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppAlertView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -286,6 +288,7 @@
 				DA02D8C72FA347D500284697 /* TimeTrialView.swift */,
 				DA02D8CD2FA348CF00284697 /* ChallengeFriendView.swift */,
 				DA02D8CF2FA350FB00284697 /* ToastModifier.swift */,
+				DAF7BEE62FA4D32B00FD445C /* AppAlertView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -494,6 +497,7 @@
 				DAA6DC302F9D455C00062038 /* StatisticsView.swift in Sources */,
 				DA02D8CE2FA348CF00284697 /* ChallengeFriendView.swift in Sources */,
 				DAA6DC2E2F9D454600062038 /* OnboardingView.swift in Sources */,
+				DAF7BEE72FA4D32B00FD445C /* AppAlertView.swift in Sources */,
 				DA02D8CC2FA348B900284697 /* GameCenterManager.swift in Sources */,
 				DA02D8BE2FA3460000284697 /* NotificationManager.swift in Sources */,
 				DA02D8C22FA3472500284697 /* WeeklyChallenge.swift in Sources */,

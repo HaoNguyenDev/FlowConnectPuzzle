@@ -45,6 +45,11 @@
 "settings.challenge_friend" = "挑战朋友";
 "settings.tutorial" = "教程";
 "settings.show_onboarding" = "再次查看教程";
+"settings.data" = "数据";
+"settings.reset_data" = "重置所有游戏数据";
+"settings.reset_confirm_title" = "重置所有数据？";
+"settings.reset_confirm_message" = "这将永久删除所有进度、统计数据和成就。无法撤销。";
+"settings.reset_confirm_action" = "重置所有内容";
 
 /* Stats */
 "stats.title" = "统计";
@@ -174,3 +179,6 @@
 "achievement.level_10.desc" = "达到等级10";
 "achievement.level_20.desc" = "达到等级20";
 "achievement.perfectionist.desc" = "不回退完成困难以上谜题";
+
+/* Common */
+"common.cancel" = "取消";

@@ -20,6 +20,7 @@ struct ContentView: View {
     @State private var notificationManager = NotificationManager.shared
     @State private var soundManager = SoundManager.shared
     @State private var showChallengeFriend = false
+    @State private var showResetConfirm = false
     @State private var lm = LocalizationManager.shared
 
     var body: some View {
@@ -458,6 +459,14 @@ struct ContentView: View {
                     }
                     .foregroundStyle(.blue)
                 }
+
+                Section(lm.t("settings.data")) {
+                    Button(role: .destructive) {
+                        showResetConfirm = true
+                    } label: {
+                        Label(lm.t("settings.reset_data"), systemImage: "trash")
+                    }
+                }
             }
             .navigationTitle(lm.t("settings.title"))
             .navigationBarTitleDisplayMode(.inline)
@@ -465,6 +474,31 @@ struct ContentView: View {
                 ToolbarItem(placement: .topBarTrailing) {
                     Button(lm.t("settings.done")) { showSettings = false }
                 }
+            }
+        }
+        .appAlert(
+            isPresented: $showResetConfirm,
+            icon: "trash.fill",
+            iconColor: .red,
+            title: lm.t("settings.reset_confirm_title"),
+            message: lm.t("settings.reset_confirm_message"),
+            confirmLabel: lm.t("settings.reset_confirm_action"),
+            cancelLabel: lm.t("common.cancel"),
+            onConfirm: resetAllGameData
+        )
+    }
+
+    private func resetAllGameData() {
+        StatisticsManager.shared.reset()
+        AchievementManager.shared.reset()
+        StreakManager.shared.reset()
+        ProgressionManager.shared.reset()
+
+        // Clear dynamic daily/weekly completion keys
+        let defaults = UserDefaults.standard
+        for key in defaults.dictionaryRepresentation().keys {
+            if key.hasPrefix("daily_done_") || key.hasPrefix("weekly_done_") {
+                defaults.removeObject(forKey: key)
             }
         }
     }

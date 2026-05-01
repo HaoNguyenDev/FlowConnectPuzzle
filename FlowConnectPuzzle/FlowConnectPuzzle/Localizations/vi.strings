@@ -45,6 +45,11 @@
 "settings.challenge_friend" = "Thách bạn bè";
 "settings.tutorial" = "Hướng dẫn";
 "settings.show_onboarding" = "Xem lại hướng dẫn";
+"settings.data" = "Dữ liệu";
+"settings.reset_data" = "Đặt lại toàn bộ dữ liệu";
+"settings.reset_confirm_title" = "Đặt lại tất cả?";
+"settings.reset_confirm_message" = "Thao tác này sẽ xóa vĩnh viễn toàn bộ tiến trình, thống kê và thành tích. Không thể hoàn tác.";
+"settings.reset_confirm_action" = "Đặt lại tất cả";
 
 /* Stats */
 "stats.title" = "Thống kê";
@@ -174,3 +179,6 @@
 "achievement.level_10.desc" = "Đạt Cấp 10";
 "achievement.level_20.desc" = "Đạt Cấp 20";
 "achievement.perfectionist.desc" = "Giải câu Khó+ mà không quay lui";
+
+/* Common */
+"common.cancel" = "Hủy";

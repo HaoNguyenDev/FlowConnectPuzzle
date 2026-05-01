@@ -37,6 +37,13 @@ class StreakManager {
         completionDates  = Set(ud.stringArray(forKey: "streak_dates") ?? [])
     }
 
+    func reset() {
+        currentStreak = 0
+        bestStreak = 0
+        totalDailySolves = 0
+        completionDates = []
+    }
+
     func dateKey(for date: Date = Date()) -> String {
         StreakManager.dateFormatter.string(from: date)
     }
