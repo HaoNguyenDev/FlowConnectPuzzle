@@ -15,18 +15,18 @@ struct AchievementBannerView: View {
         HStack(spacing: 12) {
             Image(systemName: achievement.iconName)
                 .font(.system(size: 26))
-                .foregroundColor(.yellow)
+                .foregroundStyle(.yellow)
 
             VStack(alignment: .leading, spacing: 2) {
                 Text(lm.t("achievement.unlocked"))
                     .font(.system(size: 11, weight: .semibold))
-                    .foregroundColor(.white.opacity(0.7))
+                    .foregroundStyle(.white.opacity(0.7))
                 Text(lm.achievementTitle(achievement.id))
                     .font(.system(size: 16, weight: .bold))
-                    .foregroundColor(.white)
+                    .foregroundStyle(.white)
                 Text(lm.achievementDesc(achievement.id))
                     .font(.system(size: 12))
-                    .foregroundColor(.white.opacity(0.7))
+                    .foregroundStyle(.white.opacity(0.7))
                     .lineLimit(1)
             }
 
@@ -35,7 +35,7 @@ struct AchievementBannerView: View {
             Button(action: onDismiss) {
                 Image(systemName: "xmark")
                     .font(.system(size: 13, weight: .medium))
-                    .foregroundColor(.white.opacity(0.6))
+                    .foregroundStyle(.white.opacity(0.6))
             }
         }
         .padding(.horizontal, 16)

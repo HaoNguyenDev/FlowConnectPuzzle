@@ -19,10 +19,10 @@ struct ToastModifier: ViewModifier {
             if isShowing {
                 HStack(spacing: 10) {
                     Image(systemName: systemImage)
-                        .foregroundColor(imageColor)
+                        .foregroundStyle(imageColor)
                     Text(message)
                         .font(.system(size: 14, weight: .semibold))
-                        .foregroundColor(.white)
+                        .foregroundStyle(.white)
                 }
                 .padding(.horizontal, 20)
                 .padding(.vertical, 12)

@@ -20,7 +20,7 @@ struct ChallengeFriendView: View {
     let onStartChallenge: (GameMode) -> Void
 
     var body: some View {
-        NavigationView {
+        NavigationStack {
             List {
                 // Share a puzzle
                 Section(lm.t("challenge.title")) {
@@ -33,22 +33,23 @@ struct ChallengeFriendView: View {
                     Button(action: generateCode) {
                         Label(lm.t("challenge.your_code"), systemImage: "square.and.arrow.up")
                     }
-                    .foregroundColor(themeManager.current.pathColor)
+                    .foregroundStyle(themeManager.current.pathColor)
 
                     if !generatedCode.isEmpty {
                         HStack {
                             Text(lm.t("challenge.your_code"))
-                                .foregroundColor(.secondary)
+                                .foregroundStyle(.secondary)
                             Spacer()
                             Text(generatedCode)
                                 .font(.system(size: 22, weight: .bold).monospaced())
-                                .foregroundColor(themeManager.current.pathColor)
+                                .foregroundStyle(themeManager.current.pathColor)
                             Button {
                                 UIPasteboard.general.string = generatedCode
                                 withAnimation(.spring(duration: 0.35)) {
                                     codeCopied = true
                                 }
-                                DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                                Task {
+                                    try? await Task.sleep(for: .seconds(2))
                                     withAnimation(.easeOut(duration: 0.25)) {
                                         codeCopied = false
                                     }
@@ -56,7 +57,7 @@ struct ChallengeFriendView: View {
                             } label: {
                                 Image(systemName: codeCopied ? "checkmark.circle.fill" : "doc.on.doc")
                                     .font(.system(size: 18))
-                                    .foregroundColor(codeCopied ? .green : themeManager.current.pathColor)
+                                    .foregroundStyle(codeCopied ? .green : themeManager.current.pathColor)
                             }
                             .buttonStyle(.plain)
                             .animation(.easeInOut(duration: 0.2), value: codeCopied)
@@ -68,7 +69,7 @@ struct ChallengeFriendView: View {
                         ) {
                             Label(lm.t("challenge.share_code"), systemImage: "square.and.arrow.up")
                         }
-                        .foregroundColor(.blue)
+                        .foregroundStyle(.blue)
                     }
                 }
 
@@ -79,7 +80,7 @@ struct ChallengeFriendView: View {
                             .textInputAutocapitalization(.characters)
                             .autocorrectionDisabled()
                             .onChange(of: inputCode) { _, v in
-                                inputCode = String(v.uppercased().filter(\.isLetter).prefix(6))
+                                inputCode = String(v.uppercased().filter { $0.isLetter || $0.isNumber }.prefix(6))
                             }
 
                         if inputCode.count == 6 {
@@ -93,21 +94,21 @@ struct ChallengeFriendView: View {
                                 }
                             }
                             .fontWeight(.semibold)
-                            .foregroundColor(themeManager.current.pathColor)
+                            .foregroundStyle(themeManager.current.pathColor)
                         }
                     }
                 }
 
                 Section {
-                    Text("Share a code with a friend to challenge them to the exact same puzzle. Codes expire after 7 days.")
+                    Text(lm.t("challenge.instructions"))
                         .font(.caption)
-                        .foregroundColor(.secondary)
+                        .foregroundStyle(.secondary)
                 }
             }
             .navigationTitle(lm.t("challenge.title"))
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
+                ToolbarItem(placement: .topBarTrailing) {
                     Button(lm.t("challenge.done")) { dismiss() }
                 }
             }
@@ -167,8 +168,7 @@ struct ChallengeFriendView: View {
         let seed = value & 0x0FFFFF
         guard diffIndex < Difficulty.allCases.count else { return nil }
         let difficulty = Difficulty.allCases[diffIndex]
-        // Use a custom challenge mode (map to .normal with a seeded game via the existing daily path)
-        return .normal(difficulty)  // The seed is encoded but for simplicity we return .normal here
+        return .challenge(difficulty, seed)
     }
 }
 

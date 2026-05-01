@@ -54,23 +54,25 @@ struct ContentView: View {
                     } label: {
                         Image(systemName: "chart.bar.fill")
                             .font(.system(size: 18))
-                            .foregroundColor(.primary)
+                            .foregroundStyle(.primary)
                             .padding(10)
                             .background(Color(uiColor: .systemBackground))
                             .clipShape(Circle())
                             .shadow(color: .black.opacity(0.07), radius: 4, x: 0, y: 2)
                     }
+                    .accessibilityLabel("Statistics")
                     Button {
                         showSettings = true
                     } label: {
                         Image(systemName: "gearshape.fill")
                             .font(.system(size: 18))
-                            .foregroundColor(.primary)
+                            .foregroundStyle(.primary)
                             .padding(10)
                             .background(Color(uiColor: .systemBackground))
                             .clipShape(Circle())
                             .shadow(color: .black.opacity(0.07), radius: 4, x: 0, y: 2)
                     }
+                    .accessibilityLabel("Settings")
                 }
             }
             .padding(.horizontal, 24)
@@ -92,7 +94,7 @@ struct ContentView: View {
                     VStack(spacing: 0) {
                         Text(lm.t("game.select_difficulty"))
                             .font(.system(size: 13, weight: .semibold))
-                            .foregroundColor(.secondary)
+                            .foregroundStyle(.secondary)
                             .frame(maxWidth: .infinity, alignment: .leading)
                             .padding(.horizontal, 24)
                             .padding(.bottom, 8)
@@ -109,7 +111,7 @@ struct ContentView: View {
                     VStack(spacing: 0) {
                         Text(lm.t("menu.other_modes"))
                             .font(.system(size: 13, weight: .semibold))
-                            .foregroundColor(.secondary)
+                            .foregroundStyle(.secondary)
                             .frame(maxWidth: .infinity, alignment: .leading)
                             .padding(.horizontal, 24)
                             .padding(.bottom, 8)
@@ -153,7 +155,8 @@ struct ContentView: View {
         .sheet(isPresented: $showChallengeFriend) {
             ChallengeFriendView { mode in
                 showChallengeFriend = false
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                Task {
+                    try? await Task.sleep(for: .seconds(0.3))
                     selectedMode = mode
                 }
             }
@@ -174,37 +177,37 @@ struct ContentView: View {
                         .frame(width: 52, height: 52)
                     Image(systemName: completed ? "checkmark.circle.fill" : "calendar")
                         .font(.system(size: 24))
-                        .foregroundColor(completed ? .green : .blue)
+                        .foregroundStyle(completed ? .green : .blue)
                 }
 
                 VStack(alignment: .leading, spacing: 3) {
                     HStack(spacing: 6) {
                         Text(lm.t("game.daily_challenge"))
                             .font(.system(size: 17, weight: .bold))
-                            .foregroundColor(.primary)
+                            .foregroundStyle(.primary)
                         if completed {
                             Text(lm.t("menu.done_badge"))
                                 .font(.system(size: 11, weight: .semibold))
-                                .foregroundColor(.white)
+                                .foregroundStyle(.white)
                                 .padding(.horizontal, 7)
                                 .padding(.vertical, 2)
                                 .background(Color.green)
-                                .cornerRadius(6)
+                                .clipShape(RoundedRectangle(cornerRadius: 6))
                         }
                     }
                     Text(DailyChallenge.formattedDate)
                         .font(.system(size: 13))
-                        .foregroundColor(.secondary)
+                        .foregroundStyle(.secondary)
                     Text(DailyChallenge.todayDifficulty.description)
                         .font(.system(size: 12))
-                        .foregroundColor(.secondary)
+                        .foregroundStyle(.secondary)
                     if streakManager.currentStreak > 0 {
                         HStack(spacing: 3) {
                             Text("🔥")
                                 .font(.system(size: 11))
                             Text(String(format: lm.t("menu.day_streak"), streakManager.currentStreak))
                                 .font(.system(size: 11, weight: .semibold))
-                                .foregroundColor(.orange)
+                                .foregroundStyle(.orange)
                         }
                     }
                 }
@@ -213,12 +216,12 @@ struct ContentView: View {
 
                 if !completed {
                     Image(systemName: "chevron.right")
-                        .foregroundColor(.secondary)
+                        .foregroundStyle(.secondary)
                 }
             }
             .padding(16)
             .background(Color(uiColor: .systemBackground))
-            .cornerRadius(16)
+            .clipShape(RoundedRectangle(cornerRadius: 16))
             .shadow(color: .black.opacity(0.06), radius: 6, x: 0, y: 3)
         }
         .buttonStyle(.plain)
@@ -239,42 +242,42 @@ struct ContentView: View {
                         .frame(width: 52, height: 52)
                     Image(systemName: completed ? "checkmark.circle.fill" : "crown.fill")
                         .font(.system(size: 24))
-                        .foregroundColor(completed ? .green : .purple)
+                        .foregroundStyle(completed ? .green : .purple)
                 }
 
                 VStack(alignment: .leading, spacing: 3) {
                     HStack(spacing: 6) {
                         Text(lm.t("game.weekly_challenge"))
                             .font(.system(size: 17, weight: .bold))
-                            .foregroundColor(.primary)
+                            .foregroundStyle(.primary)
                         if completed {
                             Text(lm.t("menu.done_badge"))
                                 .font(.system(size: 11, weight: .semibold))
-                                .foregroundColor(.white)
+                                .foregroundStyle(.white)
                                 .padding(.horizontal, 7)
                                 .padding(.vertical, 2)
                                 .background(Color.green)
-                                .cornerRadius(6)
+                                .clipShape(RoundedRectangle(cornerRadius: 6))
                         }
                     }
                     Text(WeeklyChallenge.formattedDateRange)
                         .font(.system(size: 13))
-                        .foregroundColor(.secondary)
+                        .foregroundStyle(.secondary)
                     Text(lm.t("menu.weekly_bonus"))
                         .font(.system(size: 12))
-                        .foregroundColor(.purple)
+                        .foregroundStyle(.purple)
                 }
 
                 Spacer()
 
                 if !completed {
                     Image(systemName: "chevron.right")
-                        .foregroundColor(.secondary)
+                        .foregroundStyle(.secondary)
                 }
             }
             .padding(16)
             .background(Color(uiColor: .systemBackground))
-            .cornerRadius(16)
+            .clipShape(RoundedRectangle(cornerRadius: 16))
             .shadow(color: .black.opacity(0.06), radius: 6, x: 0, y: 3)
         }
         .buttonStyle(.plain)
@@ -290,7 +293,7 @@ struct ContentView: View {
             HStack(spacing: 14) {
                 Image(systemName: difficulty.iconName)
                     .font(.title2)
-                    .foregroundColor(themeManager.current.pathColor)
+                    .foregroundStyle(themeManager.current.pathColor)
                     .frame(width: 36)
 
                 VStack(alignment: .leading, spacing: 3) {
@@ -298,7 +301,7 @@ struct ContentView: View {
                         .font(.system(size: 17, weight: .semibold))
                     Text(difficulty.description)
                         .font(.system(size: 13))
-                        .foregroundColor(.secondary)
+                        .foregroundStyle(.secondary)
                 }
 
                 Spacer()
@@ -308,23 +311,23 @@ struct ContentView: View {
                     VStack(alignment: .trailing, spacing: 1) {
                         Text(lm.t("menu.best"))
                             .font(.system(size: 10, weight: .medium))
-                            .foregroundColor(.secondary)
+                            .foregroundStyle(.secondary)
                         Text(formatTime(best))
                             .font(.system(size: 13, weight: .semibold).monospacedDigit())
-                            .foregroundColor(themeManager.current.pathColor)
+                            .foregroundStyle(themeManager.current.pathColor)
                     }
                     .padding(.trailing, 4)
                 }
 
                 Image(systemName: "chevron.right")
-                    .foregroundColor(.secondary)
+                    .foregroundStyle(.secondary)
                     .font(.system(size: 14))
             }
-            .foregroundColor(.primary)
+            .foregroundStyle(.primary)
             .padding(.horizontal, 16)
             .padding(.vertical, 14)
             .background(Color(uiColor: .systemBackground))
-            .cornerRadius(16)
+            .clipShape(RoundedRectangle(cornerRadius: 16))
             .shadow(color: .black.opacity(0.05), radius: 4, x: 0, y: 2)
         }
         .buttonStyle(.plain)
@@ -340,32 +343,32 @@ struct ContentView: View {
                     .frame(width: 44, height: 44)
                 Image(systemName: icon)
                     .font(.system(size: 20))
-                    .foregroundColor(color)
+                    .foregroundStyle(color)
             }
             VStack(alignment: .leading, spacing: 3) {
                 Text(title)
                     .font(.system(size: 17, weight: .semibold))
-                    .foregroundColor(.primary)
+                    .foregroundStyle(.primary)
                 Text(subtitle)
                     .font(.system(size: 12))
-                    .foregroundColor(.secondary)
+                    .foregroundStyle(.secondary)
             }
             Spacer()
             Image(systemName: "chevron.right")
-                .foregroundColor(.secondary)
+                .foregroundStyle(.secondary)
                 .font(.system(size: 14))
         }
         .padding(.horizontal, 16)
         .padding(.vertical, 14)
         .background(Color(uiColor: .systemBackground))
-        .cornerRadius(16)
+        .clipShape(RoundedRectangle(cornerRadius: 16))
         .shadow(color: .black.opacity(0.05), radius: 4, x: 0, y: 2)
     }
 
     // MARK: - Settings Sheet
 
     private var settingsSheet: some View {
-        NavigationView {
+        NavigationStack {
             List {
                 Section(lm.t("settings.theme")) {
                     ForEach(GameTheme.all) { theme in
@@ -377,11 +380,11 @@ struct ContentView: View {
                                     .fill(theme.pathColor)
                                     .frame(width: 22, height: 22)
                                 Text(theme.name)
-                                    .foregroundColor(.primary)
+                                    .foregroundStyle(.primary)
                                 Spacer()
                                 if themeManager.current == theme {
                                     Image(systemName: "checkmark")
-                                        .foregroundColor(.blue)
+                                        .foregroundStyle(.blue)
                                         .fontWeight(.semibold)
                                 }
                             }
@@ -398,11 +401,11 @@ struct ContentView: View {
                                 Text(lang.flagEmoji)
                                     .font(.system(size: 20))
                                 Text(lang.displayName)
-                                    .foregroundColor(.primary)
+                                    .foregroundStyle(.primary)
                                 Spacer()
                                 if lm.language == lang {
                                     Image(systemName: "checkmark")
-                                        .foregroundColor(.blue)
+                                        .foregroundStyle(.blue)
                                         .fontWeight(.semibold)
                                 }
                             }
@@ -411,22 +414,20 @@ struct ContentView: View {
                 }
 
                 Section(lm.t("settings.sound")) {
-                    Toggle(lm.t("settings.sound_effects"), isOn: Binding(
-                        get: { soundManager.isEnabled },
-                        set: { soundManager.isEnabled = $0 }
-                    ))
+                    Toggle(lm.t("settings.sound_effects"), isOn: Bindable(soundManager).isEnabled)
                 }
 
                 Section(lm.t("settings.social")) {
                     Button {
                         showSettings = false
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                        Task {
+                            try? await Task.sleep(for: .seconds(0.3))
                             showChallengeFriend = true
                         }
                     } label: {
                         Label(lm.t("settings.challenge_friend"), systemImage: "person.2.fill")
                     }
-                    .foregroundColor(.blue)
+                    .foregroundStyle(.blue)
                 }
 
                 Section(lm.t("settings.notifications")) {
@@ -443,24 +444,25 @@ struct ContentView: View {
                     if notificationManager.isEnabled {
                         Text(lm.t("settings.reminder_notice"))
                             .font(.caption)
-                            .foregroundColor(.secondary)
+                            .foregroundStyle(.secondary)
                     }
                 }
 
                 Section(lm.t("settings.tutorial")) {
                     Button(lm.t("settings.show_onboarding")) {
                         showSettings = false
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                        Task {
+                            try? await Task.sleep(for: .seconds(0.3))
                             showOnboarding = true
                         }
                     }
-                    .foregroundColor(.blue)
+                    .foregroundStyle(.blue)
                 }
             }
             .navigationTitle(lm.t("settings.title"))
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
+                ToolbarItem(placement: .topBarTrailing) {
                     Button(lm.t("settings.done")) { showSettings = false }
                 }
             }

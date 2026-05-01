@@ -54,12 +54,13 @@ struct TimeTrialView: View {
                     Button(action: onBack) {
                         Image(systemName: "xmark")
                             .font(.system(size: 16, weight: .semibold))
-                            .foregroundColor(.primary)
+                            .foregroundStyle(.primary)
                             .padding(12)
                             .background(Color(uiColor: .systemBackground))
                             .clipShape(Circle())
                             .shadow(color: .black.opacity(0.08), radius: 4)
                     }
+                    .accessibilityLabel("Close")
 
                     Spacer()
 
@@ -67,10 +68,10 @@ struct TimeTrialView: View {
                     VStack(spacing: 2) {
                         Text("\(score)")
                             .font(.system(size: 28, weight: .bold).monospacedDigit())
-                            .foregroundColor(themeManager.current.pathColor)
+                            .foregroundStyle(themeManager.current.pathColor)
                         Text(lm.t("timetrial.score"))
                             .font(.system(size: 11))
-                            .foregroundColor(.secondary)
+                            .foregroundStyle(.secondary)
                     }
 
                     Spacer()
@@ -81,7 +82,7 @@ struct TimeTrialView: View {
                             .font(.system(size: 28, weight: .bold).monospacedDigit())
                         Text(lm.t("timetrial.solved"))
                             .font(.system(size: 11))
-                            .foregroundColor(.secondary)
+                            .foregroundStyle(.secondary)
                     }
                 }
                 .padding(.horizontal, 20)
@@ -90,14 +91,14 @@ struct TimeTrialView: View {
                 VStack(spacing: 6) {
                     HStack {
                         Image(systemName: "timer")
-                            .foregroundColor(timeRemaining < 30 ? .red : .secondary)
+                            .foregroundStyle(timeRemaining < 30 ? .red : .secondary)
                         Text(formattedTimeRemaining)
                             .font(.system(size: 22, weight: .semibold).monospacedDigit())
-                            .foregroundColor(timeRemaining < 30 ? .red : .primary)
+                            .foregroundStyle(timeRemaining < 30 ? .red : .primary)
                         Spacer()
                         Text(lm.difficultyName(currentDifficulty))
                             .font(.system(size: 13, weight: .medium))
-                            .foregroundColor(.secondary)
+                            .foregroundStyle(.secondary)
                     }
                     .padding(.horizontal, 20)
 
@@ -259,7 +260,7 @@ struct TimeTrialView: View {
             Circle()
                 .fill(Color.black)
                 .frame(width: cellSize * 0.65, height: cellSize * 0.65)
-                .overlay(Text("\(number)").font(.system(size: cellSize * 0.35, weight: .bold)).foregroundColor(.white))
+                .overlay(Text("\(number)").font(.system(size: cellSize * 0.35, weight: .bold)).foregroundStyle(.white))
                 .position(x: (CGFloat(position.col) + 0.5) * cellSize, y: (CGFloat(position.row) + 0.5) * cellSize)
         }
     }
@@ -272,14 +273,14 @@ struct TimeTrialView: View {
             VStack(spacing: 24) {
                 Image(systemName: "timer")
                     .font(.system(size: 48))
-                    .foregroundColor(themeManager.current.pathColor)
+                    .foregroundStyle(themeManager.current.pathColor)
                 VStack(spacing: 8) {
                     Text(lm.t("timetrial.title"))
                         .font(.system(size: 28, weight: .bold))
-                        .foregroundColor(.white)
+                        .foregroundStyle(.white)
                     Text(lm.t("timetrial.subtitle"))
                         .font(.system(size: 14))
-                        .foregroundColor(.white.opacity(0.8))
+                        .foregroundStyle(.white.opacity(0.8))
                         .multilineTextAlignment(.center)
                         .padding(.horizontal, 32)
                 }
@@ -289,11 +290,11 @@ struct TimeTrialView: View {
                         Text(lm.t("timetrial.start"))
                             .font(.system(size: 18, weight: .semibold))
                     }
-                    .foregroundColor(.white)
+                    .foregroundStyle(.white)
                     .padding(.horizontal, 48)
                     .padding(.vertical, 14)
                     .background(themeManager.current.pathColor)
-                    .cornerRadius(28)
+                    .clipShape(RoundedRectangle(cornerRadius: 28))
                 }
             }
         }
@@ -307,7 +308,7 @@ struct TimeTrialView: View {
             VStack(spacing: 20) {
                 Text(lm.t("timetrial.times_up"))
                     .font(.system(size: 32, weight: .bold))
-                    .foregroundColor(.white)
+                    .foregroundStyle(.white)
 
                 VStack(spacing: 12) {
                     scoreRow(label: lm.t("timetrial.puzzles_solved"), value: "\(puzzlesSolved)")
@@ -316,7 +317,7 @@ struct TimeTrialView: View {
                 }
                 .padding(20)
                 .background(Color.white.opacity(0.15))
-                .cornerRadius(16)
+                .clipShape(RoundedRectangle(cornerRadius: 16))
 
                 ShareLink(item: String(format: lm.t("timetrial.share"), puzzlesSolved, score)) {
                     HStack(spacing: 8) {
@@ -324,21 +325,21 @@ struct TimeTrialView: View {
                         Text(lm.t("timetrial.share_result"))
                     }
                     .font(.system(size: 14, weight: .medium))
-                    .foregroundColor(.white.opacity(0.85))
+                    .foregroundStyle(.white.opacity(0.85))
                     .padding(.horizontal, 20)
                     .padding(.vertical, 9)
                     .background(Color.white.opacity(0.2))
-                    .cornerRadius(12)
+                    .clipShape(RoundedRectangle(cornerRadius: 12))
                 }
 
                 Button(action: onBack) {
                     Text(lm.t("timetrial.back_to_menu"))
                         .font(.system(size: 18, weight: .semibold))
-                        .foregroundColor(themeManager.current.pathColor)
+                        .foregroundStyle(themeManager.current.pathColor)
                         .padding(.horizontal, 40)
                         .padding(.vertical, 12)
                         .background(Color.white)
-                        .cornerRadius(24)
+                        .clipShape(RoundedRectangle(cornerRadius: 24))
                 }
             }
         }
@@ -346,9 +347,9 @@ struct TimeTrialView: View {
 
     private func scoreRow(label: String, value: String) -> some View {
         HStack {
-            Text(label).foregroundColor(.white.opacity(0.8))
+            Text(label).foregroundStyle(.white.opacity(0.8))
             Spacer()
-            Text(value).fontWeight(.semibold).foregroundColor(.white)
+            Text(value).fontWeight(.semibold).foregroundStyle(.white)
         }
     }
 
@@ -360,11 +361,11 @@ struct TimeTrialView: View {
                 Text(label)
                     .font(.system(size: 14, weight: .medium))
             }
-            .foregroundColor(.primary)
+            .foregroundStyle(.primary)
             .padding(.horizontal, 20)
             .padding(.vertical, 10)
             .background(Color(uiColor: .systemBackground))
-            .cornerRadius(20)
+            .clipShape(RoundedRectangle(cornerRadius: 20))
             .shadow(color: .black.opacity(0.08), radius: 4)
         }
     }

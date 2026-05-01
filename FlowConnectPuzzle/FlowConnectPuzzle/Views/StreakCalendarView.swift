@@ -17,7 +17,7 @@ struct StreakCalendarView: View {
         VStack(alignment: .leading, spacing: 8) {
             Text(lm.t("calendar.header"))
                 .font(.system(size: 12, weight: .semibold))
-                .foregroundColor(.secondary)
+                .foregroundStyle(.secondary)
 
             HStack(alignment: .top, spacing: 3) {
                 ForEach(0..<weeksToShow, id: \.self) { weekIndex in
@@ -51,7 +51,7 @@ struct StreakCalendarView: View {
                 Spacer()
                 Text(lm.t("calendar.less"))
                     .font(.system(size: 10))
-                    .foregroundColor(.secondary)
+                    .foregroundStyle(.secondary)
                 ForEach([0.0, 0.3, 0.6, 1.0], id: \.self) { opacity in
                     RoundedRectangle(cornerRadius: 2)
                         .fill(opacity == 0.0
@@ -61,7 +61,7 @@ struct StreakCalendarView: View {
                 }
                 Text(lm.t("calendar.more"))
                     .font(.system(size: 10))
-                    .foregroundColor(.secondary)
+                    .foregroundStyle(.secondary)
             }
         }
     }

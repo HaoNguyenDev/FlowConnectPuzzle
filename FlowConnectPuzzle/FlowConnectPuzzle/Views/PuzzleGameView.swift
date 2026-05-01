@@ -60,11 +60,11 @@ struct PuzzleGameView: View {
                 Button(action: onBack) {
                     Image(systemName: "chevron.left")
                         .font(.system(size: 16, weight: .semibold))
-                        .foregroundColor(.primary)
+                        .foregroundStyle(.primary)
                         .padding(.horizontal, 16)
                         .padding(.vertical, 10)
                         .background(Color(uiColor: .systemBackground))
-                        .cornerRadius(20)
+                        .clipShape(RoundedRectangle(cornerRadius: 20))
                         .shadow(color: .black.opacity(0.08), radius: 4, x: 0, y: 2)
                 }
 
@@ -72,15 +72,15 @@ struct PuzzleGameView: View {
                     if isDaily {
                         Image(systemName: "calendar")
                             .font(.system(size: 12, weight: .medium))
-                            .foregroundColor(themeManager.current.pathColor)
+                            .foregroundStyle(themeManager.current.pathColor)
                     } else if isWeekly {
                         Image(systemName: "crown.fill")
                             .font(.system(size: 12, weight: .medium))
-                            .foregroundColor(.purple)
+                            .foregroundStyle(.purple)
                     }
                     Text(isWeekly ? lm.t("game.weekly_challenge") : (isDaily ? lm.t("game.daily_challenge") : lm.difficultyName(difficulty)))
                         .font(.system(size: 14, weight: .medium))
-                        .foregroundColor(.secondary)
+                        .foregroundStyle(.secondary)
                 }
 
                 Spacer()
@@ -90,21 +90,21 @@ struct PuzzleGameView: View {
                     HStack(spacing: 4) {
                         Image(systemName: "leaf.fill")
                             .font(.system(size: 12))
-                            .foregroundColor(.green.opacity(0.7))
+                            .foregroundStyle(.green.opacity(0.7))
                         Text(lm.t("game.zen"))
                             .font(.system(size: 13, weight: .medium))
-                            .foregroundColor(.secondary)
+                            .foregroundStyle(.secondary)
                     }
                 } else {
                     HStack(spacing: 6) {
                         Image(systemName: "clock")
                             .font(.system(size: 14, weight: .medium))
-                            .foregroundColor(gameStarted ? .secondary : .secondary.opacity(0.4))
                         Text(formattedTime)
                             .font(.system(size: 14, weight: .medium))
-                            .foregroundColor(gameStarted ? .secondary : .secondary.opacity(0.4))
                             .monospacedDigit()
                     }
+                    .foregroundStyle(.secondary)
+                    .opacity(gameStarted ? 1.0 : 0.4)
                 }
             }
             .padding(.horizontal, 16)
@@ -121,11 +121,11 @@ struct PuzzleGameView: View {
                 }) {
                     Image(systemName: "arrow.uturn.backward")
                         .font(.system(size: 16, weight: .semibold))
-                        .foregroundColor(.primary)
+                        .foregroundStyle(.primary)
                         .padding(.horizontal, 16)
                         .padding(.vertical, 10)
                         .background(Color(uiColor: .systemBackground))
-                        .cornerRadius(20)
+                        .clipShape(RoundedRectangle(cornerRadius: 20))
                         .shadow(color: .black.opacity(0.08), radius: 4, x: 0, y: 2)
                 }
                 .disabled(!gameStarted || gameState.path.isEmpty)
@@ -139,11 +139,11 @@ struct PuzzleGameView: View {
                 }) {
                     Image(systemName: "arrow.counterclockwise")
                         .font(.system(size: 16, weight: .semibold))
-                        .foregroundColor(.primary)
+                        .foregroundStyle(.primary)
                         .padding(.horizontal, 16)
                         .padding(.vertical, 10)
                         .background(Color(uiColor: .systemBackground))
-                        .cornerRadius(20)
+                        .clipShape(RoundedRectangle(cornerRadius: 20))
                         .shadow(color: .black.opacity(0.08), radius: 4, x: 0, y: 2)
                 }
                 .accessibilityLabel("Reset puzzle")
@@ -155,11 +155,11 @@ struct PuzzleGameView: View {
                 }) {
                     Image(systemName: "lightbulb.max")
                         .font(.system(size: 16, weight: .semibold))
-                        .foregroundColor(hintActive ? .yellow : .primary)
+                        .foregroundStyle(hintActive ? .yellow : .primary)
                         .padding(.horizontal, 16)
                         .padding(.vertical, 10)
                         .background(Color(uiColor: .systemBackground))
-                        .cornerRadius(20)
+                        .clipShape(RoundedRectangle(cornerRadius: 20))
                         .shadow(color: .black.opacity(0.08), radius: 4, x: 0, y: 2)
                 }
                 .disabled(!gameStarted || gameState.allNumbersConnected || gameState.path.isEmpty)
@@ -174,11 +174,11 @@ struct PuzzleGameView: View {
                     }) {
                         Image(systemName: "plus.square")
                             .font(.system(size: 16, weight: .semibold))
-                            .foregroundColor(.primary)
+                            .foregroundStyle(.primary)
                             .padding(.horizontal, 16)
                             .padding(.vertical, 10)
                             .background(Color(uiColor: .systemBackground))
-                            .cornerRadius(20)
+                            .clipShape(RoundedRectangle(cornerRadius: 20))
                             .shadow(color: .black.opacity(0.08), radius: 4, x: 0, y: 2)
                     }
                     .accessibilityLabel("New puzzle")
@@ -282,7 +282,8 @@ struct PuzzleGameView: View {
         .onChange(of: achievementManager.recentlyUnlocked) { _, newValue in
             if newValue != nil {
                 withAnimation(.spring()) { showAchievementBanner = true }
-                DispatchQueue.main.asyncAfter(deadline: .now() + 4) {
+                Task {
+                    try? await Task.sleep(for: .seconds(4))
                     withAnimation { showAchievementBanner = false }
                     achievementManager.clearRecentlyUnlocked()
                 }
@@ -307,21 +308,21 @@ struct PuzzleGameView: View {
                         .frame(width: 72, height: 72)
                     Image(systemName: isWeekly ? "crown.fill" : (isDaily ? "calendar" : difficulty.iconName))
                         .font(.system(size: 32))
-                        .foregroundColor(isWeekly ? .purple : theme.pathColor)
+                        .foregroundStyle(isWeekly ? .purple : theme.pathColor)
                 }
 
                 VStack(spacing: 6) {
                     Text(isWeekly ? lm.t("game.weekly_challenge") : (isDaily ? lm.t("game.daily_challenge") : lm.difficultyName(difficulty)))
                         .font(.system(size: 22, weight: .bold))
-                        .foregroundColor(.primary)
+                        .foregroundStyle(.primary)
                     Text(difficulty.description)
                         .font(.system(size: 13))
-                        .foregroundColor(.secondary)
+                        .foregroundStyle(.secondary)
                     if elapsedTime > 0 {
                         // Shown on re-start after Reset — displays accumulated penalty time
                         Text(String(format: lm.t("game.time_so_far"), formattedTime))
                             .font(.system(size: 12, weight: .medium).monospacedDigit())
-                            .foregroundColor(theme.pathColor)
+                            .foregroundStyle(theme.pathColor)
                             .padding(.top, 2)
                     }
                 }
@@ -334,11 +335,11 @@ struct PuzzleGameView: View {
                         Text(elapsedTime > 0 ? lm.t("game.resume") : lm.t("game.start"))
                             .font(.system(size: 18, weight: .semibold))
                     }
-                    .foregroundColor(.white)
+                    .foregroundStyle(.white)
                     .padding(.horizontal, 40)
                     .padding(.vertical, 14)
                     .background(theme.pathColor)
-                    .cornerRadius(28)
+                    .clipShape(RoundedRectangle(cornerRadius: 28))
                     .shadow(color: theme.pathColor.opacity(0.4), radius: 10, x: 0, y: 4)
                 }
             }
@@ -529,8 +530,12 @@ struct PuzzleGameView: View {
         )
     }
 
+    private var sortedNumberPositions: [(key: Int, value: GridPosition)] {
+        gameState.numberPositions.sorted(by: { $0.key < $1.key })
+    }
+
     private func numberBadgesOverlay(cellSize: CGFloat) -> some View {
-        ForEach(Array(gameState.numberPositions.sorted(by: { $0.key < $1.key })), id: \.key) { number, position in
+        ForEach(sortedNumberPositions, id: \.key) { number, position in
             let showHint = number == nextTargetNumber && hintActive
             let accent   = themeManager.current.accentColor
 
@@ -553,7 +558,7 @@ struct PuzzleGameView: View {
                     .overlay(
                         Text("\(number)")
                             .font(.system(size: cellSize * 0.35, weight: .bold))
-                            .foregroundColor(.white)
+                            .foregroundStyle(.white)
                     )
                     .shadow(
                         color: showHint ? accent.opacity(breathPhase ? 0.8 : 0.2) : .clear,
@@ -570,7 +575,8 @@ struct PuzzleGameView: View {
 
     private func startBreathing() {
         breathPhase = false
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
+        Task {
+            try? await Task.sleep(for: .milliseconds(50))
             breathPhase = true
         }
     }
@@ -611,42 +617,42 @@ struct PuzzleGameView: View {
                 HStack(spacing: 8) {
                     if isWeekly {
                         Image(systemName: "crown.fill")
-                            .foregroundColor(.yellow)
+                            .foregroundStyle(.yellow)
                     } else if isDaily {
                         Image(systemName: "calendar.badge.checkmark")
-                            .foregroundColor(.yellow)
+                            .foregroundStyle(.yellow)
                     }
                     Text(isWeekly ? lm.t("game.weekly_complete") : (isDaily ? lm.t("game.daily_complete") : lm.t("game.puzzle_complete")))
                         .font(.system(size: 28, weight: .bold))
-                        .foregroundColor(.white)
+                        .foregroundStyle(.white)
                 }
 
                 HStack(spacing: 8) {
                     Image(systemName: "clock.fill")
                         .font(.system(size: 20))
-                        .foregroundColor(.white.opacity(0.9))
+                        .foregroundStyle(.white.opacity(0.9))
                     Text(formattedTime)
                         .font(.system(size: 24, weight: .semibold))
-                        .foregroundColor(.white.opacity(0.9))
+                        .foregroundStyle(.white.opacity(0.9))
                         .monospacedDigit()
                 }
                 .padding(.horizontal, 24)
                 .padding(.vertical, 12)
                 .background(Color.white.opacity(0.2))
-                .cornerRadius(16)
+                .clipShape(RoundedRectangle(cornerRadius: 16))
 
                 if isPersonalBest {
                     HStack(spacing: 6) {
                         Image(systemName: "star.fill")
-                            .foregroundColor(.yellow)
+                            .foregroundStyle(.yellow)
                         Text(lm.t("game.new_personal_best"))
                             .font(.system(size: 14, weight: .semibold))
-                            .foregroundColor(.yellow)
+                            .foregroundStyle(.yellow)
                     }
                     .padding(.horizontal, 16)
                     .padding(.vertical, 8)
                     .background(Color.yellow.opacity(0.2))
-                    .cornerRadius(12)
+                    .clipShape(RoundedRectangle(cornerRadius: 12))
                 }
 
                 // Share result
@@ -657,22 +663,22 @@ struct PuzzleGameView: View {
                         Text(lm.t("game.share_result"))
                             .font(.system(size: 14, weight: .medium))
                     }
-                    .foregroundColor(.white.opacity(0.85))
+                    .foregroundStyle(.white.opacity(0.85))
                     .padding(.horizontal, 20)
                     .padding(.vertical, 9)
                     .background(Color.white.opacity(0.2))
-                    .cornerRadius(12)
+                    .clipShape(RoundedRectangle(cornerRadius: 12))
                 }
 
                 if isDaily || isWeekly {
                     Button(action: onBack) {
                         Text(lm.t("game.back_to_menu"))
                             .font(.system(size: 18, weight: .semibold))
-                            .foregroundColor(theme.pathColor)
+                            .foregroundStyle(theme.pathColor)
                             .padding(.horizontal, 32)
                             .padding(.vertical, 12)
                             .background(Color.white)
-                            .cornerRadius(24)
+                            .clipShape(RoundedRectangle(cornerRadius: 24))
                     }
                 } else {
                     Button(action: {
@@ -682,11 +688,11 @@ struct PuzzleGameView: View {
                     }) {
                         Text(lm.t("game.next_puzzle"))
                             .font(.system(size: 18, weight: .semibold))
-                            .foregroundColor(theme.pathColor)
+                            .foregroundStyle(theme.pathColor)
                             .padding(.horizontal, 32)
                             .padding(.vertical, 12)
                             .background(Color.white)
-                            .cornerRadius(24)
+                            .clipShape(RoundedRectangle(cornerRadius: 24))
                     }
                 }
             }
